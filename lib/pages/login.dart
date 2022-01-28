@@ -30,14 +30,15 @@ class _LogInState extends State<LogIn> {
             children: <Widget>[
               Image(
                 image: AssetImage("assets/logo/makeat_transparent.png"),
-                width: 100,
+                width: 160.0,
               ),
               Padding(
-                padding: EdgeInsets.symmetric(vertical: 20.0),
+                padding: EdgeInsets.only(bottom: 28.0),
                 child: Text(
-                  "Login Here",
-                  style: TextStyle(
-                    fontSize: 30.0,
+                  "Welcome",
+                  style: GoogleFonts.ubuntu(
+                    color: Colors.black,
+                    fontSize: 30,
                   ),
                 ),
               ),
@@ -48,13 +49,29 @@ class _LogInState extends State<LogIn> {
                   child: Column(
                     children: <Widget>[
                       TextFormField(
+                        keyboardType: TextInputType.emailAddress,
                         decoration: InputDecoration(
-                            border: OutlineInputBorder(), labelText: "Email"),
-                        validator: MultiValidator([
-                          RequiredValidator(
-                              errorText: "This Field Is Required"),
-                          EmailValidator(errorText: "Invalid Email Address"),
-                        ]),
+                          floatingLabelStyle: TextStyle(color: Colors.black),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10.0),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: Color(0xff3BB143)),
+                          ),
+                          labelText: "Email",
+                          hintText: "Enter Your Email",
+                          prefixIcon: Icon(
+                            Icons.mail,
+                            color: Color(0xff3BB143),
+                          ),
+                        ),
+                        validator: MultiValidator(
+                          [
+                            RequiredValidator(
+                                errorText: "This Field is Required"),
+                            EmailValidator(errorText: "Invalid Email Address"),
+                          ],
+                        ),
                         onChanged: (val) {
                           email = val;
                         },
@@ -63,14 +80,29 @@ class _LogInState extends State<LogIn> {
                         padding: const EdgeInsets.symmetric(vertical: 15.0),
                         child: TextFormField(
                           obscureText: true,
+                          keyboardType: TextInputType.text,
                           decoration: InputDecoration(
-                              border: OutlineInputBorder(),
-                              labelText: "Password"),
+                            floatingLabelStyle: TextStyle(
+                              color: Colors.black,
+                            ),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Color(0xff3BB143)),
+                            ),
+                            labelText: "Password",
+                            hintText: "Enter Your Password",
+                            prefixIcon: Icon(
+                              Icons.vpn_key,
+                              color: Color(0xff3BB143),
+                            ),
+                          ),
                           validator: MultiValidator([
                             RequiredValidator(
-                                errorText: "Password Is Required"),
-                            MinLengthValidator(6,
-                                errorText: "Minimum 6 Characters Required"),
+                                errorText: "Password is Required"),
+                            MinLengthValidator(8,
+                                errorText: "Minimum 8 Characters Required"),
                           ]),
                           onChanged: (val) {
                             password = val;
@@ -81,10 +113,17 @@ class _LogInState extends State<LogIn> {
                         // passing an additional context parameter to show dialog boxs
                         onPressed: () {},
                         style: ElevatedButton.styleFrom(
-                          primary: Colors.green,
+                          minimumSize: Size.fromHeight(55),
+                          primary: Color(0xff3BB143),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
                         ),
                         child: Text(
                           "Login",
+                          style: GoogleFonts.ubuntu(
+                            fontSize: 20,
+                          ),
                         ),
                       ),
                     ],
@@ -96,7 +135,7 @@ class _LogInState extends State<LogIn> {
                 onPressed: () {},
                 child: Image(
                   image: AssetImage('assets/icons/googleicon.png'),
-                  width: 200.0,
+                  width: 50,
                 ),
               ),
               SizedBox(
@@ -109,7 +148,7 @@ class _LogInState extends State<LogIn> {
                   //     MaterialPageRoute(builder: (context) => SignUpScreen()));
                 },
                 child: Text(
-                  "Sign Up Here",
+                  "Sign Up",
                 ),
               ),
             ],
