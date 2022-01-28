@@ -130,26 +130,33 @@ class _LogInState extends State<LogIn> {
                   ),
                 ),
               ),
-              MaterialButton(
-                padding: EdgeInsets.zero,
-                onPressed: () {},
-                child: Image(
-                  image: AssetImage('assets/icons/googleicon.png'),
-                  width: 50,
-                ),
-              ),
               SizedBox(
-                height: 10.0,
+                height: 35.0,
               ),
-              InkWell(
-                onTap: () {
-                  // send to login screen
-                  // Navigator.of(context).push(
-                  //     MaterialPageRoute(builder: (context) => SignUpScreen()));
-                },
-                child: Text(
-                  "Sign Up",
-                ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  MaterialButton(
+                    padding: EdgeInsets.zero,
+                    onPressed: () {},
+                    child: Image(
+                      image: AssetImage('assets/icons/googleicon.png'),
+                      width: 40,
+                    ),
+                  ),
+                  Text(
+                    "Or",
+                    style: GoogleFonts.ubuntu(fontSize: 15.0),
+                  ),
+                  MaterialButton(
+                    padding: EdgeInsets.zero,
+                    onPressed: () {},
+                    child: Image(
+                      image: AssetImage('assets/icons/signupicon.png'),
+                      width: 40,
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
