@@ -56,7 +56,7 @@ class _MainScreenState extends State<MainScreen> {
         primaryColor: Colors.white,
         scaffoldBackgroundColor: Colors.transparent,
       ),
-      home: Login(),
+      home: LogIn(),
     );
   }
 }

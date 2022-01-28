@@ -8,14 +8,14 @@ import "package:form_field_validator/form_field_validator.dart";
 var mfont = GoogleFonts.ubuntu(color: Colors.black, fontSize: 15.0);
 var mfontw = GoogleFonts.ubuntu(color: Colors.white, fontSize: 15.0);
 
-class Login extends StatefulWidget {
-  const Login({Key? key}) : super(key: key);
+class LogIn extends StatefulWidget {
+  const LogIn({Key? key}) : super(key: key);
 
   @override
-  State<Login> createState() => _LoginState();
+  State<LogIn> createState() => _LogInState();
 }
 
-class _LoginState extends State<Login> {
+class _LogInState extends State<LogIn> {
   late String email;
   late String password;
   GlobalKey<FormState> formkey = GlobalKey<FormState>();
@@ -30,7 +30,8 @@ class _LoginState extends State<Login> {
             children: <Widget>[
               Image(
                 image: AssetImage("assets/logo/makeat_transparent.png"),
-                width: 100,),
+                width: 100,
+              ),
               Padding(
                 padding: EdgeInsets.symmetric(vertical: 20.0),
                 child: Text(
@@ -78,7 +79,7 @@ class _LoginState extends State<Login> {
                       ),
                       ElevatedButton(
                         // passing an additional context parameter to show dialog boxs
-                        onPressed: (){},
+                        onPressed: () {},
                         style: ElevatedButton.styleFrom(
                           primary: Colors.green,
                         ),
