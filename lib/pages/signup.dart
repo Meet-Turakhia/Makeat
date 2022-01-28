@@ -137,7 +137,7 @@ class _SignUpState extends State<SignUp> {
                           ),
                         ),
                         child: Text(
-                          "Login",
+                          "Sign Up",
                           style: GoogleFonts.ubuntu(
                             fontSize: 20,
                           ),
@@ -172,7 +172,7 @@ class _SignUpState extends State<SignUp> {
                           MaterialPageRoute(builder: (context) => LogIn(),),);
                     },
                     child: Image(
-                      image: AssetImage('assets/icons/signupicon.png'),
+                      image: AssetImage('assets/icons/loginicon.png'),
                       width: 40,
                     ),
                   ),
