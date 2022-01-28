@@ -3,6 +3,7 @@ import "package:flutter/material.dart";
 import 'package:flutter/services.dart';
 import 'package:makeat_app/widgets/splashscreen.dart';
 
+// Flutter execution starts from here
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]).then(
