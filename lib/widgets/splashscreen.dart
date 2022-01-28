@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 // ignore: import_of_legacy_library_into_null_safe
 import "package:splashscreen/splashscreen.dart";
 import "package:google_fonts/google_fonts.dart";
+import "../pages/login.dart";
 
 class MyApp extends StatefulWidget {
   const MyApp({Key? key}) : super(key: key);
@@ -55,7 +56,7 @@ class _MainScreenState extends State<MainScreen> {
         primaryColor: Colors.white,
         scaffoldBackgroundColor: Colors.transparent,
       ),
-      // home: Home(),
+      home: Login(),
     );
   }
 }
