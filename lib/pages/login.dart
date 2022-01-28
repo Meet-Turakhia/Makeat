@@ -18,7 +18,14 @@ class LogIn extends StatefulWidget {
 class _LogInState extends State<LogIn> {
   late String email;
   late String password;
+  bool isHidden = true;
   GlobalKey<FormState> formkey = GlobalKey<FormState>();
+
+  void togglePasswordView() {
+    setState(() {
+      isHidden = !isHidden;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -79,7 +86,7 @@ class _LogInState extends State<LogIn> {
                       Padding(
                         padding: const EdgeInsets.symmetric(vertical: 15.0),
                         child: TextFormField(
-                          obscureText: true,
+                          obscureText: isHidden,
                           keyboardType: TextInputType.text,
                           decoration: InputDecoration(
                             floatingLabelStyle: TextStyle(
@@ -96,6 +103,15 @@ class _LogInState extends State<LogIn> {
                             prefixIcon: Icon(
                               Icons.vpn_key,
                               color: Color(0xff3BB143),
+                            ),
+                            suffixIcon: InkWell(
+                              onTap: togglePasswordView,
+                              child: Icon(
+                                isHidden
+                                    ? Icons.visibility
+                                    : Icons.visibility_off,
+                                color: Color(0xff3BB143),
+                              ),
                             ),
                           ),
                           validator: MultiValidator([
