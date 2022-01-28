@@ -118,8 +118,6 @@ class _LogInState extends State<LogIn> {
                           validator: MultiValidator([
                             RequiredValidator(
                                 errorText: "Password is Required"),
-                            MinLengthValidator(8,
-                                errorText: "Minimum 8 Characters Required"),
                           ]),
                           onChanged: (val) {
                             password = val;
