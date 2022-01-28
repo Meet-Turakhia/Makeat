@@ -167,7 +167,10 @@ class _LogInState extends State<LogIn> {
                   ),
                   MaterialButton(
                     padding: EdgeInsets.zero,
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => SignUp()));
+                    },
                     child: Image(
                       image: AssetImage('assets/icons/signupicon.png'),
                       width: 40,
