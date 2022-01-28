@@ -42,7 +42,7 @@ class _SignUpState extends State<SignUp> {
               Padding(
                 padding: EdgeInsets.only(bottom: 28.0),
                 child: Text(
-                  "Welcome",
+                  "Register",
                   style: GoogleFonts.ubuntu(
                     color: Colors.black,
                     fontSize: 30,
@@ -167,7 +167,10 @@ class _SignUpState extends State<SignUp> {
                   ),
                   MaterialButton(
                     padding: EdgeInsets.zero,
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.of(context).push(
+                          MaterialPageRoute(builder: (context) => LogIn(),),);
+                    },
                     child: Image(
                       image: AssetImage('assets/icons/signupicon.png'),
                       width: 40,
