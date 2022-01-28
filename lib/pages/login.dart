@@ -53,6 +53,7 @@ class _LogInState extends State<LogIn> {
                 width: MediaQuery.of(context).size.width * 0.90,
                 child: Form(
                   key: formkey,
+                  autovalidateMode: AutovalidateMode.always,
                   child: Column(
                     children: <Widget>[
                       TextFormField(
