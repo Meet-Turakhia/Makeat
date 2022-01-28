@@ -6,6 +6,7 @@ import "package:splashscreen/splashscreen.dart";
 import "package:google_fonts/google_fonts.dart";
 import "../pages/login.dart";
 
+// splashscreen code starts from here
 class MyApp extends StatefulWidget {
   const MyApp({Key? key}) : super(key: key);
 
