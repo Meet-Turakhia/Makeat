@@ -25,9 +25,10 @@ class _MyAppState extends State<MyApp> {
         "assets/logo/makeat.gif",
       ),
       photoSize: 100.0,
-      title: Text("Makeat",
-          style:
-              GoogleFonts.ubuntu(fontSize: 30.0, fontWeight: FontWeight.bold)),
+      title: Text(
+        "Makeat",
+        style: GoogleFonts.ubuntu(fontSize: 30.0, fontWeight: FontWeight.bold),
+      ),
       loadingText: Text(
         "From \n nCoders",
         style: GoogleFonts.ubuntu(fontSize: 15.0, color: Colors.grey),
