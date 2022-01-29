@@ -79,8 +79,7 @@ class _LogInState extends State<LogIn> {
                         ),
                         validator: MultiValidator(
                           [
-                            RequiredValidator(
-                                errorText: "Required"),
+                            RequiredValidator(errorText: "Required"),
                             EmailValidator(errorText: "Invalid Email Address"),
                           ],
                         ),
@@ -122,8 +121,7 @@ class _LogInState extends State<LogIn> {
                             ),
                           ),
                           validator: MultiValidator([
-                            RequiredValidator(
-                                errorText: "Required"),
+                            RequiredValidator(errorText: "Required"),
                           ]),
                           onChanged: (val) {
                             password = val;
@@ -133,15 +131,17 @@ class _LogInState extends State<LogIn> {
                       ElevatedButton(
                         // passing an additional context parameter to show dialog boxs
                         onPressed: () {
-                          signIn(email, password).whenComplete(
-                            () {
-                              Navigator.of(context).pushReplacement(
-                                MaterialPageRoute(
-                                  builder: (context) => LoginPage(),
-                                ),
-                              );
-                            },
-                          );
+                          if (formkey.currentState!.validate()) {
+                            signIn(email, password).whenComplete(
+                              () {
+                                Navigator.of(context).pushReplacement(
+                                  MaterialPageRoute(
+                                    builder: (context) => LoginPage(),
+                                  ),
+                                );
+                              },
+                            );
+                          }
                         },
                         style: ElevatedButton.styleFrom(
                           minimumSize: Size.fromHeight(55),
