@@ -79,8 +79,7 @@ class _SignUpState extends State<SignUp> {
                         ),
                         validator: MultiValidator(
                           [
-                            RequiredValidator(
-                                errorText: "Required"),
+                            RequiredValidator(errorText: "Required"),
                             EmailValidator(errorText: "Invalid Email Address"),
                           ],
                         ),
@@ -122,8 +121,7 @@ class _SignUpState extends State<SignUp> {
                             ),
                           ),
                           validator: MultiValidator([
-                            RequiredValidator(
-                                errorText: "Required"),
+                            RequiredValidator(errorText: "Required"),
                             MinLengthValidator(8,
                                 errorText: "Minimum 8 Characters are Required"),
                           ]),
@@ -135,13 +133,15 @@ class _SignUpState extends State<SignUp> {
                       ElevatedButton(
                         // passing an additional context parameter to show dialog boxs
                         onPressed: () {
-                          signUp(email, password).whenComplete(() {
-                            Navigator.of(context).pushReplacement(
-                              MaterialPageRoute(
-                                builder: (context) => LogIn(),
-                              ),
-                            );
-                          });
+                          if (formkey.currentState!.validate()) {
+                            signUp(email, password).whenComplete(() {
+                              Navigator.of(context).pushReplacement(
+                                MaterialPageRoute(
+                                  builder: (context) => LogIn(),
+                                ),
+                              );
+                            });
+                          }
                         },
                         style: ElevatedButton.styleFrom(
                           minimumSize: Size.fromHeight(55),
