@@ -2,7 +2,7 @@
 import "package:fluttertoast/fluttertoast.dart";
 import "package:flutter/material.dart";
 
-void displayMessage() {
+void popupMessage() {
   Fluttertoast.showToast(
       msg: "This is Center Short Toast",
       toastLength: Toast.LENGTH_SHORT,
