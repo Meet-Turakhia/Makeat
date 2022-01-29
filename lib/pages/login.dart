@@ -80,7 +80,7 @@ class _LogInState extends State<LogIn> {
                         validator: MultiValidator(
                           [
                             RequiredValidator(
-                                errorText: "This Field is Required"),
+                                errorText: "Required"),
                             EmailValidator(errorText: "Invalid Email Address"),
                           ],
                         ),
@@ -123,7 +123,7 @@ class _LogInState extends State<LogIn> {
                           ),
                           validator: MultiValidator([
                             RequiredValidator(
-                                errorText: "Password is Required"),
+                                errorText: "Required"),
                           ]),
                           onChanged: (val) {
                             password = val;
