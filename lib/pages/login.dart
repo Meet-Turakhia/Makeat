@@ -45,7 +45,7 @@ class _LogInState extends State<LogIn> {
                   "Welcome",
                   style: GoogleFonts.ubuntu(
                     color: Colors.black,
-                    fontSize: 30,
+                    fontSize: 30.0,
                   ),
                 ),
               ),
@@ -64,7 +64,9 @@ class _LogInState extends State<LogIn> {
                             borderRadius: BorderRadius.circular(10.0),
                           ),
                           focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Color(0xff3BB143)),
+                            borderSide: BorderSide(
+                              color: Color(0xff3BB143),
+                            ),
                           ),
                           labelText: "Email",
                           hintText: "Enter Your Email",
@@ -97,7 +99,9 @@ class _LogInState extends State<LogIn> {
                               borderRadius: BorderRadius.circular(10.0),
                             ),
                             focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: Color(0xff3BB143)),
+                              borderSide: BorderSide(
+                                color: Color(0xff3BB143),
+                              ),
                             ),
                             labelText: "Password",
                             hintText: "Enter Your Password",
