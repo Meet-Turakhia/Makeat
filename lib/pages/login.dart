@@ -130,17 +130,19 @@ class _LogInState extends State<LogIn> {
                       ),
                       ElevatedButton(
                         // passing an additional context parameter to show dialog boxs
-                        onPressed: () {
+                        onPressed: () async {
                           if (formkey.currentState!.validate()) {
-                            signIn(email, password).whenComplete(
-                              () {
-                                Navigator.of(context).pushReplacement(
-                                  MaterialPageRoute(
-                                    builder: (context) => LoginPage(),
-                                  ),
-                                );
-                              },
+                            bool isUserPresent = await signIn(
+                              email.trim(),
+                              password.trim(),
                             );
+                            if (isUserPresent) {
+                              Navigator.of(context).pushReplacement(
+                                MaterialPageRoute(
+                                  builder: (context) => LoginPage(),
+                                ),
+                              );
+                            }
                           }
                         },
                         style: ElevatedButton.styleFrom(
