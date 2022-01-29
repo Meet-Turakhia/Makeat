@@ -1,7 +1,9 @@
 // ignore_for_file: prefer_const_constructors
 import "package:flutter/material.dart";
 import "package:google_fonts/google_fonts.dart";
+import 'package:makeat_app/controllers/authentications.dart';
 import "login.dart";
+import "home.dart";
 import "package:firebase_auth/firebase_auth.dart";
 import "package:form_field_validator/form_field_validator.dart";
 
@@ -132,7 +134,15 @@ class _SignUpState extends State<SignUp> {
                       ),
                       ElevatedButton(
                         // passing an additional context parameter to show dialog boxs
-                        onPressed: () {},
+                        onPressed: () {
+                          signUp(email, password).whenComplete(() {
+                            Navigator.of(context).pushReplacement(
+                              MaterialPageRoute(
+                                builder: (context) => LogIn(),
+                              ),
+                            );
+                          });
+                        },
                         style: ElevatedButton.styleFrom(
                           minimumSize: Size.fromHeight(55),
                           primary: Color(0xff3BB143),
@@ -159,7 +169,13 @@ class _SignUpState extends State<SignUp> {
                 children: [
                   MaterialButton(
                     padding: EdgeInsets.zero,
-                    onPressed: () {},
+                    onPressed: () {
+                      googleSignIn().whenComplete(
+                        () => MaterialPageRoute(
+                          builder: (context) => LoginPage(),
+                        ),
+                      );
+                    },
                     child: Image(
                       image: AssetImage('assets/icons/googleicon.png'),
                       width: 40,
