@@ -32,6 +32,7 @@ Future<bool> googleSignIn() async {
 Future<bool> signIn(String email, String password) async {
   try {
     await auth.signInWithEmailAndPassword(email: email, password: password);
+    popupMessage("Login Successful!");
     return Future.value(true);
   } on FirebaseException catch (e) {
     popupMessage(e.code.toString());
@@ -42,6 +43,7 @@ Future<bool> signIn(String email, String password) async {
 Future<bool> signUp(String email, String password) async {
   try {
     await auth.createUserWithEmailAndPassword(email: email, password: password);
+    popupMessage("Account Created Successfully!");
     return Future.value(true);
   } on FirebaseAuthException catch (e) {
     popupMessage(e.code.toString());
