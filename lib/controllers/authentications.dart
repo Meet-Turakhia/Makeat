@@ -1,5 +1,6 @@
 import "package:firebase_auth/firebase_auth.dart";
 import "package:google_sign_in/google_sign_in.dart";
+import "../widgets/showtoast.dart";
 
 FirebaseAuth auth = FirebaseAuth.instance;
 final googleSignInInstance = GoogleSignIn();
@@ -28,16 +29,13 @@ Future<bool> googleSignIn() async {
   }
 }
 
-Future<User?> signIn(String email, String password) async {
+Future<bool> signIn(String email, String password) async {
   try {
-    UserCredential result =
-        await auth.signInWithEmailAndPassword(email: email, password: password);
-
-    User? user = result.user;
-
-    return Future.value(user);
+    await auth.signInWithEmailAndPassword(email: email, password: password);
+    return Future.value(true);
   } on FirebaseException catch (e) {
-    print(e.code);
+    popupMessage(e.code.toString());
+    return Future.value(false);
   }
 }
 
