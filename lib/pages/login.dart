@@ -2,8 +2,10 @@
 import "package:flutter/material.dart";
 import "package:google_fonts/google_fonts.dart";
 import "signup.dart";
+import "home.dart";
 import "package:firebase_auth/firebase_auth.dart";
 import "package:form_field_validator/form_field_validator.dart";
+import "../controllers/authentications.dart";
 
 var mfont = GoogleFonts.ubuntu(color: Colors.black, fontSize: 15.0);
 var mfontw = GoogleFonts.ubuntu(color: Colors.white, fontSize: 15.0);
@@ -130,7 +132,17 @@ class _LogInState extends State<LogIn> {
                       ),
                       ElevatedButton(
                         // passing an additional context parameter to show dialog boxs
-                        onPressed: () {},
+                        onPressed: () {
+                          signIn(email, password).whenComplete(
+                            () {
+                              Navigator.of(context).pushReplacement(
+                                MaterialPageRoute(
+                                  builder: (context) => LoginPage(),
+                                ),
+                              );
+                            },
+                          );
+                        },
                         style: ElevatedButton.styleFrom(
                           minimumSize: Size.fromHeight(55),
                           primary: Color(0xff3BB143),
@@ -157,7 +169,13 @@ class _LogInState extends State<LogIn> {
                 children: [
                   MaterialButton(
                     padding: EdgeInsets.zero,
-                    onPressed: () {},
+                    onPressed: () {
+                      googleSignIn().whenComplete(
+                        () => MaterialPageRoute(
+                          builder: (context) => LoginPage(),
+                        ),
+                      );
+                    },
                     child: Image(
                       image: AssetImage('assets/icons/googleicon.png'),
                       width: 40,
