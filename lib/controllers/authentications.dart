@@ -41,20 +41,11 @@ Future<bool> signIn(String email, String password) async {
 
 Future<bool> signUp(String email, String password) async {
   try {
-    UserCredential result = await auth.createUserWithEmailAndPassword(
-        email: email, password: password);
-
-    // User? user = result.user;
+    await auth.createUserWithEmailAndPassword(email: email, password: password);
     return Future.value(true);
   } on FirebaseAuthException catch (e) {
-    switch (e.code) {
-      case "email-already-in-use":
-        print("error");
-        return Future.value(false);
-        break;
-      default:
-        return Future.value(false);
-    }
+    popupMessage(e.code.toString());
+    return Future.value(false);
   }
 }
 
