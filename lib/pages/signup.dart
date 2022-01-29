@@ -80,7 +80,7 @@ class _SignUpState extends State<SignUp> {
                         validator: MultiValidator(
                           [
                             RequiredValidator(
-                                errorText: "This Field is Required"),
+                                errorText: "Required"),
                             EmailValidator(errorText: "Invalid Email Address"),
                           ],
                         ),
@@ -123,7 +123,7 @@ class _SignUpState extends State<SignUp> {
                           ),
                           validator: MultiValidator([
                             RequiredValidator(
-                                errorText: "Password is Required"),
+                                errorText: "Required"),
                             MinLengthValidator(8,
                                 errorText: "Minimum 8 Characters are Required"),
                           ]),
