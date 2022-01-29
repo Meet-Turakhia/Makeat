@@ -1,4 +1,4 @@
-// ignore_for_file: non_constant_identifier_names
+// ignore_for_file: prefer_const_constructors
 import "package:fluttertoast/fluttertoast.dart";
 import "package:flutter/material.dart";
 
