@@ -25,12 +25,6 @@ class _LoginPageState extends State<LoginPage> {
         body: Stack(
           fit: StackFit.expand,
           children: [
-            Image.asset(
-              "assets/bg.jpg",
-              fit: BoxFit.cover,
-              color: Colors.black.withOpacity(0.7),
-              colorBlendMode: BlendMode.darken,
-            ),
             Center(
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
