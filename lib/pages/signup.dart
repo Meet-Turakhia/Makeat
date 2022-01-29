@@ -45,7 +45,7 @@ class _SignUpState extends State<SignUp> {
                   "Register",
                   style: GoogleFonts.ubuntu(
                     color: Colors.black,
-                    fontSize: 30,
+                    fontSize: 30.0,
                   ),
                 ),
               ),
@@ -64,7 +64,9 @@ class _SignUpState extends State<SignUp> {
                             borderRadius: BorderRadius.circular(10.0),
                           ),
                           focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Color(0xff3BB143)),
+                            borderSide: BorderSide(
+                              color: Color(0xff3BB143),
+                            ),
                           ),
                           labelText: "Email",
                           hintText: "Enter Your Email",
@@ -97,7 +99,9 @@ class _SignUpState extends State<SignUp> {
                               borderRadius: BorderRadius.circular(10.0),
                             ),
                             focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: Color(0xff3BB143)),
+                              borderSide: BorderSide(
+                                color: Color(0xff3BB143),
+                              ),
                             ),
                             labelText: "Password",
                             hintText: "Enter Your Password",
@@ -119,7 +123,7 @@ class _SignUpState extends State<SignUp> {
                             RequiredValidator(
                                 errorText: "Password is Required"),
                             MinLengthValidator(8,
-                                errorText: "Minimum 8 Characters Required"),
+                                errorText: "Minimum 8 Characters are Required"),
                           ]),
                           onChanged: (val) {
                             password = val;
@@ -169,7 +173,10 @@ class _SignUpState extends State<SignUp> {
                     padding: EdgeInsets.zero,
                     onPressed: () {
                       Navigator.of(context).push(
-                          MaterialPageRoute(builder: (context) => LogIn(),),);
+                        MaterialPageRoute(
+                          builder: (context) => LogIn(),
+                        ),
+                      );
                     },
                     child: Image(
                       image: AssetImage('assets/icons/loginicon.png'),
