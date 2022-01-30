@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 import "package:flutter/material.dart";
 import 'package:flutter/services.dart';
+import 'package:makeat_app/widgets/authcheck.dart';
 // ignore: import_of_legacy_library_into_null_safe
 import "package:splashscreen/splashscreen.dart";
 import "package:google_fonts/google_fonts.dart";
@@ -58,7 +59,7 @@ class _MainScreenState extends State<MainScreen> {
         primaryColor: Colors.white,
         scaffoldBackgroundColor: Colors.transparent,
       ),
-      home: LogIn(),
+      home: AuthCheck(),
     );
   }
 }
