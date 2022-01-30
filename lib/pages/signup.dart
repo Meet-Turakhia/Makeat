@@ -55,10 +55,10 @@ class _SignUpState extends State<SignUp> {
                 width: MediaQuery.of(context).size.width * 0.90,
                 child: Form(
                   key: formkey,
-                  autovalidateMode: AutovalidateMode.always,
                   child: Column(
                     children: <Widget>[
                       TextFormField(
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
                         keyboardType: TextInputType.emailAddress,
                         decoration: InputDecoration(
                           floatingLabelStyle: TextStyle(color: Colors.black),
@@ -90,6 +90,7 @@ class _SignUpState extends State<SignUp> {
                       Padding(
                         padding: const EdgeInsets.symmetric(vertical: 15.0),
                         child: TextFormField(
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
                           obscureText: isHidden,
                           keyboardType: TextInputType.text,
                           decoration: InputDecoration(
