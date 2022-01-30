@@ -20,14 +20,7 @@ class SignUp extends StatefulWidget {
 class _SignUpState extends State<SignUp> {
   late String email;
   late String password;
-  bool isHidden = true;
   GlobalKey<FormState> formkey = GlobalKey<FormState>();
-
-  void togglePasswordView() {
-    setState(() {
-      isHidden = !isHidden;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -88,10 +81,10 @@ class _SignUpState extends State<SignUp> {
                         },
                       ),
                       Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 15.0),
+                        padding: const EdgeInsets.only(top: 15.0),
                         child: TextFormField(
                           autovalidateMode: AutovalidateMode.onUserInteraction,
-                          obscureText: isHidden,
+                          obscureText: true,
                           keyboardType: TextInputType.text,
                           decoration: InputDecoration(
                             floatingLabelStyle: TextStyle(
@@ -111,14 +104,37 @@ class _SignUpState extends State<SignUp> {
                               Icons.vpn_key,
                               color: Color(0xff3BB143),
                             ),
-                            suffixIcon: InkWell(
-                              onTap: togglePasswordView,
-                              child: Icon(
-                                isHidden
-                                    ? Icons.visibility
-                                    : Icons.visibility_off,
+                          ),
+                          validator: MultiValidator([
+                            RequiredValidator(errorText: "Required"),
+                            MinLengthValidator(8,
+                                errorText: "Minimum 8 Characters are Required"),
+                          ]),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 15.0),
+                        child: TextFormField(
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
+                          obscureText: true,
+                          keyboardType: TextInputType.text,
+                          decoration: InputDecoration(
+                            floatingLabelStyle: TextStyle(
+                              color: Colors.black,
+                            ),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
                                 color: Color(0xff3BB143),
                               ),
+                            ),
+                            labelText: "Confirm Password",
+                            hintText: "Confirm Your Password",
+                            prefixIcon: Icon(
+                              Icons.vpn_key,
+                              color: Color(0xff3BB143),
                             ),
                           ),
                           validator: MultiValidator([
