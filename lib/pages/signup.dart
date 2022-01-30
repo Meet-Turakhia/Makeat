@@ -9,6 +9,8 @@ import "package:form_field_validator/form_field_validator.dart";
 
 var mfont = GoogleFonts.ubuntu(color: Colors.black, fontSize: 15.0);
 var mfontw = GoogleFonts.ubuntu(color: Colors.white, fontSize: 15.0);
+var mfontl = GoogleFonts.ubuntu(fontSize: 17.0);
+var mfontwl = GoogleFonts.ubuntu(fontSize: 17.0);
 
 class SignUp extends StatefulWidget {
   const SignUp({Key? key}) : super(key: key);
@@ -71,8 +73,12 @@ class _SignUpState extends State<SignUp> {
                               color: Color(0xff3BB143),
                             ),
                           ),
-                          labelText: "Email",
+                          label: Text(
+                            "Email",
+                            style: mfontl,
+                          ),
                           hintText: "Enter Your Email",
+                          hintStyle: mfontl,
                           prefixIcon: Icon(
                             Icons.mail,
                             color: Color(0xff3BB143),
@@ -107,8 +113,12 @@ class _SignUpState extends State<SignUp> {
                                 color: Color(0xff3BB143),
                               ),
                             ),
-                            labelText: "Password",
+                            label: Text(
+                              "Password",
+                              style: mfontl,
+                            ),
                             hintText: "Enter Your Password",
+                            hintStyle: mfontl,
                             prefixIcon: Icon(
                               Icons.vpn_key,
                               color: Color(0xff3BB143),
@@ -136,8 +146,12 @@ class _SignUpState extends State<SignUp> {
                                 color: Color(0xff3BB143),
                               ),
                             ),
-                            labelText: "Confirm Password",
+                            label: Text(
+                              "Confirm Password",
+                              style: mfontl,
+                            ),
                             hintText: "Confirm Your Password",
+                            hintStyle: mfontl,
                             prefixIcon: Icon(
                               Icons.lock_rounded,
                               color: Color(0xff3BB143),
@@ -205,7 +219,9 @@ class _SignUpState extends State<SignUp> {
                         User? user = FirebaseAuth.instance.currentUser;
                         Navigator.of(context).pushReplacement(
                           MaterialPageRoute(
-                            builder: (context) => LoginPage(uid: user!.uid,),
+                            builder: (context) => LoginPage(
+                              uid: user!.uid,
+                            ),
                           ),
                         );
                       }
