@@ -9,6 +9,8 @@ import "../controllers/authentications.dart";
 
 var mfont = GoogleFonts.ubuntu(color: Colors.black, fontSize: 15.0);
 var mfontw = GoogleFonts.ubuntu(color: Colors.white, fontSize: 15.0);
+var mfontl = GoogleFonts.ubuntu(fontSize: 15.0);
+var mfontwl = GoogleFonts.ubuntu(fontSize: 15.0);
 
 class LogIn extends StatefulWidget {
   const LogIn({Key? key}) : super(key: key);
@@ -70,8 +72,12 @@ class _LogInState extends State<LogIn> {
                               color: Color(0xff3BB143),
                             ),
                           ),
-                          labelText: "Email",
+                          label: Text(
+                            "Email",
+                            style: mfontl,
+                          ),
                           hintText: "Enter Your Email",
+                          hintStyle: mfontl,
                           prefixIcon: Icon(
                             Icons.mail,
                             color: Color(0xff3BB143),
@@ -105,8 +111,12 @@ class _LogInState extends State<LogIn> {
                                 color: Color(0xff3BB143),
                               ),
                             ),
-                            labelText: "Password",
+                            label: Text(
+                              "Password",
+                              style: mfontl,
+                            ),
                             hintText: "Enter Your Password",
+                            hintStyle: mfontl,
                             prefixIcon: Icon(
                               Icons.vpn_key,
                               color: Color(0xff3BB143),
@@ -141,7 +151,8 @@ class _LogInState extends State<LogIn> {
                               User? user = FirebaseAuth.instance.currentUser;
                               Navigator.of(context).pushReplacement(
                                 MaterialPageRoute(
-                                  builder: (context) => LoginPage(uid: user!.uid),
+                                  builder: (context) =>
+                                      LoginPage(uid: user!.uid),
                                 ),
                               );
                             }
