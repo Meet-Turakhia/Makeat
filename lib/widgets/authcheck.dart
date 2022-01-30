@@ -15,7 +15,7 @@ class _AuthCheckState extends State<AuthCheck> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<User>(
-      future: Future.value(FirebaseAuth.instance.currentUser!),
+      future: Future.value(FirebaseAuth.instance.currentUser),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           User? user = snapshot.data;
