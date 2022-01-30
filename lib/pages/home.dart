@@ -1,5 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 import "package:flutter/material.dart";
+import 'package:makeat_app/controllers/authentications.dart';
+import "login.dart";
 
 class LoginPage extends StatefulWidget {
   static const String routeName = "/login";
@@ -21,6 +23,21 @@ class _LoginPageState extends State<LoginPage> {
     return Scaffold(
         appBar: AppBar(
           title: Text("Login page"),
+          actions: <Widget>[
+            IconButton(
+              icon: Icon(
+                Icons.logout_rounded,
+                color: Colors.white,
+              ),
+              onPressed: () {
+                signOutUser().then((value) {
+                  Navigator.of(context).pushAndRemoveUntil(
+                      MaterialPageRoute(builder: (context) => LogIn()),
+                      (Route<dynamic> route) => false);
+                });
+              },
+            )
+          ],
         ),
         body: Stack(
           fit: StackFit.expand,
