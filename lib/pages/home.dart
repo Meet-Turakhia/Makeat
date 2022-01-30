@@ -4,9 +4,10 @@ import 'package:makeat_app/controllers/authentications.dart';
 import "login.dart";
 
 class LoginPage extends StatefulWidget {
+  final String uid;
   static const String routeName = "/login";
 
-  const LoginPage({Key? key}) : super(key: key);
+  const LoginPage({Key? key, required this.uid}) : super(key: key);
   @override
   _LoginPageState createState() => _LoginPageState();
 }
@@ -22,7 +23,7 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text("Login page"),
+          title: Text(widget.uid),
           actions: <Widget>[
             IconButton(
               icon: Icon(
