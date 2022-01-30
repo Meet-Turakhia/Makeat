@@ -139,7 +139,7 @@ class _SignUpState extends State<SignUp> {
                             labelText: "Confirm Password",
                             hintText: "Confirm Your Password",
                             prefixIcon: Icon(
-                              Icons.vpn_key,
+                              Icons.lock_rounded,
                               color: Color(0xff3BB143),
                             ),
                           ),
