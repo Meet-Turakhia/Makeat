@@ -20,6 +20,14 @@ class SignUp extends StatefulWidget {
 class _SignUpState extends State<SignUp> {
   late String email;
   late String password;
+  final TextEditingController pass = TextEditingController();
+  final TextEditingController confirmPass = TextEditingController();
+  final passwordValidator = MultiValidator([
+    RequiredValidator(errorText: "Required"),
+    MinLengthValidator(8, errorText: "Minimum 8 Characters are Required"),
+    PatternValidator(r'(?=.*?[#?!@$%^&*-])',
+        errorText: "Passwords must have at least one special character")
+  ]);
   GlobalKey<FormState> formkey = GlobalKey<FormState>();
 
   @override
@@ -83,6 +91,7 @@ class _SignUpState extends State<SignUp> {
                       Padding(
                         padding: const EdgeInsets.only(top: 15.0),
                         child: TextFormField(
+                          controller: pass,
                           autovalidateMode: AutovalidateMode.onUserInteraction,
                           obscureText: true,
                           keyboardType: TextInputType.text,
@@ -105,16 +114,13 @@ class _SignUpState extends State<SignUp> {
                               color: Color(0xff3BB143),
                             ),
                           ),
-                          validator: MultiValidator([
-                            RequiredValidator(errorText: "Required"),
-                            MinLengthValidator(8,
-                                errorText: "Minimum 8 Characters are Required"),
-                          ]),
+                          validator: passwordValidator,
                         ),
                       ),
                       Padding(
                         padding: const EdgeInsets.symmetric(vertical: 15.0),
                         child: TextFormField(
+                          controller: confirmPass,
                           autovalidateMode: AutovalidateMode.onUserInteraction,
                           obscureText: true,
                           keyboardType: TextInputType.text,
@@ -137,11 +143,14 @@ class _SignUpState extends State<SignUp> {
                               color: Color(0xff3BB143),
                             ),
                           ),
-                          validator: MultiValidator([
-                            RequiredValidator(errorText: "Required"),
-                            MinLengthValidator(8,
-                                errorText: "Minimum 8 Characters are Required"),
-                          ]),
+                          validator: (val) {
+                            if (val!.isEmpty) {
+                              return "Required";
+                            }
+                            if (pass.text != val) {
+                              return "Passwords do not match";
+                            }
+                          },
                           onChanged: (val) {
                             password = val;
                           },
