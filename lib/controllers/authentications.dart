@@ -18,12 +18,14 @@ Future<bool> googleSignIn() async {
           accessToken: googleSignInAuthentication.accessToken);
       try {
         await auth.signInWithCredential(credential);
+        popupMessage("Login Successful!");
         return Future.value(true);
       } on FirebaseAuthException catch (e) {
         popupMessage(e.code);
         return Future.value(false);
       }
     } else {
+      popupMessage("Some Error Occured!");
       return Future.value(false);
     }
   } on PlatformException catch (e) {
@@ -60,5 +62,6 @@ Future<bool> signOutUser() async {
     await googleSignInInstance.disconnect();
   }
   await auth.signOut();
+  popupMessage("Logout Successful!");
   return Future.value(true);
 }
