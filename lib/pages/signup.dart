@@ -199,12 +199,15 @@ class _SignUpState extends State<SignUp> {
                 children: [
                   MaterialButton(
                     padding: EdgeInsets.zero,
-                    onPressed: () {
-                      googleSignIn().whenComplete(
-                        () => MaterialPageRoute(
-                          builder: (context) => LoginPage(),
-                        ),
-                      );
+                    onPressed: () async {
+                      bool isUserPresent = await googleSignIn();
+                      if (isUserPresent) {
+                        Navigator.of(context).pushReplacement(
+                          MaterialPageRoute(
+                            builder: (context) => LoginPage(),
+                          ),
+                        );
+                      }
                     },
                     child: Image(
                       image: AssetImage('assets/icons/googleicon.png'),
