@@ -1,7 +1,6 @@
 // ignore_for_file: prefer_const_constructors
 import "package:flutter/material.dart";
 import 'package:flutter/services.dart';
-import 'package:makeat_app/widgets/authcheck.dart';
 import 'package:makeat_app/widgets/splashscreen.dart';
 import "package:cloud_firestore/cloud_firestore.dart";
 import "package:firebase_core/firebase_core.dart";
@@ -19,7 +18,7 @@ Future<void> main() async{
             systemOverlayStyle: SystemUiOverlayStyle.light,
           ),
         ),
-        home: AuthCheck(),
+        home: MyApp(),
       ),
     ),
   );
