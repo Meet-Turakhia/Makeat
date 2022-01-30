@@ -58,7 +58,7 @@ Future<bool> signUp(String email, String password) async {
 
 Future<bool> signOutUser() async {
   User? user = auth.currentUser;
-  if (user!.providerData[1].providerId == "google.com") {
+  if (user!.providerData[0].providerId == "google.com") {
     await googleSignInInstance.disconnect();
   }
   await auth.signOut();
