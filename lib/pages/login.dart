@@ -149,11 +149,12 @@ class _LogInState extends State<LogIn> {
                             );
                             if (isUserPresent) {
                               User? user = FirebaseAuth.instance.currentUser;
-                              Navigator.of(context).pushReplacement(
+                              Navigator.of(context).pushAndRemoveUntil(
                                 MaterialPageRoute(
                                   builder: (context) =>
                                       LoginPage(uid: user!.uid),
                                 ),
+                                (Route<dynamic> route) => false,
                               );
                             }
                           }
@@ -188,10 +189,11 @@ class _LogInState extends State<LogIn> {
                       bool isUserPresent = await googleSignIn();
                       if (isUserPresent) {
                         User? user = FirebaseAuth.instance.currentUser;
-                        Navigator.of(context).pushReplacement(
+                        Navigator.of(context).pushAndRemoveUntil(
                           MaterialPageRoute(
                             builder: (context) => LoginPage(uid: user!.uid),
                           ),
+                          (Route<dynamic> route) => false,
                         );
                       }
                     },
