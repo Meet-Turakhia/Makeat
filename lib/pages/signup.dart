@@ -217,12 +217,11 @@ class _SignUpState extends State<SignUp> {
                       bool isUserPresent = await googleSignIn();
                       if (isUserPresent) {
                         User? user = FirebaseAuth.instance.currentUser;
-                        Navigator.of(context).pushReplacement(
+                        Navigator.of(context).pushAndRemoveUntil(
                           MaterialPageRoute(
-                            builder: (context) => LoginPage(
-                              uid: user!.uid,
-                            ),
+                            builder: (context) => LoginPage(uid: user!.uid),
                           ),
+                          (Route<dynamic> route) => false,
                         );
                       }
                     },
