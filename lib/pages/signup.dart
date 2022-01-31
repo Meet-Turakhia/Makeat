@@ -179,10 +179,12 @@ class _SignUpState extends State<SignUp> {
                               password.trim(),
                             );
                             if (isUserCreated) {
-                              Navigator.of(context).pushReplacement(
+                              Navigator.of(context).pushAndRemoveUntil(
                                 MaterialPageRoute(
-                                  builder: (context) => LogIn(),
+                                  builder: (context) =>
+                                      LogIn(),
                                 ),
+                                (Route<dynamic> route) => false,
                               );
                             }
                           }
