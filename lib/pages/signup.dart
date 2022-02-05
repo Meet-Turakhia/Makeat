@@ -221,7 +221,7 @@ class _SignUpState extends State<SignUp> {
                         User? user = FirebaseAuth.instance.currentUser;
                         Navigator.of(context).pushAndRemoveUntil(
                           MaterialPageRoute(
-                            builder: (context) => LoginPage(uid: user!.uid),
+                            builder: (context) => Home(uid: user!.uid),
                           ),
                           (Route<dynamic> route) => false,
                         );
