@@ -19,7 +19,7 @@ class _AuthCheckState extends State<AuthCheck> {
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           User? user = snapshot.data;
-          return LoginPage(uid: user!.uid);
+          return Home(uid: user!.uid);
         } else {
           return LogIn();
         }
