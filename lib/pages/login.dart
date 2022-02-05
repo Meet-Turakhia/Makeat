@@ -151,8 +151,7 @@ class _LogInState extends State<LogIn> {
                               User? user = FirebaseAuth.instance.currentUser;
                               Navigator.of(context).pushAndRemoveUntil(
                                 MaterialPageRoute(
-                                  builder: (context) =>
-                                      LoginPage(uid: user!.uid),
+                                  builder: (context) => Home(uid: user!.uid),
                                 ),
                                 (Route<dynamic> route) => false,
                               );
@@ -191,7 +190,7 @@ class _LogInState extends State<LogIn> {
                         User? user = FirebaseAuth.instance.currentUser;
                         Navigator.of(context).pushAndRemoveUntil(
                           MaterialPageRoute(
-                            builder: (context) => LoginPage(uid: user!.uid),
+                            builder: (context) => Home(uid: user!.uid),
                           ),
                           (Route<dynamic> route) => false,
                         );
