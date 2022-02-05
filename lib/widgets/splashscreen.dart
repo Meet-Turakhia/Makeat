@@ -5,7 +5,6 @@ import 'package:makeat_app/widgets/authcheck.dart';
 // ignore: import_of_legacy_library_into_null_safe
 import "package:splashscreen/splashscreen.dart";
 import "package:google_fonts/google_fonts.dart";
-import "../pages/login.dart";
 
 // splashscreen code starts from here
 class MyApp extends StatefulWidget {
