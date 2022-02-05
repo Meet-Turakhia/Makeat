@@ -6,11 +6,7 @@ import "home.dart";
 import "package:firebase_auth/firebase_auth.dart";
 import "package:form_field_validator/form_field_validator.dart";
 import "../controllers/authentications.dart";
-
-var mfont = GoogleFonts.ubuntu(color: Colors.black, fontSize: 15.0);
-var mfontw = GoogleFonts.ubuntu(color: Colors.white, fontSize: 15.0);
-var mfontl = GoogleFonts.ubuntu(fontSize: 17.0);
-var mfontwl = GoogleFonts.ubuntu(fontSize: 17.0);
+import "../widgets/fonts.dart";
 
 class LogIn extends StatefulWidget {
   const LogIn({Key? key}) : super(key: key);

@@ -6,11 +6,7 @@ import "login.dart";
 import "home.dart";
 import "package:firebase_auth/firebase_auth.dart";
 import "package:form_field_validator/form_field_validator.dart";
-
-var mfont = GoogleFonts.ubuntu(color: Colors.black, fontSize: 15.0);
-var mfontw = GoogleFonts.ubuntu(color: Colors.white, fontSize: 15.0);
-var mfontl = GoogleFonts.ubuntu(fontSize: 17.0);
-var mfontwl = GoogleFonts.ubuntu(fontSize: 17.0);
+import "../widgets/fonts.dart";
 
 class SignUp extends StatefulWidget {
   const SignUp({Key? key}) : super(key: key);
@@ -181,8 +177,7 @@ class _SignUpState extends State<SignUp> {
                             if (isUserCreated) {
                               Navigator.of(context).pushAndRemoveUntil(
                                 MaterialPageRoute(
-                                  builder: (context) =>
-                                      LogIn(),
+                                  builder: (context) => LogIn(),
                                 ),
                                 (Route<dynamic> route) => false,
                               );
