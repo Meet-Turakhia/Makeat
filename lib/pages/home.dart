@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:makeat_app/widgets/searchbar.dart';
+import 'package:makeat_app/widgets/showtoast.dart';
 import "../widgets/bottombar.dart";
 import "../pages/recipe.dart";
 import 'swipecards.dart';
@@ -291,9 +292,18 @@ class _HomeState extends State<Home> {
                           },
                         );
                       } else if (snapshot.hasError) {
-                        return CircularProgressIndicator();
+                        popupMessage("Some Error Occured, Retrying.../");
+                        return Center(
+                          child: CircularProgressIndicator(
+                            color: Color(0xff3BB143),
+                          ),
+                        );
                       } else {
-                        return CircularProgressIndicator();
+                        return Center(
+                          child: CircularProgressIndicator(
+                            color: Color(0xff3BB143),
+                          ),
+                        );
                       }
                     },
                   ),
