@@ -19,6 +19,8 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   final db = FirebaseFirestore.instance;
+  CollectionReference recipeStream =
+      FirebaseFirestore.instance.collection("recipes");
   List<String> cardimg = [
     "assets/food2.jpg",
     "assets/food3.jpg",
@@ -113,14 +115,16 @@ class _HomeState extends State<Home> {
                 Container(
                   padding: EdgeInsets.only(top: 60),
                   child: StreamBuilder<QuerySnapshot>(
-                    stream: db.collection("recipes").snapshots(),
+                    stream: recipeStream.limit(15).snapshots(),
                     builder: (context, snapshot) {
                       if (snapshot.hasData) {
                         return ListView.builder(
                           // padding: EdgeInsets.only(top: 80),
                           physics: const BouncingScrollPhysics(),
-                          itemCount: cardimg.length,
+                          itemCount: snapshot.data!.docs.length,
                           itemBuilder: (context, index) {
+                            DocumentSnapshot ds = snapshot.data!.docs[index];
+                            String time = ds["TotalTime"].split("PT")[1];
                             return CupertinoButton(
                               child: Container(
                                 height: 250,
@@ -131,7 +135,7 @@ class _HomeState extends State<Home> {
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Text(title[index],
+                                    Text(ds["Name"],
                                         style: GoogleFonts.ubuntu(
                                           textStyle: TextStyle(
                                               background:
@@ -168,7 +172,7 @@ class _HomeState extends State<Home> {
                                         scrollDirection: Axis.horizontal,
                                         physics: const BouncingScrollPhysics(),
                                         children: [
-                                          Text("${cal[index]} Calories",
+                                          Text("${ds['Calories']} Calories",
                                               textAlign: TextAlign.start,
                                               style: GoogleFonts.ubuntu(
                                                 textStyle: TextStyle(
@@ -197,7 +201,7 @@ class _HomeState extends State<Home> {
                                           Padding(
                                             padding: EdgeInsets.all(12),
                                           ),
-                                          Text("4H45M Time",
+                                          Text("$time Time",
                                               textAlign: TextAlign.start,
                                               style: GoogleFonts.ubuntu(
                                                 textStyle: TextStyle(
@@ -226,7 +230,7 @@ class _HomeState extends State<Home> {
                                           Padding(
                                             padding: EdgeInsets.all(12),
                                           ),
-                                          Text("4.5 Rating",
+                                          Text("${ds['AggregatedRating']} Rating",
                                               textAlign: TextAlign.start,
                                               style: GoogleFonts.ubuntu(
                                                 textStyle: TextStyle(
@@ -264,7 +268,7 @@ class _HomeState extends State<Home> {
                                   //   colors: [Colors.black, Colors.white],
                                   // ),
                                   image: DecorationImage(
-                                    image: AssetImage(cardimg[index]),
+                                    image: AssetImage("assets/logo/makeat_transparent.png"),
                                     fit: BoxFit.cover,
                                   ),
                                   borderRadius: BorderRadius.circular(10),
