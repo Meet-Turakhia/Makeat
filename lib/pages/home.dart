@@ -78,6 +78,7 @@ class _HomeState extends State<Home> {
           .get();
     }
     if (querySnapshot.docs.isEmpty) {
+      popupMessage("No More Recipes!");
       setLoading(false);
       return;
     }
