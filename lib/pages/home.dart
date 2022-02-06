@@ -4,7 +4,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:makeat_app/widgets/searchbar.dart';
 import "../widgets/bottombar.dart";
-import "../widgets/fonts.dart";
 import "../pages/recipe.dart";
 import 'swipecards.dart';
 import "package:cloud_firestore/cloud_firestore.dart";
