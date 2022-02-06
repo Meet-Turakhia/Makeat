@@ -83,7 +83,7 @@ class _HomeState extends State<Home> {
                 actions: [
                   Padding(
                     padding: EdgeInsets.fromLTRB(2, 2, 10, 2),
-                    child: Image.asset('assets/makeat_transparent.png'),
+                    child: Image.asset('assets/logo/makeat_transparent.png'),
                   ),
                   // Image.asset('assets/makeat_transparent.png', scale: 15),
                 ],
