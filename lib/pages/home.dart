@@ -1,4 +1,5 @@
 // ignore_for_file: prefer_const_constructors
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -21,6 +22,75 @@ class _HomeState extends State<Home> {
   final db = FirebaseFirestore.instance;
   CollectionReference recipeStream =
       FirebaseFirestore.instance.collection("recipes");
+
+  List<DocumentSnapshot> recipes = [];
+  bool isLoading = false;
+  bool hasMore = true;
+  bool firstCall = true;
+  int documentLimit = 15;
+  late DocumentSnapshot lastDocument;
+  ScrollController scrollController = ScrollController();
+
+  StreamController<List<DocumentSnapshot>> controller =
+      StreamController<List<DocumentSnapshot>>();
+
+  Stream<List<DocumentSnapshot>> get streamController => controller.stream;
+
+  @override
+  void initState() {
+    super.initState();
+    getRecipes();
+    scrollController.addListener(() {
+      double maxScroll = scrollController.position.maxScrollExtent;
+      double currentScroll = scrollController.position.pixels;
+      double delta = MediaQuery.of(context).size.height * 0.20;
+      if (maxScroll - currentScroll <= delta) {
+        getRecipes();
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    controller.close();
+    super.dispose();
+  }
+
+  getRecipes() async {
+    if (isLoading) {
+      return;
+    }
+    setState(() {
+      isLoading = true;
+    });
+    QuerySnapshot querySnapshot;
+    if (firstCall == true) {
+      querySnapshot = await db.collection("recipes").limit(documentLimit).get();
+      firstCall = false;
+      // ignore: unnecessary_null_comparison
+    } else if (lastDocument == null) {
+      querySnapshot = await db.collection("recipes").limit(documentLimit).get();
+    } else {
+      querySnapshot = await db
+          .collection("recipes")
+          .startAfterDocument(lastDocument)
+          .limit(documentLimit)
+          .get();
+    }
+    if (querySnapshot.docs.isEmpty) {
+      setLoading(false);
+      return;
+    }
+    lastDocument = querySnapshot.docs[querySnapshot.docs.length - 1];
+    recipes.addAll(querySnapshot.docs);
+    controller.sink.add(recipes);
+    setLoading(false);
+  }
+
+  void setLoading([bool value = false]) => setState(() {
+        isLoading = value;
+      });
+
   List<String> cardimg = [
     "assets/food2.jpg",
     "assets/food3.jpg",
@@ -114,16 +184,17 @@ class _HomeState extends State<Home> {
                 // buildBottomNavigationBar(),
                 Container(
                   padding: EdgeInsets.only(top: 60),
-                  child: StreamBuilder<QuerySnapshot>(
-                    stream: recipeStream.limit(15).snapshots(),
+                  child: StreamBuilder<List<DocumentSnapshot>>(
+                    stream: streamController,
                     builder: (context, snapshot) {
-                      if (snapshot.hasData) {
+                      if (snapshot.hasData && snapshot.data!.isNotEmpty) {
                         return ListView.builder(
                           // padding: EdgeInsets.only(top: 80),
+                          controller: scrollController,
                           physics: const BouncingScrollPhysics(),
-                          itemCount: snapshot.data!.docs.length,
+                          itemCount: snapshot.data!.length,
                           itemBuilder: (context, index) {
-                            DocumentSnapshot ds = snapshot.data!.docs[index];
+                            DocumentSnapshot ds = snapshot.data![index];
                             String time = ds["TotalTime"].split("PT")[1];
                             ImageProvider recipeImage;
                             if (ds["Images"] == "character(0)") {
@@ -321,6 +392,20 @@ class _HomeState extends State<Home> {
                     },
                   ),
                 ),
+                isLoading
+                    ? Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: const [
+                          Center(
+                            child: CircularProgressIndicator(
+                              color: Color(0xff3BB143),
+                            ),
+                          ),
+                        ],
+                      )
+                    : Container(),
                 buildFloatingSearchBar(),
               ],
             ),
