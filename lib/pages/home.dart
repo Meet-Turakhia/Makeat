@@ -125,6 +125,14 @@ class _HomeState extends State<Home> {
                           itemBuilder: (context, index) {
                             DocumentSnapshot ds = snapshot.data!.docs[index];
                             String time = ds["TotalTime"].split("PT")[1];
+                            ImageProvider recipeImage;
+                            if (ds["Images"] == "character(0)") {
+                              recipeImage = AssetImage(
+                                  "assets/images/generic_image2.jpg");
+                            } else {
+                              recipeImage =
+                                  NetworkImage("${ds['Images'].split('"')[1]}");
+                            }
                             return CupertinoButton(
                               child: Container(
                                 height: 250,
@@ -230,7 +238,8 @@ class _HomeState extends State<Home> {
                                           Padding(
                                             padding: EdgeInsets.all(12),
                                           ),
-                                          Text("${ds['AggregatedRating']} Rating",
+                                          Text(
+                                              "${ds['AggregatedRating']} Rating",
                                               textAlign: TextAlign.start,
                                               style: GoogleFonts.ubuntu(
                                                 textStyle: TextStyle(
@@ -268,7 +277,7 @@ class _HomeState extends State<Home> {
                                   //   colors: [Colors.black, Colors.white],
                                   // ),
                                   image: DecorationImage(
-                                    image: AssetImage("assets/logo/makeat_transparent.png"),
+                                    image: recipeImage,
                                     fit: BoxFit.cover,
                                   ),
                                   borderRadius: BorderRadius.circular(10),
