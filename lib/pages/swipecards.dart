@@ -283,13 +283,13 @@ class _TinderswiperState extends State<Tinderswiper>
                         } else if (orientation.toString() ==
                             'CardSwipeOrientation.RIGHT') {
                           //Card is RIGHT swiping
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  Recipe(tinderimages[index], title[index]),
-                            ),
-                          );
+                          // Navigator.push(
+                          //   context,
+                          //   MaterialPageRoute(
+                          //     builder: (context) =>
+                          //         Recipe(tinderimages[index], title[index]),
+                          //   ),
+                          // );
                         }
                         // print("$index ${orientation.toString()}");
                       },
