@@ -96,25 +96,6 @@ class _HomeState extends State<Home> {
         isLoading = value;
       });
 
-  List<String> cardimg = [
-    "assets/food2.jpg",
-    "assets/food3.jpg",
-    "assets/food4.jpg",
-    "assets/food1.jpg",
-  ];
-  List<String> title = [
-    "Paneer Tikka",
-    "Farmhouse Pizza",
-    "Noodle",
-    "Pav Bhaji",
-  ];
-  List<String> cal = [
-    "170.9",
-    "1110.7",
-    "437.9",
-    "895.5",
-  ];
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -378,7 +359,7 @@ class _HomeState extends State<Home> {
                                     context,
                                     MaterialPageRoute(
                                       builder: (context) =>
-                                          Recipe(cardimg[index], title[index]),
+                                          Recipe(uid: widget.uid, recipeId: ds.id),
                                     ),
                                   );
                                 },
