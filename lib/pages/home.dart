@@ -60,17 +60,21 @@ class _HomeState extends State<Home> {
     if (isLoading) {
       return;
     }
-    setState(() {
-      isLoading = true;
-    });
     QuerySnapshot querySnapshot;
     if (firstCall == true) {
       querySnapshot = await db.collection("recipes").limit(documentLimit).get();
       firstCall = false;
       // ignore: unnecessary_null_comparison
     } else if (lastDocument == null) {
+      setState(() {
+        isLoading = true;
+      });
       querySnapshot = await db.collection("recipes").limit(documentLimit).get();
     } else {
+      setState(() {
+        isLoading = true;
+      });
+      await Future.delayed(const Duration(seconds: 100), () {});
       querySnapshot = await db
           .collection("recipes")
           .startAfterDocument(lastDocument)
@@ -193,187 +197,199 @@ class _HomeState extends State<Home> {
                           // padding: EdgeInsets.only(top: 80),
                           controller: scrollController,
                           physics: const BouncingScrollPhysics(),
-                          itemCount: snapshot.data!.length,
+                          itemCount: snapshot.data!.length + 1,
                           itemBuilder: (context, index) {
-                            DocumentSnapshot ds = snapshot.data![index];
-                            String time = ds["TotalTime"].split("PT")[1];
-                            ImageProvider recipeImage;
-                            if (ds["Images"] == "character(0)") {
-                              recipeImage = AssetImage(
-                                  "assets/images/generic_image2.jpg");
-                            } else {
-                              recipeImage =
-                                  NetworkImage("${ds['Images'].split('"')[1]}");
-                            }
-                            return CupertinoButton(
-                              child: Container(
-                                height: 250,
-                                width: 400,
-                                margin: EdgeInsets.fromLTRB(8, 3, 8, 3),
-                                padding: EdgeInsets.fromLTRB(15, 15, 15, 15),
-                                child: Column(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(ds["Name"],
-                                        style: GoogleFonts.ubuntu(
-                                          textStyle: TextStyle(
-                                              background:
-                                                  Paint() //text black bg
-                                                    ..strokeWidth = 21.0
-                                                    ..color = Colors.black54
-                                                    ..style =
-                                                        PaintingStyle.stroke
-                                                    ..strokeJoin =
-                                                        StrokeJoin.round),
-                                          color: Colors.white,
-                                          fontSize: 17,
-                                          fontWeight: FontWeight.w600,
-                                          shadows: <Shadow>[
-                                            //text shadow of card
-                                            Shadow(
-                                              offset: Offset(2, 2.0),
-                                              blurRadius: 30.0,
-                                              color: Colors.black,
+                            if (index < snapshot.data!.length) {
+                              DocumentSnapshot ds = snapshot.data![index];
+                              String time = ds["TotalTime"].split("PT")[1];
+                              ImageProvider recipeImage;
+                              if (ds["Images"] == "character(0)") {
+                                recipeImage = AssetImage(
+                                    "assets/images/generic_image2.jpg");
+                              } else {
+                                recipeImage = NetworkImage(
+                                    "${ds['Images'].split('"')[1]}");
+                              }
+                              return CupertinoButton(
+                                child: Container(
+                                  height: 250,
+                                  width: 400,
+                                  margin: EdgeInsets.fromLTRB(8, 3, 8, 3),
+                                  padding: EdgeInsets.fromLTRB(15, 15, 15, 15),
+                                  child: Column(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(ds["Name"],
+                                          style: GoogleFonts.ubuntu(
+                                            textStyle: TextStyle(
+                                                background:
+                                                    Paint() //text black bg
+                                                      ..strokeWidth = 21.0
+                                                      ..color = Colors.black54
+                                                      ..style =
+                                                          PaintingStyle.stroke
+                                                      ..strokeJoin =
+                                                          StrokeJoin.round),
+                                            color: Colors.white,
+                                            fontSize: 17,
+                                            fontWeight: FontWeight.w600,
+                                            shadows: <Shadow>[
+                                              //text shadow of card
+                                              Shadow(
+                                                offset: Offset(2, 2.0),
+                                                blurRadius: 30.0,
+                                                color: Colors.black,
+                                              ),
+                                              Shadow(
+                                                offset: Offset(2, 2.0),
+                                                blurRadius: 30.0,
+                                                color: Colors.black,
+                                              ),
+                                            ],
+                                          )),
+                                      SizedBox(
+                                        // color: Colors.red,
+                                        height: 35,
+                                        child: ListView(
+                                          padding: EdgeInsets.all(10),
+                                          shrinkWrap: true,
+                                          scrollDirection: Axis.horizontal,
+                                          physics:
+                                              const BouncingScrollPhysics(),
+                                          children: [
+                                            Text("${ds['Calories']} Calories",
+                                                textAlign: TextAlign.start,
+                                                style: GoogleFonts.ubuntu(
+                                                  textStyle: TextStyle(
+                                                      background:
+                                                          Paint() //text black bg
+                                                            ..strokeWidth = 17.0
+                                                            ..color =
+                                                                Colors.white70
+                                                            ..style =
+                                                                PaintingStyle
+                                                                    .stroke
+                                                            ..strokeJoin =
+                                                                StrokeJoin
+                                                                    .round),
+                                                  color: Colors.black,
+                                                  fontSize: 13,
+                                                  fontWeight: FontWeight.w500,
+                                                  shadows: <Shadow>[
+                                                    //text shadow of card
+                                                    Shadow(
+                                                      offset: Offset(2, 2.0),
+                                                      blurRadius: 20.0,
+                                                      color: Colors.white,
+                                                    ),
+                                                  ],
+                                                )),
+                                            Padding(
+                                              padding: EdgeInsets.all(12),
                                             ),
-                                            Shadow(
-                                              offset: Offset(2, 2.0),
-                                              blurRadius: 30.0,
-                                              color: Colors.black,
+                                            Text("$time Time",
+                                                textAlign: TextAlign.start,
+                                                style: GoogleFonts.ubuntu(
+                                                  textStyle: TextStyle(
+                                                      background:
+                                                          Paint() //text black bg
+                                                            ..strokeWidth = 17.0
+                                                            ..color =
+                                                                Colors.white70
+                                                            ..style =
+                                                                PaintingStyle
+                                                                    .stroke
+                                                            ..strokeJoin =
+                                                                StrokeJoin
+                                                                    .round),
+                                                  color: Colors.black,
+                                                  fontSize: 13,
+                                                  fontWeight: FontWeight.w500,
+                                                  shadows: <Shadow>[
+                                                    //text shadow of card
+                                                    Shadow(
+                                                      offset: Offset(2, 2.0),
+                                                      blurRadius: 20.0,
+                                                      color: Colors.white,
+                                                    ),
+                                                  ],
+                                                )),
+                                            Padding(
+                                              padding: EdgeInsets.all(12),
                                             ),
+                                            Text(
+                                                "${ds['AggregatedRating']} Rating",
+                                                textAlign: TextAlign.start,
+                                                style: GoogleFonts.ubuntu(
+                                                  textStyle: TextStyle(
+                                                      background:
+                                                          Paint() //text black bg
+                                                            ..strokeWidth = 17.0
+                                                            ..color =
+                                                                Colors.white70
+                                                            ..style =
+                                                                PaintingStyle
+                                                                    .stroke
+                                                            ..strokeJoin =
+                                                                StrokeJoin
+                                                                    .round),
+                                                  color: Colors.black,
+                                                  fontSize: 13,
+                                                  fontWeight: FontWeight.w500,
+                                                  shadows: <Shadow>[
+                                                    //text shadow of card
+                                                    Shadow(
+                                                      offset: Offset(2, 2.0),
+                                                      blurRadius: 20.0,
+                                                      color: Colors.white,
+                                                    ),
+                                                  ],
+                                                )),
                                           ],
-                                        )),
-                                    SizedBox(
-                                      // color: Colors.red,
-                                      height: 35,
-                                      child: ListView(
-                                        padding: EdgeInsets.all(10),
-                                        shrinkWrap: true,
-                                        scrollDirection: Axis.horizontal,
-                                        physics: const BouncingScrollPhysics(),
-                                        children: [
-                                          Text("${ds['Calories']} Calories",
-                                              textAlign: TextAlign.start,
-                                              style: GoogleFonts.ubuntu(
-                                                textStyle: TextStyle(
-                                                    background:
-                                                        Paint() //text black bg
-                                                          ..strokeWidth = 17.0
-                                                          ..color =
-                                                              Colors.white70
-                                                          ..style =
-                                                              PaintingStyle
-                                                                  .stroke
-                                                          ..strokeJoin =
-                                                              StrokeJoin.round),
-                                                color: Colors.black,
-                                                fontSize: 13,
-                                                fontWeight: FontWeight.w500,
-                                                shadows: <Shadow>[
-                                                  //text shadow of card
-                                                  Shadow(
-                                                    offset: Offset(2, 2.0),
-                                                    blurRadius: 20.0,
-                                                    color: Colors.white,
-                                                  ),
-                                                ],
-                                              )),
-                                          Padding(
-                                            padding: EdgeInsets.all(12),
-                                          ),
-                                          Text("$time Time",
-                                              textAlign: TextAlign.start,
-                                              style: GoogleFonts.ubuntu(
-                                                textStyle: TextStyle(
-                                                    background:
-                                                        Paint() //text black bg
-                                                          ..strokeWidth = 17.0
-                                                          ..color =
-                                                              Colors.white70
-                                                          ..style =
-                                                              PaintingStyle
-                                                                  .stroke
-                                                          ..strokeJoin =
-                                                              StrokeJoin.round),
-                                                color: Colors.black,
-                                                fontSize: 13,
-                                                fontWeight: FontWeight.w500,
-                                                shadows: <Shadow>[
-                                                  //text shadow of card
-                                                  Shadow(
-                                                    offset: Offset(2, 2.0),
-                                                    blurRadius: 20.0,
-                                                    color: Colors.white,
-                                                  ),
-                                                ],
-                                              )),
-                                          Padding(
-                                            padding: EdgeInsets.all(12),
-                                          ),
-                                          Text(
-                                              "${ds['AggregatedRating']} Rating",
-                                              textAlign: TextAlign.start,
-                                              style: GoogleFonts.ubuntu(
-                                                textStyle: TextStyle(
-                                                    background:
-                                                        Paint() //text black bg
-                                                          ..strokeWidth = 17.0
-                                                          ..color =
-                                                              Colors.white70
-                                                          ..style =
-                                                              PaintingStyle
-                                                                  .stroke
-                                                          ..strokeJoin =
-                                                              StrokeJoin.round),
-                                                color: Colors.black,
-                                                fontSize: 13,
-                                                fontWeight: FontWeight.w500,
-                                                shadows: <Shadow>[
-                                                  //text shadow of card
-                                                  Shadow(
-                                                    offset: Offset(2, 2.0),
-                                                    blurRadius: 20.0,
-                                                    color: Colors.white,
-                                                  ),
-                                                ],
-                                              )),
-                                        ],
+                                        ),
                                       ),
-                                    ),
-                                  ],
-                                ),
-                                decoration: BoxDecoration(
-                                  // gradient: LinearGradient(
-                                  //   begin: Alignment.topCenter,
-                                  //   end: Alignment.center,
-                                  //   colors: [Colors.black, Colors.white],
-                                  // ),
-                                  image: DecorationImage(
-                                    image: recipeImage,
-                                    fit: BoxFit.cover,
+                                    ],
                                   ),
-                                  borderRadius: BorderRadius.circular(10),
-                                  boxShadow: const [
-                                    BoxShadow(
-                                      color: Colors.black45,
-                                      spreadRadius: 3,
-                                      blurRadius: 10,
-                                      offset: Offset(3.5,
-                                          7), // changes position of card shadow
+                                  decoration: BoxDecoration(
+                                    // gradient: LinearGradient(
+                                    //   begin: Alignment.topCenter,
+                                    //   end: Alignment.center,
+                                    //   colors: [Colors.black, Colors.white],
+                                    // ),
+                                    image: DecorationImage(
+                                      image: recipeImage,
+                                      fit: BoxFit.cover,
                                     ),
-                                  ],
-                                ),
-                              ),
-                              onPressed: () async {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        Recipe(cardimg[index], title[index]),
+                                    borderRadius: BorderRadius.circular(10),
+                                    boxShadow: const [
+                                      BoxShadow(
+                                        color: Colors.black45,
+                                        spreadRadius: 3,
+                                        blurRadius: 10,
+                                        offset: Offset(3.5,
+                                            7), // changes position of card shadow
+                                      ),
+                                    ],
                                   ),
-                                );
-                              },
-                            );
+                                ),
+                                onPressed: () async {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          Recipe(cardimg[index], title[index]),
+                                    ),
+                                  );
+                                },
+                              );
+                            } else {
+                              return Padding(
+                                padding: EdgeInsets.symmetric(
+                                  vertical: 32.0,
+                                ),
+                              );
+                            }
                           },
                         );
                       } else if (snapshot.hasError) {
@@ -394,18 +410,11 @@ class _HomeState extends State<Home> {
                   ),
                 ),
                 isLoading
-                    ? Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: const [
-                          Center(
-                            child: CircularProgressIndicator(
-                              color: Color(0xff3BB143),
-                            ),
-                          ),
-                        ],
-                      )
+                    ? Center(
+                      child: CircularProgressIndicator(
+                        color: Color(0xff3BB143),
+                      ),
+                    )
                     : Container(),
                 buildFloatingSearchBar(),
               ],
