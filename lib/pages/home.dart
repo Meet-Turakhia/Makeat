@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:makeat_app/widgets/fonts.dart';
 import 'package:makeat_app/widgets/searchbar.dart';
 import 'package:makeat_app/widgets/showtoast.dart';
 import "../widgets/bottombar.dart";
@@ -385,9 +386,22 @@ class _HomeState extends State<Home> {
                               );
                             } else {
                               return Padding(
-                                padding: EdgeInsets.symmetric(
-                                  vertical: 32.0,
+                                padding: EdgeInsets.only(
+                                  bottom: 60.0,
+                                  top: 32.0,
                                 ),
+                                child: isLoading
+                                    ? Center(
+                                        child: CircularProgressIndicator(
+                                          color: Color(0xff3BB143),
+                                        ),
+                                      )
+                                    : Center(
+                                        child: Text(
+                                          "No More Recipes!",
+                                          style: mfontg15,
+                                        ),
+                                      ),
                               );
                             }
                           },
@@ -409,13 +423,6 @@ class _HomeState extends State<Home> {
                     },
                   ),
                 ),
-                isLoading
-                    ? Center(
-                      child: CircularProgressIndicator(
-                        color: Color(0xff3BB143),
-                      ),
-                    )
-                    : Container(),
                 buildFloatingSearchBar(),
               ],
             ),
