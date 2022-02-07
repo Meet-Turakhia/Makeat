@@ -384,7 +384,7 @@ class _HomeState extends State<Home> {
                           ),
                         );
                       } else {
-                         return Center(
+                        return Center(
                           child: CircularProgressIndicator(
                             color: Color(0xff3BB143),
                           ),
