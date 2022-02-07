@@ -75,7 +75,6 @@ class _HomeState extends State<Home> {
       setState(() {
         isLoading = true;
       });
-      await Future.delayed(const Duration(seconds: 100), () {});
       querySnapshot = await db
           .collection("recipes")
           .startAfterDocument(lastDocument)
