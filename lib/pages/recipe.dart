@@ -96,9 +96,24 @@ class _RecipeState extends State<Recipe> {
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 Map<String, dynamic>? ds = snapshot.data!.data();
-                String totalTime = ds!["TotalTime"].split("PT")[1];
-                String cookTime = ds["CookTime"].split("PT")[1];
-                String prepTime = ds["PrepTime"].split("PT")[1];
+                String totalTime;
+                String cookTime;
+                String prepTime;
+                if (ds!["TotalTime"] != "NA") {
+                  totalTime = ds["TotalTime"].split("PT")[1];
+                } else {
+                  totalTime = "NA";
+                }
+                if (ds["CookTime"] != "NA") {
+                  cookTime = ds["CookTime"].split("PT")[1];
+                } else {
+                  cookTime = "NA";
+                }
+                if (ds["PrepTime"] != "NA") {
+                  prepTime = ds["PrepTime"].split("PT")[1];
+                } else {
+                  prepTime = "NA";
+                }
                 Image recipeImage;
                 if (ds["Images"] == "character(0)") {
                   recipeImage = Image.asset(
