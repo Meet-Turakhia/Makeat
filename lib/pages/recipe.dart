@@ -130,6 +130,20 @@ class _RecipeState extends State<Recipe> {
                     fit: BoxFit.cover,
                   );
                 }
+                RegExp doubleQuotesPattern = RegExp('"([^"]*)"|NA');
+                List<String> ingredients = [];
+                List<String?> ingredientNames = doubleQuotesPattern
+                    .allMatches(ds["RecipeIngredientParts"].toString())
+                    .map((e) => e.group(0))
+                    .toList();
+                List<String?> ingredientQuantities = doubleQuotesPattern
+                    .allMatches(ds["RecipeIngredientQuantities"].toString())
+                    .map((e) => e.group(0))
+                    .toList();
+                for (var i = 0; i < ingredientQuantities.length; i++) {
+                  ingredients.add(
+                      "${ingredientQuantities[i]!.replaceAll('"', '').replaceAll('NA', 'some')} ${ingredientNames[i]!.replaceAll('"', '')}");
+                }
                 return Stack(
                   children: [
                     recipeImage,
