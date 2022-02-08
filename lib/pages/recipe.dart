@@ -664,6 +664,36 @@ class _RecipeState extends State<Recipe> {
                                   ],
                                 ),
                               ),
+                              SizedBox(
+                                height: 5,
+                              ),
+                              Text(
+                                "Ingredients:",
+                                softWrap: true,
+                                style: mfontbl,
+                                textAlign: TextAlign.justify,
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Text(
+                                ingredients.join(", "),
+                                softWrap: true,
+                                style: mfont15,
+                                textAlign: TextAlign.justify,
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Text(
+                                "Instructions:",
+                                softWrap: true,
+                                style: mfontbl,
+                                textAlign: TextAlign.justify,
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
                               Text(
                                 'Lorem ipsum dolor sit amet, consectetur adipiscing elit'
                                 'sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'
