@@ -9,5 +9,13 @@ var mfontw15 = GoogleFonts.ubuntu(color: Colors.white, fontSize: 15.0);
 var mfontg15 = GoogleFonts.ubuntu(color: Color(0xff3BB143), fontSize: 15.0);
 var mfont = GoogleFonts.ubuntu(color: Colors.black, fontSize: 15.0);
 var mfontw = GoogleFonts.ubuntu(color: Colors.white, fontSize: 15.0);
-var mfontl = GoogleFonts.ubuntu(fontSize: 17.0);
-var mfontwl = GoogleFonts.ubuntu(fontSize: 17.0);
+var mfontl = GoogleFonts.ubuntu(color: Colors.black, fontSize: 17.0);
+var mfontwl = GoogleFonts.ubuntu(color: Colors.white, fontSize: 17.0);
+var mfontbl = GoogleFonts.ubuntu(
+    color: Colors.black,
+    fontSize: 17.0,
+    textStyle: TextStyle(fontWeight: FontWeight.bold));
+var mfontwbl = GoogleFonts.ubuntu(
+    color: Colors.white,
+    fontSize: 17.0,
+    textStyle: TextStyle(fontWeight: FontWeight.bold));
