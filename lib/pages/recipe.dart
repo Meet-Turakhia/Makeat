@@ -115,10 +115,7 @@ class _RecipeState extends State<Recipe> {
                               gradient: LinearGradient(
                                 begin: Alignment.bottomCenter,
                                 end: Alignment.topCenter,
-                                colors: const [
-                                  Color(0xff3BB143),
-                                  Colors.white
-                                ],
+                                colors: const [Color(0xff3BB143), Colors.white],
                               ),
                               borderRadius: BorderRadius.circular(20),
                               boxShadow: const [
@@ -132,8 +129,7 @@ class _RecipeState extends State<Recipe> {
                               ],
                             ),
                             child: Column(
-                              mainAxisAlignment:
-                                  MainAxisAlignment.spaceEvenly,
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
                                 ShaderMask(
                                   shaderCallback: (Rect bounds) {
@@ -152,8 +148,7 @@ class _RecipeState extends State<Recipe> {
                                       child: ListView(
                                         shrinkWrap: true,
                                         scrollDirection: Axis.horizontal,
-                                        physics:
-                                            const BouncingScrollPhysics(),
+                                        physics: const BouncingScrollPhysics(),
                                         children: [
                                           Center(
                                               child: Title(
@@ -161,8 +156,7 @@ class _RecipeState extends State<Recipe> {
                                                   child: Text(widget.title,
                                                       textAlign:
                                                           TextAlign.center,
-                                                      style:
-                                                          GoogleFonts.ubuntu(
+                                                      style: GoogleFonts.ubuntu(
                                                         fontSize: 20.0,
                                                         fontWeight:
                                                             FontWeight.bold,
@@ -188,8 +182,7 @@ class _RecipeState extends State<Recipe> {
                                         // mainAxisAlignment: MainAxisAlignment.center,
                                         shrinkWrap: true,
                                         scrollDirection: Axis.horizontal,
-                                        physics:
-                                            const BouncingScrollPhysics(),
+                                        physics: const BouncingScrollPhysics(),
                                         children: [
                                           Column(
                                             mainAxisAlignment:
