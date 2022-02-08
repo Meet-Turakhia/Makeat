@@ -132,6 +132,7 @@ class _RecipeState extends State<Recipe> {
                 }
                 RegExp doubleQuotesPattern = RegExp('"([^"]*)"|NA');
                 List<String> ingredients = [];
+                int ingredientsIteration;
                 List<String?> ingredientNames = doubleQuotesPattern
                     .allMatches(ds["RecipeIngredientParts"].toString())
                     .map((e) => e.group(0))
@@ -140,9 +141,19 @@ class _RecipeState extends State<Recipe> {
                     .allMatches(ds["RecipeIngredientQuantities"].toString())
                     .map((e) => e.group(0))
                     .toList();
-                for (var i = 0; i < ingredientNames.length; i++) {
+                if (ingredientNames.length < ingredientQuantities.length) {
+                  ingredientsIteration = ingredientNames.length;
+                } else {
+                  ingredientsIteration = ingredientQuantities.length;
+                }
+                for (var i = 0; i < ingredientsIteration; i++) {
                   ingredients.add(
                       "${ingredientQuantities[i]!.replaceAll('"', '').replaceAll('NA', 'some')} ${ingredientNames[i]!.replaceAll('"', '')}");
+                }
+                for (var i = ingredientsIteration;
+                    i < ingredientNames.length;
+                    i++) {
+                  ingredients.add(ingredientNames[i].toString().replaceAll('"', ''));
                 }
                 List<String?> instructions = doubleQuotesPattern
                     .allMatches(ds["RecipeInstructions"].toString())
@@ -672,7 +683,7 @@ class _RecipeState extends State<Recipe> {
                                 height: 5,
                               ),
                               Text(
-                                "Ingredients:",
+                                "Ingredients",
                                 softWrap: true,
                                 style: mfontbl,
                                 textAlign: TextAlign.justify,
@@ -690,7 +701,7 @@ class _RecipeState extends State<Recipe> {
                                 height: 10,
                               ),
                               Text(
-                                "Instructions:",
+                                "Instructions",
                                 softWrap: true,
                                 style: mfontbl,
                                 textAlign: TextAlign.justify,
