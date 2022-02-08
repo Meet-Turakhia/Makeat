@@ -164,15 +164,18 @@ class _RecipeState extends State<Recipe> {
                                       physics: const BouncingScrollPhysics(),
                                       children: [
                                         Center(
-                                            child: Title(
-                                                color: Colors.black,
-                                                child: Text("Test",
-                                                    textAlign: TextAlign.center,
-                                                    style: GoogleFonts.ubuntu(
-                                                      fontSize: 20.0,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                    )))),
+                                          child: Title(
+                                            color: Colors.black,
+                                            child: Text(
+                                              "Test",
+                                              textAlign: TextAlign.center,
+                                              style: GoogleFonts.ubuntu(
+                                                fontSize: 20.0,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
                                       ],
                                     ),
                                   ),
