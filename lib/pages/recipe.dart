@@ -140,7 +140,7 @@ class _RecipeState extends State<Recipe> {
                     .allMatches(ds["RecipeIngredientQuantities"].toString())
                     .map((e) => e.group(0))
                     .toList();
-                for (var i = 0; i < ingredientQuantities.length; i++) {
+                for (var i = 0; i < ingredientNames.length; i++) {
                   ingredients.add(
                       "${ingredientQuantities[i]!.replaceAll('"', '').replaceAll('NA', 'some')} ${ingredientNames[i]!.replaceAll('"', '')}");
                 }
