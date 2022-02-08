@@ -167,7 +167,7 @@ class _RecipeState extends State<Recipe> {
                                           child: Title(
                                             color: Colors.black,
                                             child: Text(
-                                              "Test",
+                                              ds["Name"],
                                               textAlign: TextAlign.center,
                                               style: GoogleFonts.ubuntu(
                                                 fontSize: 20.0,
@@ -191,114 +191,115 @@ class _RecipeState extends State<Recipe> {
                                 ),
                               ),
                               SizedBox(
-                                  height: 55,
-                                  child: Center(
-                                    child: ListView(
-                                      // mainAxisAlignment: MainAxisAlignment.center,
-                                      shrinkWrap: true,
-                                      scrollDirection: Axis.horizontal,
-                                      physics: const BouncingScrollPhysics(),
-                                      children: [
-                                        Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            Text(
-                                              "Total Cook Time",
-                                              style: GoogleFonts.ubuntu(
-                                                fontSize: 15.0,
-                                              ),
+                                height: 55,
+                                child: Center(
+                                  child: ListView(
+                                    // mainAxisAlignment: MainAxisAlignment.center,
+                                    shrinkWrap: true,
+                                    scrollDirection: Axis.horizontal,
+                                    physics: const BouncingScrollPhysics(),
+                                    children: [
+                                      Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            "Total Cook Time",
+                                            style: GoogleFonts.ubuntu(
+                                              fontSize: 15.0,
                                             ),
-                                            Text(
-                                              "24H45M",
-                                              style: GoogleFonts.ubuntu(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 15.0,
-                                              ),
+                                          ),
+                                          Text(
+                                            time,
+                                            style: GoogleFonts.ubuntu(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 15.0,
                                             ),
-                                          ],
-                                        ),
-                                        VerticalDivider(
-                                          color: Colors.black,
-                                          indent: 20,
-                                          endIndent: 20,
-                                          width: 30,
-                                          thickness: 2,
-                                        ),
-                                        Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            Text(
-                                              "Calories",
-                                              style: GoogleFonts.ubuntu(
-                                                fontSize: 15.0,
-                                              ),
+                                          ),
+                                        ],
+                                      ),
+                                      VerticalDivider(
+                                        color: Colors.black,
+                                        indent: 20,
+                                        endIndent: 20,
+                                        width: 30,
+                                        thickness: 2,
+                                      ),
+                                      Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            "Calories",
+                                            style: GoogleFonts.ubuntu(
+                                              fontSize: 15.0,
                                             ),
-                                            Text(
-                                              "170.9",
-                                              style: GoogleFonts.ubuntu(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 15.0,
-                                              ),
+                                          ),
+                                          Text(
+                                            ds["Calories"],
+                                            style: GoogleFonts.ubuntu(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 15.0,
                                             ),
-                                          ],
-                                        ),
-                                        VerticalDivider(
-                                          color: Colors.black,
-                                          indent: 20,
-                                          endIndent: 20,
-                                          width: 30,
-                                          thickness: 2,
-                                        ),
-                                        Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            Text(
-                                              "Rating",
-                                              style: GoogleFonts.ubuntu(
-                                                fontSize: 15.0,
-                                              ),
+                                          ),
+                                        ],
+                                      ),
+                                      VerticalDivider(
+                                        color: Colors.black,
+                                        indent: 20,
+                                        endIndent: 20,
+                                        width: 30,
+                                        thickness: 2,
+                                      ),
+                                      Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            "Rating",
+                                            style: GoogleFonts.ubuntu(
+                                              fontSize: 15.0,
                                             ),
-                                            Text(
-                                              "4.5",
-                                              style: GoogleFonts.ubuntu(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 15.0,
-                                              ),
+                                          ),
+                                          Text(
+                                            ds["AggregatedRating"],
+                                            style: GoogleFonts.ubuntu(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 15.0,
                                             ),
-                                          ],
-                                        ),
-                                        VerticalDivider(
-                                          color: Colors.black,
-                                          indent: 20,
-                                          endIndent: 20,
-                                          width: 30,
-                                          thickness: 2,
-                                        ),
-                                        Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            Text(
-                                              "Recipe Category",
-                                              style: GoogleFonts.ubuntu(
-                                                fontSize: 15.0,
-                                              ),
+                                          ),
+                                        ],
+                                      ),
+                                      VerticalDivider(
+                                        color: Colors.black,
+                                        indent: 20,
+                                        endIndent: 20,
+                                        width: 30,
+                                        thickness: 2,
+                                      ),
+                                      Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            "Recipe Category",
+                                            style: GoogleFonts.ubuntu(
+                                              fontSize: 15.0,
                                             ),
-                                            Text(
-                                              "Frozen Desserts",
-                                              style: GoogleFonts.ubuntu(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 15.0,
-                                              ),
+                                          ),
+                                          Text(
+                                            ds["RecipeCategory"],
+                                            style: GoogleFonts.ubuntu(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 15.0,
                                             ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  )),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
                               Padding(
                                 padding: const EdgeInsets.all(5.0),
                                 child: Row(
