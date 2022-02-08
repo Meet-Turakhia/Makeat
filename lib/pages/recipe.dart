@@ -357,6 +357,233 @@ class _RecipeState extends State<Recipe> {
                                         width: 30,
                                         thickness: 2,
                                       ),
+                                      Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            "Carbohydrate Content",
+                                            style: GoogleFonts.ubuntu(
+                                              fontSize: 15.0,
+                                            ),
+                                          ),
+                                          Text(
+                                            ds["CarbohydrateContent"],
+                                            style: GoogleFonts.ubuntu(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 15.0,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      VerticalDivider(
+                                        color: Colors.black,
+                                        indent: 20,
+                                        endIndent: 20,
+                                        width: 30,
+                                        thickness: 2,
+                                      ),
+                                      Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            "Cholesterol Content",
+                                            style: GoogleFonts.ubuntu(
+                                              fontSize: 15.0,
+                                            ),
+                                          ),
+                                          Text(
+                                            ds["CholesterolContent"],
+                                            style: GoogleFonts.ubuntu(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 15.0,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      VerticalDivider(
+                                        color: Colors.black,
+                                        indent: 20,
+                                        endIndent: 20,
+                                        width: 30,
+                                        thickness: 2,
+                                      ),
+                                      Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            "Fat Content",
+                                            style: GoogleFonts.ubuntu(
+                                              fontSize: 15.0,
+                                            ),
+                                          ),
+                                          Text(
+                                            ds["FatContent"],
+                                            style: GoogleFonts.ubuntu(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 15.0,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      VerticalDivider(
+                                        color: Colors.black,
+                                        indent: 20,
+                                        endIndent: 20,
+                                        width: 30,
+                                        thickness: 2,
+                                      ),
+                                      Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            "Fiber Content",
+                                            style: GoogleFonts.ubuntu(
+                                              fontSize: 15.0,
+                                            ),
+                                          ),
+                                          Text(
+                                            ds["FiberContent"],
+                                            style: GoogleFonts.ubuntu(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 15.0,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      VerticalDivider(
+                                        color: Colors.black,
+                                        indent: 20,
+                                        endIndent: 20,
+                                        width: 30,
+                                        thickness: 2,
+                                      ),
+                                      Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            "Protein Content",
+                                            style: GoogleFonts.ubuntu(
+                                              fontSize: 15.0,
+                                            ),
+                                          ),
+                                          Text(
+                                            ds["ProteinContent"],
+                                            style: GoogleFonts.ubuntu(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 15.0,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      VerticalDivider(
+                                        color: Colors.black,
+                                        indent: 20,
+                                        endIndent: 20,
+                                        width: 30,
+                                        thickness: 2,
+                                      ),
+                                      Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            "Saturated Fat Content",
+                                            style: GoogleFonts.ubuntu(
+                                              fontSize: 15.0,
+                                            ),
+                                          ),
+                                          Text(
+                                            ds["SaturatedFatContent"],
+                                            style: GoogleFonts.ubuntu(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 15.0,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      VerticalDivider(
+                                        color: Colors.black,
+                                        indent: 20,
+                                        endIndent: 20,
+                                        width: 30,
+                                        thickness: 2,
+                                      ),
+                                      Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            "Sodium Content",
+                                            style: GoogleFonts.ubuntu(
+                                              fontSize: 15.0,
+                                            ),
+                                          ),
+                                          Text(
+                                            ds["SodiumContent"],
+                                            style: GoogleFonts.ubuntu(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 15.0,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      VerticalDivider(
+                                        color: Colors.black,
+                                        indent: 20,
+                                        endIndent: 20,
+                                        width: 30,
+                                        thickness: 2,
+                                      ),
+                                      Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            "Sugar Content",
+                                            style: GoogleFonts.ubuntu(
+                                              fontSize: 15.0,
+                                            ),
+                                          ),
+                                          Text(
+                                            ds["SugarContent"],
+                                            style: GoogleFonts.ubuntu(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 15.0,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      VerticalDivider(
+                                        color: Colors.black,
+                                        indent: 20,
+                                        endIndent: 20,
+                                        width: 30,
+                                        thickness: 2,
+                                      ),
+                                      Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            "Recipe Servings",
+                                            style: GoogleFonts.ubuntu(
+                                              fontSize: 15.0,
+                                            ),
+                                          ),
+                                          Text(
+                                            ds["RecipeServings"],
+                                            style: GoogleFonts.ubuntu(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 15.0,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                                     ],
                                   ),
                                 ),
