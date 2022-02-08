@@ -96,7 +96,9 @@ class _RecipeState extends State<Recipe> {
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 Map<String, dynamic>? ds = snapshot.data!.data();
-                String time = ds!["TotalTime"].split("PT")[1];
+                String totalTime = ds!["TotalTime"].split("PT")[1];
+                String cookTime = ds["CookTime"].split("PT")[1];
+                String prepTime = ds["PrepTime"].split("PT")[1];
                 Image recipeImage;
                 if (ds["Images"] == "character(0)") {
                   recipeImage = Image.asset(
@@ -204,58 +206,6 @@ class _RecipeState extends State<Recipe> {
                                             MainAxisAlignment.center,
                                         children: [
                                           Text(
-                                            "Total Cook Time",
-                                            style: GoogleFonts.ubuntu(
-                                              fontSize: 15.0,
-                                            ),
-                                          ),
-                                          Text(
-                                            time,
-                                            style: GoogleFonts.ubuntu(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 15.0,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      VerticalDivider(
-                                        color: Colors.black,
-                                        indent: 20,
-                                        endIndent: 20,
-                                        width: 30,
-                                        thickness: 2,
-                                      ),
-                                      Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Text(
-                                            "Calories",
-                                            style: GoogleFonts.ubuntu(
-                                              fontSize: 15.0,
-                                            ),
-                                          ),
-                                          Text(
-                                            ds["Calories"],
-                                            style: GoogleFonts.ubuntu(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 15.0,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      VerticalDivider(
-                                        color: Colors.black,
-                                        indent: 20,
-                                        endIndent: 20,
-                                        width: 30,
-                                        thickness: 2,
-                                      ),
-                                      Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Text(
                                             "Rating",
                                             style: GoogleFonts.ubuntu(
                                               fontSize: 15.0,
@@ -295,6 +245,117 @@ class _RecipeState extends State<Recipe> {
                                             ),
                                           ),
                                         ],
+                                      ),
+                                      VerticalDivider(
+                                        color: Colors.black,
+                                        indent: 20,
+                                        endIndent: 20,
+                                        width: 30,
+                                        thickness: 2,
+                                      ),
+                                      Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            "Total Cook Time",
+                                            style: GoogleFonts.ubuntu(
+                                              fontSize: 15.0,
+                                            ),
+                                          ),
+                                          Text(
+                                            totalTime,
+                                            style: GoogleFonts.ubuntu(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 15.0,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      VerticalDivider(
+                                        color: Colors.black,
+                                        indent: 20,
+                                        endIndent: 20,
+                                        width: 30,
+                                        thickness: 2,
+                                      ),
+                                      Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            "Cook Time",
+                                            style: GoogleFonts.ubuntu(
+                                              fontSize: 15.0,
+                                            ),
+                                          ),
+                                          Text(
+                                            cookTime,
+                                            style: GoogleFonts.ubuntu(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 15.0,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      VerticalDivider(
+                                        color: Colors.black,
+                                        indent: 20,
+                                        endIndent: 20,
+                                        width: 30,
+                                        thickness: 2,
+                                      ),
+                                      Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            "Prep Time",
+                                            style: GoogleFonts.ubuntu(
+                                              fontSize: 15.0,
+                                            ),
+                                          ),
+                                          Text(
+                                            prepTime,
+                                            style: GoogleFonts.ubuntu(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 15.0,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      VerticalDivider(
+                                        color: Colors.black,
+                                        indent: 20,
+                                        endIndent: 20,
+                                        width: 30,
+                                        thickness: 2,
+                                      ),
+                                      Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            "Calories",
+                                            style: GoogleFonts.ubuntu(
+                                              fontSize: 15.0,
+                                            ),
+                                          ),
+                                          Text(
+                                            ds["Calories"],
+                                            style: GoogleFonts.ubuntu(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 15.0,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      VerticalDivider(
+                                        color: Colors.black,
+                                        indent: 20,
+                                        endIndent: 20,
+                                        width: 30,
+                                        thickness: 2,
                                       ),
                                     ],
                                   ),
