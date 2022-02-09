@@ -21,11 +21,11 @@ var mfontwbl = GoogleFonts.ubuntu(
     textStyle: TextStyle(fontWeight: FontWeight.bold));
 var mfontbl21 = GoogleFonts.ubuntu(
     color: Colors.black,
-    fontSize: 25.0,
+    fontSize: 21.0,
     textStyle: TextStyle(fontWeight: FontWeight.bold));
 var mfontwbl21 = GoogleFonts.ubuntu(
     color: Colors.white,
-    fontSize: 25.0,
+    fontSize: 21.0,
     textStyle: TextStyle(fontWeight: FontWeight.bold));
 var mfontgbl21 = GoogleFonts.ubuntu(
     color: Color(0xff3BB143),
