@@ -1,8 +1,11 @@
 // ignore_for_file: prefer_const_constructors
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:makeat_app/pages/likes.dart';
 import "../pages/home.dart";
 import "package:firebase_auth/firebase_auth.dart";
+
+User? user = FirebaseAuth.instance.currentUser;
 
 Widget buildBottomBar(BuildContext context) {
   return BottomAppBar(
@@ -13,7 +16,6 @@ Widget buildBottomBar(BuildContext context) {
       children: [
         IconButton(
           onPressed: () {
-            User? user = FirebaseAuth.instance.currentUser;
             Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => Home(uid: user!.uid)),
@@ -22,7 +24,12 @@ Widget buildBottomBar(BuildContext context) {
           icon: Icon(CupertinoIcons.home, color: Color(0xff3BB143)),
         ),
         IconButton(
-          onPressed: () {},
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => Likes(uid: user!.uid)),
+            );
+          },
           icon: Icon(CupertinoIcons.hand_thumbsup, color: Color(0xff3BB143)),
         ),
         IconButton(
