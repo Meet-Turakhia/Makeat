@@ -461,7 +461,7 @@ class _RecipeState extends State<Recipe> {
                                             ),
                                           ),
                                           Text(
-                                            ds["CarbohydrateContent"],
+                                            "${ds["CarbohydrateContent"]} g",
                                             style: GoogleFonts.ubuntu(
                                               fontWeight: FontWeight.bold,
                                               fontSize: 15.0,
@@ -487,7 +487,7 @@ class _RecipeState extends State<Recipe> {
                                             ),
                                           ),
                                           Text(
-                                            ds["CholesterolContent"],
+                                            "${ds["CholesterolContent"]} mg",
                                             style: GoogleFonts.ubuntu(
                                               fontWeight: FontWeight.bold,
                                               fontSize: 15.0,
@@ -513,7 +513,7 @@ class _RecipeState extends State<Recipe> {
                                             ),
                                           ),
                                           Text(
-                                            ds["FatContent"],
+                                            "${ds["FatContent"]} g",
                                             style: GoogleFonts.ubuntu(
                                               fontWeight: FontWeight.bold,
                                               fontSize: 15.0,
@@ -539,7 +539,7 @@ class _RecipeState extends State<Recipe> {
                                             ),
                                           ),
                                           Text(
-                                            ds["FiberContent"],
+                                            "${ds["FiberContent"]} g",
                                             style: GoogleFonts.ubuntu(
                                               fontWeight: FontWeight.bold,
                                               fontSize: 15.0,
@@ -565,7 +565,7 @@ class _RecipeState extends State<Recipe> {
                                             ),
                                           ),
                                           Text(
-                                            ds["ProteinContent"],
+                                            "${ds["ProteinContent"]} g",
                                             style: GoogleFonts.ubuntu(
                                               fontWeight: FontWeight.bold,
                                               fontSize: 15.0,
@@ -591,7 +591,7 @@ class _RecipeState extends State<Recipe> {
                                             ),
                                           ),
                                           Text(
-                                            ds["SaturatedFatContent"],
+                                            "${ds["SaturatedFatContent"]} g",
                                             style: GoogleFonts.ubuntu(
                                               fontWeight: FontWeight.bold,
                                               fontSize: 15.0,
@@ -617,7 +617,7 @@ class _RecipeState extends State<Recipe> {
                                             ),
                                           ),
                                           Text(
-                                            ds["SodiumContent"],
+                                            "${ds["SodiumContent"]} mg",
                                             style: GoogleFonts.ubuntu(
                                               fontWeight: FontWeight.bold,
                                               fontSize: 15.0,
@@ -643,7 +643,7 @@ class _RecipeState extends State<Recipe> {
                                             ),
                                           ),
                                           Text(
-                                            ds["SugarContent"],
+                                            "${ds["SugarContent"]} g",
                                             style: GoogleFonts.ubuntu(
                                               fontWeight: FontWeight.bold,
                                               fontSize: 15.0,
