@@ -22,8 +22,13 @@ class Recipe extends StatefulWidget {
 class _RecipeState extends State<Recipe> {
   final db = FirebaseFirestore.instance;
   var likesCollection = FirebaseFirestore.instance.collection("likes");
+  var savesCollection = FirebaseFirestore.instance.collection("saves");
+  // ignore: prefer_typing_uninitialized_variables
   var isLikedDoc;
   bool isLiked = false;
+  // ignore: prefer_typing_uninitialized_variables
+  var isSavedDoc;
+  bool isSaved = false;
 
   void setLike() async {
     isLikedDoc = await likesCollection
@@ -36,10 +41,22 @@ class _RecipeState extends State<Recipe> {
     });
   }
 
+  void setSave() async {
+    isSavedDoc = savesCollection
+        .doc(widget.uid)
+        .collection("save")
+        .doc(widget.recipeId)
+        .get();
+    setState(() {
+      isSaved = isSavedDoc.exists;
+    });
+  }
+
   @override
   void initState() {
     super.initState();
     setLike();
+    setSave();
   }
 
   _likeispressed() {
@@ -62,19 +79,24 @@ class _RecipeState extends State<Recipe> {
     setLike();
   }
 
-  bool saveisPressed = false;
-
   _saveispressed() {
-    var newVal2 = true;
-    if (saveisPressed) {
-      newVal2 = false;
+    if (isSaved) {
+      savesCollection
+          .doc(widget.uid)
+          .collection("save")
+          .doc(widget.recipeId)
+          .delete();
     } else {
-      newVal2 = true;
+      savesCollection
+          .doc(widget.uid)
+          .collection("save")
+          .doc(widget.recipeId)
+          .set({
+        "recipeId": widget.recipeId,
+        "time": DateTime.now(),
+      });
     }
-
-    setState(() {
-      saveisPressed = newVal2;
-    });
+    setSave();
   }
 
   @override
@@ -685,7 +707,7 @@ class _RecipeState extends State<Recipe> {
                                       child: IconButton(
                                         color: Colors.black,
                                         icon: Icon(
-                                          saveisPressed
+                                          isSaved
                                               ? CupertinoIcons.bookmark_fill
                                               : CupertinoIcons.bookmark,
                                         ),
