@@ -42,7 +42,7 @@ class _RecipeState extends State<Recipe> {
   }
 
   void setSave() async {
-    isSavedDoc = savesCollection
+    isSavedDoc = await savesCollection
         .doc(widget.uid)
         .collection("save")
         .doc(widget.recipeId)
