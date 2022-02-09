@@ -21,19 +21,45 @@ class Recipe extends StatefulWidget {
 
 class _RecipeState extends State<Recipe> {
   final db = FirebaseFirestore.instance;
-  bool likeisPressed = false;
+  var likesCollection = FirebaseFirestore.instance.collection("likes");
+  var isLikedDoc;
+  bool isLiked = false;
+
+  void setLike() async {
+    isLikedDoc = await likesCollection
+        .doc(widget.uid)
+        .collection("like")
+        .doc(widget.recipeId)
+        .get();
+    setState(() {
+      isLiked = isLikedDoc.exists;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    setLike();
+  }
 
   _likeispressed() {
-    var newVal1 = true;
-    if (likeisPressed) {
-      newVal1 = false;
+    if (isLiked) {
+      likesCollection
+          .doc(widget.uid)
+          .collection("like")
+          .doc(widget.recipeId)
+          .delete();
     } else {
-      newVal1 = true;
+      likesCollection
+          .doc(widget.uid)
+          .collection("like")
+          .doc(widget.recipeId)
+          .set({
+        "recipeId": widget.recipeId,
+        "time": DateTime.now(),
+      });
     }
-
-    setState(() {
-      likeisPressed = newVal1;
-    });
+    setLike();
   }
 
   bool saveisPressed = false;
@@ -153,7 +179,8 @@ class _RecipeState extends State<Recipe> {
                 for (var i = ingredientsIteration;
                     i < ingredientNames.length;
                     i++) {
-                  ingredients.add(ingredientNames[i].toString().replaceAll('"', ''));
+                  ingredients
+                      .add(ingredientNames[i].toString().replaceAll('"', ''));
                 }
                 List<String?> instructions = doubleQuotesPattern
                     .allMatches(ds["RecipeInstructions"].toString())
@@ -643,7 +670,7 @@ class _RecipeState extends State<Recipe> {
                                       backgroundColor: Color(0xff3BB143),
                                       child: IconButton(
                                         color: Colors.black,
-                                        icon: Icon(likeisPressed
+                                        icon: Icon(isLiked
                                             ? CupertinoIcons.hand_thumbsup_fill
                                             : CupertinoIcons.hand_thumbsup),
                                         tooltip: "Like",
