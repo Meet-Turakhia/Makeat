@@ -69,20 +69,29 @@ class _LikesState extends State<Likes> {
     }
     QuerySnapshot querySnapshot;
     if (firstCall == true) {
-      querySnapshot = await db.collection("recipes").limit(documentLimit).get();
+      querySnapshot = await db
+          .collection("recipes")
+          .where(FieldPath.documentId, whereIn: likedRecipesIdList)
+          .limit(documentLimit)
+          .get();
       firstCall = false;
       // ignore: unnecessary_null_comparison
     } else if (lastDocument == null) {
       setState(() {
         isLoading = true;
       });
-      querySnapshot = await db.collection("recipes").limit(documentLimit).get();
+      querySnapshot = await db
+          .collection("recipes")
+          .where(FieldPath.documentId, whereIn: likedRecipesIdList)
+          .limit(documentLimit)
+          .get();
     } else {
       setState(() {
         isLoading = true;
       });
       querySnapshot = await db
           .collection("recipes")
+          .where(FieldPath.documentId, whereIn: likedRecipesIdList)
           .startAfterDocument(lastDocument)
           .limit(documentLimit)
           .get();
