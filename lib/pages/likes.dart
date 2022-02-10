@@ -57,6 +57,13 @@ class _LikesState extends State<Likes> {
   }
 
   getRecipes() async {
+    var likedRecipeDocuments =
+        await db.collection("likes").doc(widget.uid).collection("like").get();
+    final List<DocumentSnapshot> likedRecipes = likedRecipeDocuments.docs;
+    var likedRecipesIdList = [];
+    for (var element in likedRecipes) {
+      likedRecipesIdList.add(element.id);
+    }
     if (isLoading) {
       return;
     }
@@ -170,7 +177,10 @@ class _LikesState extends State<Likes> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text("Your Favorites", style: mfontgbl21,),
+                    Text(
+                      "Your Favorites",
+                      style: mfontgbl21,
+                    ),
                   ],
                 ),
                 Container(
