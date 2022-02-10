@@ -27,8 +27,11 @@ class _LikesState extends State<Likes> {
   bool isLoading = false;
   bool hasMore = true;
   bool firstCall = true;
+  bool getLikedRecipesFirstCall = true;
   int documentLimit = 15;
+  int getLikedDocumentsLimit = 15;
   late DocumentSnapshot lastDocument;
+  late DocumentSnapshot lastLikedRecipeDocument;
   ScrollController scrollController = ScrollController();
 
   StreamController<List<DocumentSnapshot>> controller =
@@ -56,53 +59,77 @@ class _LikesState extends State<Likes> {
     super.dispose();
   }
 
-  getRecipes() async {
-    var likedRecipeDocuments =
-        await db.collection("likes").doc(widget.uid).collection("like").get();
+  Future<List> getLikedRecipesIdList() async {
+    QuerySnapshot<Map<String, dynamic>> likedRecipeDocuments;
+    if (getLikedRecipesFirstCall) {
+      likedRecipeDocuments = await db
+          .collection("likes")
+          .doc(widget.uid)
+          .collection("like")
+          .orderBy("time", descending: true)
+          .limit(getLikedDocumentsLimit)
+          .get();
+      getLikedRecipesFirstCall = false;
+    } else {
+      likedRecipeDocuments = await db
+          .collection("likes")
+          .doc(widget.uid)
+          .collection("like")
+          .orderBy("time", descending: true)
+          .startAfterDocument(lastLikedRecipeDocument)
+          .limit(getLikedDocumentsLimit)
+          .get();
+    }
+    if (likedRecipeDocuments.docs.isEmpty) {
+      return ["exit"];
+    }
     final List<DocumentSnapshot> likedRecipes = likedRecipeDocuments.docs;
     var likedRecipesIdList = [];
     for (var element in likedRecipes) {
       likedRecipesIdList.add(element.id);
     }
+    lastLikedRecipeDocument =
+        likedRecipeDocuments.docs[likedRecipeDocuments.docs.length - 1];
+    return likedRecipesIdList;
+  }
+
+  getRecipes() async {
     if (isLoading) {
       return;
     }
-    QuerySnapshot querySnapshot;
+    var likedRecipesIdList = await getLikedRecipesIdList();
+    DocumentSnapshot documentSnapshot;
+    List<DocumentSnapshot> listDS = [];
     if (firstCall == true) {
-      querySnapshot = await db
-          .collection("recipes")
-          .where(FieldPath.documentId, whereIn: likedRecipesIdList)
-          .limit(documentLimit)
-          .get();
+      for (var id in likedRecipesIdList) {
+        documentSnapshot = await db.collection("recipes").doc(id).get();
+        listDS.add(documentSnapshot);
+      }
       firstCall = false;
       // ignore: unnecessary_null_comparison
     } else if (lastDocument == null) {
       setState(() {
         isLoading = true;
       });
-      querySnapshot = await db
-          .collection("recipes")
-          .where(FieldPath.documentId, whereIn: likedRecipesIdList)
-          .limit(documentLimit)
-          .get();
+      for (var id in likedRecipesIdList) {
+        documentSnapshot = await db.collection("recipes").doc(id).get();
+        listDS.add(documentSnapshot);
+      }
     } else {
       setState(() {
         isLoading = true;
       });
-      querySnapshot = await db
-          .collection("recipes")
-          .where(FieldPath.documentId, whereIn: likedRecipesIdList)
-          .startAfterDocument(lastDocument)
-          .limit(documentLimit)
-          .get();
+      for (var id in likedRecipesIdList) {
+        documentSnapshot = await db.collection("recipes").doc(id).get();
+        listDS.add(documentSnapshot);
+      }
     }
-    if (querySnapshot.docs.isEmpty) {
-      popupMessage("No More Recipes!");
+    if (listDS.first.data() == null) {
       setLoading(false);
       return;
     }
-    lastDocument = querySnapshot.docs[querySnapshot.docs.length - 1];
-    recipes.addAll(querySnapshot.docs);
+    lastDocument = listDS[listDS.length - 1];
+    recipes.addAll(listDS);
     controller.sink.add(recipes);
     setLoading(false);
   }
