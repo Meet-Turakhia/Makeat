@@ -43,13 +43,13 @@ class _LikesState extends State<Likes> {
   @override
   void initState() {
     super.initState();
-    getRecipes();
+    getRecipes(false);
     scrollController.addListener(() {
       double maxScroll = scrollController.position.maxScrollExtent;
       double currentScroll = scrollController.position.pixels;
       double delta = MediaQuery.of(context).size.height * 0.20;
       if (maxScroll - currentScroll <= delta) {
-        getRecipes();
+        getRecipes(false);
       }
     });
   }
@@ -91,6 +91,9 @@ class _LikesState extends State<Likes> {
           .get();
     }
     if (likedRecipeDocuments.docs.isEmpty) {
+      setState(() {
+        isIdLoading = false;
+      });
       return ["exit"];
     }
     final List<DocumentSnapshot> likedRecipes = likedRecipeDocuments.docs;
@@ -106,7 +109,7 @@ class _LikesState extends State<Likes> {
     return likedRecipesIdList;
   }
 
-  getRecipes() async {
+  getRecipes(bool refresh) async {
     if (isLoading) {
       return;
     }
@@ -142,8 +145,14 @@ class _LikesState extends State<Likes> {
       return;
     }
     lastDocument = listDS[listDS.length - 1];
-    recipes.addAll(listDS);
-    controller.sink.add(recipes);
+    if (refresh) {
+      recipes = [];
+      recipes.addAll(listDS);
+      controller.sink.add(recipes);
+    } else {
+      recipes.addAll(listDS);
+      controller.sink.add(recipes);
+    }
     setLoading(false);
   }
 
@@ -424,6 +433,13 @@ class _LikesState extends State<Likes> {
                                     MaterialPageRoute(
                                       builder: (context) => Recipe(
                                           uid: widget.uid, recipeId: ds.id),
+                                    ),
+                                  ).then(
+                                    (value) => setState(
+                                      () {
+                                        getLikedRecipesFirstCall = true;
+                                        getRecipes(true);
+                                      },
                                     ),
                                   );
                                 },
