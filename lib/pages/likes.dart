@@ -145,7 +145,7 @@ class _LikesState extends State<Likes> {
                   ),
                   // Image.asset('assets/makeat_transparent.png', scale: 15),
                 ],
-                title: Text("Makeat",
+                title: Text("Liked",
                     style: GoogleFonts.ubuntu(
                         color: Colors.black,
                         fontSize: 20.0,
@@ -167,8 +167,14 @@ class _LikesState extends State<Likes> {
             body: Stack(
               children: [
                 // buildBottomNavigationBar(),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text("Your Favorites", style: mfontgbl21,),
+                  ],
+                ),
                 Container(
-                  padding: EdgeInsets.only(top: 60),
+                  padding: EdgeInsets.only(top: 30),
                   child: StreamBuilder<List<DocumentSnapshot>>(
                     stream: streamController,
                     builder: (context, snapshot) {
