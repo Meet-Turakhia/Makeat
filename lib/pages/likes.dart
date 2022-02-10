@@ -25,6 +25,7 @@ class _LikesState extends State<Likes> {
 
   List<DocumentSnapshot> recipes = [];
   bool isLoading = false;
+  bool isIdLoading = false;
   bool hasMore = true;
   bool firstCall = true;
   bool getLikedRecipesFirstCall = true;
@@ -60,8 +61,14 @@ class _LikesState extends State<Likes> {
   }
 
   Future<List> getLikedRecipesIdList() async {
+    if (isIdLoading) {
+      return ["exit"];
+    }
     QuerySnapshot<Map<String, dynamic>> likedRecipeDocuments;
     if (getLikedRecipesFirstCall) {
+      setState(() {
+        isIdLoading = true;
+      });
       likedRecipeDocuments = await db
           .collection("likes")
           .doc(widget.uid)
@@ -71,6 +78,9 @@ class _LikesState extends State<Likes> {
           .get();
       getLikedRecipesFirstCall = false;
     } else {
+      setState(() {
+        isIdLoading = true;
+      });
       likedRecipeDocuments = await db
           .collection("likes")
           .doc(widget.uid)
@@ -90,6 +100,9 @@ class _LikesState extends State<Likes> {
     }
     lastLikedRecipeDocument =
         likedRecipeDocuments.docs[likedRecipeDocuments.docs.length - 1];
+    setState(() {
+      isIdLoading = false;
+    });
     return likedRecipesIdList;
   }
 
