@@ -458,7 +458,7 @@ class _LikesState extends State<Likes> {
                                       )
                                     : Center(
                                         child: Text(
-                                          "No More Recipes!",
+                                          "That's All Folks!",
                                           style: mfont15,
                                         ),
                                       ),
