@@ -145,7 +145,12 @@ class _LikesState extends State<Likes> {
         listDS.add(documentSnapshot);
       }
     }
-    if (listDS.first.data() == null) {
+    if (listDS.first.data() == null && !refresh) {
+      setLoading(false);
+      return;
+    } else if (listDS.first.data() == null && refresh) {
+      recipes = [];
+      controller.sink.add(recipes);
       setLoading(false);
       return;
     }
@@ -479,9 +484,10 @@ class _LikesState extends State<Likes> {
                           ),
                         );
                       } else if (!isLoading && !firstCall) {
-                        return Center(
-                          child: SizedBox(
-                            width: 300,
+                        return Container(
+                          margin: EdgeInsets.all(70.0),
+                          padding: EdgeInsets.only(bottom: 60.0),
+                          child: Center(
                             child: likeSVG,
                           ),
                         );
