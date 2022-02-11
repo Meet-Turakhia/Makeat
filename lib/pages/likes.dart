@@ -39,6 +39,7 @@ class _LikesState extends State<Likes> {
     "assets/svgs/like.svg",
     semanticsLabel: 'Like SVG',
   );
+  var likePageTitle = "Your Favorites";
 
   StreamController<List<DocumentSnapshot>> controller =
       StreamController<List<DocumentSnapshot>>();
@@ -146,9 +147,17 @@ class _LikesState extends State<Likes> {
       }
     }
     if (listDS.first.data() == null && !refresh) {
+      if (!firstCall && !isLoading && recipes.isEmpty) {
+        setState(() {
+          likePageTitle = "Like Some Recipes";
+        });
+      }
       setLoading(false);
       return;
     } else if (listDS.first.data() == null && refresh) {
+      setState(() {
+        likePageTitle = "Like Some Recipes";
+      });
       recipes = [];
       controller.sink.add(recipes);
       setLoading(false);
@@ -156,6 +165,9 @@ class _LikesState extends State<Likes> {
     }
     lastDocument = listDS[listDS.length - 1];
     if (refresh) {
+      setState(() {
+        likePageTitle = "Your Favorites";
+      });
       recipes = [];
       recipes.addAll(listDS);
       controller.sink.add(recipes);
@@ -246,7 +258,7 @@ class _LikesState extends State<Likes> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      "Your Favorites",
+                      likePageTitle,
                       style: mfontgbl21,
                     ),
                   ],
