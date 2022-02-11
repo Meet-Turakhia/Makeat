@@ -2,6 +2,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:makeat_app/widgets/fonts.dart';
 import 'package:makeat_app/widgets/showtoast.dart';
@@ -34,6 +35,10 @@ class _LikesState extends State<Likes> {
   late DocumentSnapshot lastDocument;
   late DocumentSnapshot lastLikedRecipeDocument;
   ScrollController scrollController = ScrollController();
+  final Widget likeSVG = SvgPicture.asset(
+    "assets/svgs/like.svg",
+    semanticsLabel: 'Like SVG',
+  );
 
   StreamController<List<DocumentSnapshot>> controller =
       StreamController<List<DocumentSnapshot>>();
@@ -471,6 +476,13 @@ class _LikesState extends State<Likes> {
                         return Center(
                           child: CircularProgressIndicator(
                             color: Color(0xff3BB143),
+                          ),
+                        );
+                      } else if (!isLoading && !firstCall) {
+                        return Center(
+                          child: SizedBox(
+                            width: 300,
+                            child: likeSVG,
                           ),
                         );
                       } else {
