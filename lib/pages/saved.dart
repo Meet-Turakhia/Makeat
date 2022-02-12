@@ -34,7 +34,7 @@ class _SavedState extends State<Saved> {
   int getSavedDocumentsLimit = 15;
   late DocumentSnapshot lastDocument;
   late DocumentSnapshot lastSavedRecipeDocument;
-  final Widget likeSVG = SvgPicture.asset(
+  final Widget saveSVG = SvgPicture.asset(
     "assets/svgs/save.svg",
     semanticsLabel: 'Save SVG',
   );
@@ -67,9 +67,9 @@ class _SavedState extends State<Saved> {
         isIdLoading = true;
       });
       savedRecipeDocuments = await db
-          .collection("likes")
+          .collection("saves")
           .doc(widget.uid)
-          .collection("like")
+          .collection("save")
           .orderBy("time", descending: true)
           .limit(getSavedDocumentsLimit)
           .get();
@@ -79,9 +79,9 @@ class _SavedState extends State<Saved> {
         isIdLoading = true;
       });
       savedRecipeDocuments = await db
-          .collection("likes")
+          .collection("saves")
           .doc(widget.uid)
-          .collection("like")
+          .collection("save")
           .orderBy("time", descending: true)
           .startAfterDocument(lastSavedRecipeDocument)
           .limit(getSavedDocumentsLimit)
@@ -510,7 +510,7 @@ class _SavedState extends State<Saved> {
                           margin: EdgeInsets.all(70.0),
                           padding: EdgeInsets.only(bottom: 60.0),
                           child: Center(
-                            child: likeSVG,
+                            child: saveSVG,
                           ),
                         );
                       } else {
