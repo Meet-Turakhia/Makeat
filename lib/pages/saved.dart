@@ -29,16 +29,16 @@ class _SavedState extends State<Saved> {
   bool isIdLoading = false;
   bool hasMore = true;
   bool firstCall = true;
-  bool getLikedRecipesFirstCall = true;
+  bool getSavedRecipesFirstCall = true;
   int documentLimit = 15;
-  int getLikedDocumentsLimit = 15;
+  int getSavedDocumentsLimit = 15;
   late DocumentSnapshot lastDocument;
-  late DocumentSnapshot lastLikedRecipeDocument;
+  late DocumentSnapshot lastSavedRecipeDocument;
   final Widget likeSVG = SvgPicture.asset(
-    "assets/svgs/like.svg",
-    semanticsLabel: 'Like SVG',
+    "assets/svgs/save.svg",
+    semanticsLabel: 'Save SVG',
   );
-  var likePageTitle = "Your Favorites";
+  var savedPageTitle = "Try These Next";
 
   StreamController<List<DocumentSnapshot>> controller =
       StreamController<List<DocumentSnapshot>>();
@@ -57,49 +57,50 @@ class _SavedState extends State<Saved> {
     super.dispose();
   }
 
-  Future<List> getLikedRecipesIdList() async {
+  Future<List> getSavedRecipesIdList() async {
     if (isIdLoading) {
       return ["exit"];
     }
-    QuerySnapshot<Map<String, dynamic>> likedRecipeDocuments;
-    if (getLikedRecipesFirstCall) {
+    // ignore: non_constant_identifier_names
+    QuerySnapshot<Map<String, dynamic>> savedRecipeDocuments;
+    if (getSavedRecipesFirstCall) {
       setState(() {
         isIdLoading = true;
       });
-      likedRecipeDocuments = await db
+      savedRecipeDocuments = await db
           .collection("likes")
           .doc(widget.uid)
           .collection("like")
           .orderBy("time", descending: true)
-          .limit(getLikedDocumentsLimit)
+          .limit(getSavedDocumentsLimit)
           .get();
-      getLikedRecipesFirstCall = false;
+      getSavedRecipesFirstCall = false;
     } else {
       setState(() {
         isIdLoading = true;
       });
-      likedRecipeDocuments = await db
+      savedRecipeDocuments = await db
           .collection("likes")
           .doc(widget.uid)
           .collection("like")
           .orderBy("time", descending: true)
-          .startAfterDocument(lastLikedRecipeDocument)
-          .limit(getLikedDocumentsLimit)
+          .startAfterDocument(lastSavedRecipeDocument)
+          .limit(getSavedDocumentsLimit)
           .get();
     }
-    if (likedRecipeDocuments.docs.isEmpty) {
+    if (savedRecipeDocuments.docs.isEmpty) {
       setState(() {
         isIdLoading = false;
       });
       return ["exit"];
     }
-    final List<DocumentSnapshot> likedRecipes = likedRecipeDocuments.docs;
+    final List<DocumentSnapshot> likedRecipes = savedRecipeDocuments.docs;
     var likedRecipesIdList = [];
     for (var element in likedRecipes) {
       likedRecipesIdList.add(element.id);
     }
-    lastLikedRecipeDocument =
-        likedRecipeDocuments.docs[likedRecipeDocuments.docs.length - 1];
+    lastSavedRecipeDocument =
+        savedRecipeDocuments.docs[savedRecipeDocuments.docs.length - 1];
     setState(() {
       isIdLoading = false;
     });
@@ -110,7 +111,7 @@ class _SavedState extends State<Saved> {
     if (isLoading) {
       return;
     }
-    var likedRecipesIdList = await getLikedRecipesIdList();
+    var likedRecipesIdList = await getSavedRecipesIdList();
     DocumentSnapshot documentSnapshot;
     List<DocumentSnapshot> listDS = [];
     if (firstCall == true) {
@@ -140,14 +141,14 @@ class _SavedState extends State<Saved> {
     if (listDS.first.data() == null && !refresh) {
       if (!firstCall && !isLoading && recipes.isEmpty) {
         setState(() {
-          likePageTitle = "Like Some Recipes";
+          savedPageTitle = "Like Some Recipes";
         });
       }
       setLoading(false);
       return;
     } else if (listDS.first.data() == null && refresh) {
       setState(() {
-        likePageTitle = "Like Some Recipes";
+        savedPageTitle = "Like Some Recipes";
       });
       recipes = [];
       controller.sink.add(recipes);
@@ -157,7 +158,7 @@ class _SavedState extends State<Saved> {
     lastDocument = listDS[listDS.length - 1];
     if (refresh) {
       setState(() {
-        likePageTitle = "Your Favorites";
+        savedPageTitle = "Your Favorites";
       });
       recipes = [];
       recipes.addAll(listDS);
@@ -251,7 +252,7 @@ class _SavedState extends State<Saved> {
                     Padding(
                       padding: const EdgeInsets.only(top: 30),
                       child: Text(
-                        likePageTitle,
+                        savedPageTitle,
                         style: mfontgbl21,
                       ),
                     ),
@@ -468,7 +469,7 @@ class _SavedState extends State<Saved> {
                                     ).then(
                                       (value) => setState(
                                         () {
-                                          getLikedRecipesFirstCall = true;
+                                          getSavedRecipesFirstCall = true;
                                           getRecipes(true);
                                         },
                                       ),
