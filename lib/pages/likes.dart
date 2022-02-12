@@ -248,14 +248,17 @@ class _LikesState extends State<Likes> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(
-                      likePageTitle,
-                      style: mfontgbl21,
+                    Padding(
+                      padding: const EdgeInsets.only(top: 30),
+                      child: Text(
+                        likePageTitle,
+                        style: mfontgbl21,
+                      ),
                     ),
                   ],
                 ),
                 Container(
-                  padding: EdgeInsets.only(top: 30),
+                  padding: EdgeInsets.only(top: 60),
                   child: StreamBuilder<List<DocumentSnapshot>>(
                     stream: streamController,
                     builder: (context, snapshot) {
