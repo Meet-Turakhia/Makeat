@@ -61,7 +61,6 @@ class _SavedState extends State<Saved> {
     if (isIdLoading) {
       return ["exit"];
     }
-    // ignore: non_constant_identifier_names
     QuerySnapshot<Map<String, dynamic>> savedRecipeDocuments;
     if (getSavedRecipesFirstCall) {
       setState(() {
@@ -94,28 +93,28 @@ class _SavedState extends State<Saved> {
       });
       return ["exit"];
     }
-    final List<DocumentSnapshot> likedRecipes = savedRecipeDocuments.docs;
-    var likedRecipesIdList = [];
-    for (var element in likedRecipes) {
-      likedRecipesIdList.add(element.id);
+    final List<DocumentSnapshot> savedRecipes = savedRecipeDocuments.docs;
+    var savedRecipesIdList = [];
+    for (var element in savedRecipes) {
+      savedRecipesIdList.add(element.id);
     }
     lastSavedRecipeDocument =
         savedRecipeDocuments.docs[savedRecipeDocuments.docs.length - 1];
     setState(() {
       isIdLoading = false;
     });
-    return likedRecipesIdList;
+    return savedRecipesIdList;
   }
 
   getRecipes(bool refresh) async {
     if (isLoading) {
       return;
     }
-    var likedRecipesIdList = await getSavedRecipesIdList();
+    var savedRecipesIdList = await getSavedRecipesIdList();
     DocumentSnapshot documentSnapshot;
     List<DocumentSnapshot> listDS = [];
     if (firstCall == true) {
-      for (var id in likedRecipesIdList) {
+      for (var id in savedRecipesIdList) {
         documentSnapshot = await db.collection("recipes").doc(id).get();
         listDS.add(documentSnapshot);
       }
@@ -125,7 +124,7 @@ class _SavedState extends State<Saved> {
       setState(() {
         isLoading = true;
       });
-      for (var id in likedRecipesIdList) {
+      for (var id in savedRecipesIdList) {
         documentSnapshot = await db.collection("recipes").doc(id).get();
         listDS.add(documentSnapshot);
       }
@@ -133,7 +132,7 @@ class _SavedState extends State<Saved> {
       setState(() {
         isLoading = true;
       });
-      for (var id in likedRecipesIdList) {
+      for (var id in savedRecipesIdList) {
         documentSnapshot = await db.collection("recipes").doc(id).get();
         listDS.add(documentSnapshot);
       }
