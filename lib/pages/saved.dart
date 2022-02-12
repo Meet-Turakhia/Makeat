@@ -140,14 +140,14 @@ class _SavedState extends State<Saved> {
     if (listDS.first.data() == null && !refresh) {
       if (!firstCall && !isLoading && recipes.isEmpty) {
         setState(() {
-          savedPageTitle = "Like Some Recipes";
+          savedPageTitle = "Save Some Recipes";
         });
       }
       setLoading(false);
       return;
     } else if (listDS.first.data() == null && refresh) {
       setState(() {
-        savedPageTitle = "Like Some Recipes";
+        savedPageTitle = "Save Some Recipes";
       });
       recipes = [];
       controller.sink.add(recipes);
@@ -157,7 +157,7 @@ class _SavedState extends State<Saved> {
     lastDocument = listDS[listDS.length - 1];
     if (refresh) {
       setState(() {
-        savedPageTitle = "Your Favorites";
+        savedPageTitle = "Try These Next";
       });
       recipes = [];
       recipes.addAll(listDS);
@@ -223,7 +223,7 @@ class _SavedState extends State<Saved> {
                   ),
                   // Image.asset('assets/makeat_transparent.png', scale: 15),
                 ],
-                title: Text("Liked",
+                title: Text("Saved",
                     style: GoogleFonts.ubuntu(
                         color: Colors.black,
                         fontSize: 20.0,
