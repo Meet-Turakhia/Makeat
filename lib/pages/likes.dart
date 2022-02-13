@@ -468,7 +468,9 @@ class _LikesState extends State<Likes> {
                                         builder: (context) => Recipe(
                                           uid: widget.uid,
                                           recipeId: ds.id,
-                                          previousPage: "likes",
+                                          homePage: false,
+                                          likesPage: true,
+                                          savedPage: false,
                                         ),
                                       ),
                                     ).then(
