@@ -370,7 +370,9 @@ class _HomeState extends State<Home> {
                                         builder: (context) => Recipe(
                                           uid: widget.uid,
                                           recipeId: ds.id,
-                                          previousPage: "home",
+                                          homePage: true,
+                                          likesPage: false,
+                                          savedPage: false,
                                         ),
                                       ),
                                     );
