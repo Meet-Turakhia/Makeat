@@ -395,7 +395,7 @@ class _TinderswiperState extends State<Tinderswiper>
                 icon: Icon(
                   Icons.thumb_up_outlined,
                   color: Color(0xff3BB143),
-                  size: 27,
+                  size: 25,
                 ),
               ),
               IconButton(
