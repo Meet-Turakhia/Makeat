@@ -466,7 +466,10 @@ class _LikesState extends State<Likes> {
                                       context,
                                       MaterialPageRoute(
                                         builder: (context) => Recipe(
-                                            uid: widget.uid, recipeId: ds.id),
+                                          uid: widget.uid,
+                                          recipeId: ds.id,
+                                          previousPage: "likes",
+                                        ),
                                       ),
                                     ).then(
                                       (value) => setState(
