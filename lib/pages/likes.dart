@@ -588,7 +588,7 @@ class _LikesState extends State<Likes> {
                 icon: Icon(
                   Icons.thumb_up,
                   color: Color(0xff3BB143),
-                  size: 27,
+                  size: 25,
                 ),
               ),
               IconButton(
