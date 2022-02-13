@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 import "package:flutter/material.dart";
 import "package:google_fonts/google_fonts.dart";
+import 'package:makeat_app/widgets/showtoast.dart';
 import "signup.dart";
 import "home.dart";
 import "package:firebase_auth/firebase_auth.dart";
@@ -152,6 +153,8 @@ class _LogInState extends State<LogIn> {
                                 (Route<dynamic> route) => false,
                               );
                             }
+                          } else {
+                            popupMessage("Validation Failed!");
                           }
                         },
                         style: ElevatedButton.styleFrom(
