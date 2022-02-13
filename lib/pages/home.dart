@@ -457,8 +457,7 @@ class _HomeState extends State<Home> {
                         builder: (context) => Likes(uid: user!.uid)),
                   );
                 },
-                icon: Icon(Icons.thumb_up_outlined,
-                    color: Color(0xff3BB143)),
+                icon: Icon(Icons.thumb_up_outlined, color: Color(0xff3BB143)),
               ),
               IconButton(
                 onPressed: () {},
