@@ -1,10 +1,13 @@
 // ignore_for_file: prefer_const_constructors
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:flutter_tindercard/flutter_tindercard.dart';
 import 'package:google_fonts/google_fonts.dart';
-import "../widgets/bottombar.dart";
+import 'package:makeat_app/pages/home.dart';
+import 'package:makeat_app/pages/likes.dart';
+import 'package:makeat_app/pages/saved.dart';
 import "../widgets/fonts.dart";
 import 'recipe.dart';
 
@@ -17,6 +20,7 @@ class Tinderswiper extends StatefulWidget {
 
 class _TinderswiperState extends State<Tinderswiper>
     with TickerProviderStateMixin {
+  User? user = FirebaseAuth.instance.currentUser;
   List<String> tinderimages = [
     "assets/food3.jpg",
     "assets/food4.jpg",
@@ -104,8 +108,7 @@ class _TinderswiperState extends State<Tinderswiper>
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(15.0),
                                 image: DecorationImage(
-                                    image: AssetImage(
-                                        tinderimages[index]),
+                                    image: AssetImage(tinderimages[index]),
                                     fit: BoxFit.cover),
                                 // shape: BoxShape.circle
                               ),
@@ -361,7 +364,56 @@ class _TinderswiperState extends State<Tinderswiper>
           splashColor: Colors.white,
         ),
         extendBody: true, //to make navbar notch transparent
-        bottomNavigationBar: buildBottomBar(context),
+        bottomNavigationBar: BottomAppBar(
+          color: Colors.white,
+          shape: CircularNotchedRectangle(),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              IconButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => Home(uid: user!.uid)),
+                  );
+                },
+                icon: Icon(Icons.home_outlined, color: Color(0xff3BB143)),
+              ),
+              IconButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => Likes(uid: user!.uid)),
+                  );
+                },
+                icon: Icon(Icons.thumb_up_outlined,
+                    color: Color(0xff3BB143)),
+              ),
+              IconButton(
+                onPressed: () {},
+                icon: Icon(CupertinoIcons.camera_viewfinder,
+                    color: Colors.transparent), //space holder
+              ),
+              IconButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => Saved(uid: user!.uid)),
+                  );
+                },
+                icon: Icon(Icons.bookmark_outlined, color: Color(0xff3BB143)),
+              ),
+              IconButton(
+                onPressed: () {},
+                icon: Icon(Icons.account_circle_outlined,
+                    color: Color(0xff3BB143)),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
