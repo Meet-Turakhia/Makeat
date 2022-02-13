@@ -463,7 +463,10 @@ class _SavedState extends State<Saved> {
                                       context,
                                       MaterialPageRoute(
                                         builder: (context) => Recipe(
-                                            uid: widget.uid, recipeId: ds.id),
+                                          uid: widget.uid,
+                                          recipeId: ds.id,
+                                          previousPage: "saved",
+                                        ),
                                       ),
                                     ).then(
                                       (value) => setState(
