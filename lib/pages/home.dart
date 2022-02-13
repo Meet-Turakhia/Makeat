@@ -1,12 +1,14 @@
 // ignore_for_file: prefer_const_constructors
 import 'dart:async';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:makeat_app/pages/likes.dart';
+import 'package:makeat_app/pages/saved.dart';
 import 'package:makeat_app/widgets/fonts.dart';
 import 'package:makeat_app/widgets/searchbar.dart';
 import 'package:makeat_app/widgets/showtoast.dart';
-import "../widgets/bottombar.dart";
 import "../pages/recipe.dart";
 import 'swipecards.dart';
 import "package:cloud_firestore/cloud_firestore.dart";
@@ -21,6 +23,7 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  User? user = FirebaseAuth.instance.currentUser;
   final db = FirebaseFirestore.instance;
   CollectionReference recipeStream =
       FirebaseFirestore.instance.collection("recipes");
@@ -436,7 +439,50 @@ class _HomeState extends State<Home> {
           splashColor: Colors.white,
         ),
         extendBody: true, //to make navbar notch transparent
-        bottomNavigationBar: buildBottomBar(context),
+        bottomNavigationBar: BottomAppBar(
+          color: Colors.white,
+          shape: CircularNotchedRectangle(),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              IconButton(
+                onPressed: () {},
+                icon: Icon(Icons.home, color: Color(0xff3BB143)),
+              ),
+              IconButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => Likes(uid: user!.uid)),
+                  );
+                },
+                icon: Icon(Icons.thumb_up_outlined,
+                    color: Color(0xff3BB143)),
+              ),
+              IconButton(
+                onPressed: () {},
+                icon: Icon(CupertinoIcons.camera_viewfinder,
+                    color: Colors.transparent), //space holder
+              ),
+              IconButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => Saved(uid: user!.uid)),
+                  );
+                },
+                icon: Icon(Icons.bookmark_outline, color: Color(0xff3BB143)),
+              ),
+              IconButton(
+                onPressed: () {},
+                icon: Icon(Icons.account_circle_outlined,
+                    color: Color(0xff3BB143)),
+              ),
+            ],
+          ),
+        ),
         // BottomAppBar(
         //   color: Colors.white,
         //   shape: CircularNotchedRectangle(),
