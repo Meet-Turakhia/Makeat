@@ -368,7 +368,7 @@ class _HomeState extends State<Home> {
                                       context,
                                       MaterialPageRoute(
                                         builder: (context) => Recipe(
-                                            uid: widget.uid, recipeId: ds.id),
+                                            uid: widget.uid, recipeId: ds.id, previousPage: "home",),
                                       ),
                                     );
                                   },
