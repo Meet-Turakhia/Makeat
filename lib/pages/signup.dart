@@ -2,6 +2,7 @@
 import "package:flutter/material.dart";
 import "package:google_fonts/google_fonts.dart";
 import 'package:makeat_app/controllers/authentications.dart';
+import 'package:makeat_app/widgets/showtoast.dart';
 import "login.dart";
 import "home.dart";
 import "package:firebase_auth/firebase_auth.dart";
@@ -182,6 +183,8 @@ class _SignUpState extends State<SignUp> {
                                 (Route<dynamic> route) => false,
                               );
                             }
+                          } else {
+                            popupMessage("Validation Failed!");
                           }
                         },
                         style: ElevatedButton.styleFrom(
