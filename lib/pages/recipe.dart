@@ -1,17 +1,29 @@
 // ignore_for_file: prefer_const_constructors
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:makeat_app/pages/home.dart';
+import 'package:makeat_app/pages/likes.dart';
+import 'package:makeat_app/pages/saved.dart';
 import 'package:makeat_app/widgets/showtoast.dart';
-import "../widgets/bottombar.dart";
 import "../widgets/fonts.dart";
 import 'swipecards.dart';
 
 class Recipe extends StatefulWidget {
   final String uid;
   final String recipeId;
-  const Recipe({Key? key, required this.uid, required this.recipeId})
+  final bool homePage;
+  final bool likesPage;
+  final bool savedPage;
+  const Recipe(
+      {Key? key,
+      required this.uid,
+      required this.recipeId,
+      required this.homePage,
+      required this.likesPage, 
+      required this.savedPage,})
       : super(key: key);
   // Recipe(List<String> cardimg, { Key key, this.img }) : super(key: key);
 
@@ -20,6 +32,7 @@ class Recipe extends StatefulWidget {
 }
 
 class _RecipeState extends State<Recipe> {
+  User? user = FirebaseAuth.instance.currentUser;
   final db = FirebaseFirestore.instance;
   var likesCollection = FirebaseFirestore.instance.collection("likes");
   var savesCollection = FirebaseFirestore.instance.collection("saves");
@@ -849,7 +862,56 @@ class _RecipeState extends State<Recipe> {
           splashColor: Colors.white,
         ),
         extendBody: true, //to make navbar notch transparent
-        bottomNavigationBar: buildBottomBar(context),
+        bottomNavigationBar: BottomAppBar(
+          color: Colors.white,
+          shape: CircularNotchedRectangle(),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              IconButton(
+                onPressed: () {
+                  widget.homePage?Navigator.pop(context):Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => Home(uid: user!.uid)),
+                  );
+                },
+                icon: Icon(widget.homePage?Icons.home:Icons.home_outlined, color: Color(0xff3BB143)),
+              ),
+              IconButton(
+                onPressed: () {
+                  widget.likesPage?Navigator.pop(context):Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => Likes(uid: user!.uid)),
+                  );
+                },
+                icon: Icon(widget.likesPage?Icons.thumb_up:Icons.thumb_up_outlined,
+                    color: Color(0xff3BB143)),
+              ),
+              IconButton(
+                onPressed: () {},
+                icon: Icon(CupertinoIcons.camera_viewfinder,
+                    color: Colors.transparent), //space holder
+              ),
+              IconButton(
+                onPressed: () {
+                  widget.savedPage?Navigator.pop(context):Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => Saved(uid: user!.uid)),
+                  );
+                },
+                icon: Icon(widget.savedPage?Icons.bookmark:Icons.bookmark_outline, color: Color(0xff3BB143)),
+              ),
+              IconButton(
+                onPressed: () {},
+                icon: Icon(Icons.account_circle_outlined,
+                    color: Color(0xff3BB143)),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
