@@ -17,14 +17,14 @@ class Recipe extends StatefulWidget {
   final bool homePage;
   final bool likesPage;
   final bool savedPage;
-  const Recipe(
-      {Key? key,
-      required this.uid,
-      required this.recipeId,
-      required this.homePage,
-      required this.likesPage, 
-      required this.savedPage,})
-      : super(key: key);
+  const Recipe({
+    Key? key,
+    required this.uid,
+    required this.recipeId,
+    required this.homePage,
+    required this.likesPage,
+    required this.savedPage,
+  }) : super(key: key);
   // Recipe(List<String> cardimg, { Key key, this.img }) : super(key: key);
 
   @override
@@ -870,24 +870,35 @@ class _RecipeState extends State<Recipe> {
             children: [
               IconButton(
                 onPressed: () {
-                  widget.homePage?Navigator.pop(context):Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => Home(uid: user!.uid)),
-                  );
+                  widget.homePage
+                      ? Navigator.pop(context)
+                      : Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => Home(uid: user!.uid)),
+                        );
                 },
-                icon: Icon(widget.homePage?Icons.home:Icons.home_outlined, color: Color(0xff3BB143)),
+                icon: Icon(
+                  widget.homePage ? Icons.home : Icons.home_outlined,
+                  color: Color(0xff3BB143),
+                  size: 27,
+                ),
               ),
               IconButton(
                 onPressed: () {
-                  widget.likesPage?Navigator.pop(context):Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => Likes(uid: user!.uid)),
-                  );
+                  widget.likesPage
+                      ? Navigator.pop(context)
+                      : Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => Likes(uid: user!.uid)),
+                        );
                 },
-                icon: Icon(widget.likesPage?Icons.thumb_up:Icons.thumb_up_outlined,
-                    color: Color(0xff3BB143)),
+                icon: Icon(
+                  widget.likesPage ? Icons.thumb_up : Icons.thumb_up_outlined,
+                  color: Color(0xff3BB143),
+                  size: 27,
+                ),
               ),
               IconButton(
                 onPressed: () {},
@@ -896,18 +907,27 @@ class _RecipeState extends State<Recipe> {
               ),
               IconButton(
                 onPressed: () {
-                  widget.savedPage?Navigator.pop(context):Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => Saved(uid: user!.uid)),
-                  );
+                  widget.savedPage
+                      ? Navigator.pop(context)
+                      : Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => Saved(uid: user!.uid)),
+                        );
                 },
-                icon: Icon(widget.savedPage?Icons.bookmark:Icons.bookmark_outline, color: Color(0xff3BB143)),
+                icon: Icon(
+                  widget.savedPage ? Icons.bookmark : Icons.bookmark_outline,
+                  color: Color(0xff3BB143),
+                  size: 27,
+                ),
               ),
               IconButton(
                 onPressed: () {},
-                icon: Icon(Icons.account_circle_outlined,
-                    color: Color(0xff3BB143)),
+                icon: Icon(
+                  Icons.account_circle_outlined,
+                  color: Color(0xff3BB143),
+                  size: 27,
+                ),
               ),
             ],
           ),
