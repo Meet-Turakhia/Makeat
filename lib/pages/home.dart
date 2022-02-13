@@ -11,6 +11,7 @@ import "../pages/recipe.dart";
 import 'swipecards.dart';
 import "package:cloud_firestore/cloud_firestore.dart";
 
+//home class
 class Home extends StatefulWidget {
   final String uid;
   const Home({Key? key, required this.uid}) : super(key: key);
