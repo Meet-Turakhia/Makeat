@@ -1,12 +1,14 @@
 // ignore_for_file: prefer_const_constructors
 import 'dart:async';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:makeat_app/pages/home.dart';
+import 'package:makeat_app/pages/saved.dart';
 import 'package:makeat_app/widgets/fonts.dart';
 import 'package:makeat_app/widgets/showtoast.dart';
-import "../widgets/bottombar.dart";
 import "../pages/recipe.dart";
 import 'swipecards.dart';
 import "package:cloud_firestore/cloud_firestore.dart";
@@ -20,6 +22,7 @@ class Likes extends StatefulWidget {
 }
 
 class _LikesState extends State<Likes> {
+  User? user = FirebaseAuth.instance.currentUser;
   final db = FirebaseFirestore.instance;
   CollectionReference recipeStream =
       FirebaseFirestore.instance.collection("recipes");
@@ -548,7 +551,63 @@ class _LikesState extends State<Likes> {
           splashColor: Colors.white,
         ),
         extendBody: true, //to make navbar notch transparent
-        bottomNavigationBar: buildBottomBar(context),
+        bottomNavigationBar: BottomAppBar(
+          color: Colors.white,
+          shape: CircularNotchedRectangle(),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              IconButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => Home(uid: user!.uid)),
+                  ).then(
+                    (value) => setState(
+                      () {
+                        getLikedRecipesFirstCall = true;
+                        getRecipes(true);
+                      },
+                    ),
+                  );
+                },
+                icon: Icon(Icons.home_outlined, color: Color(0xff3BB143)),
+              ),
+              IconButton(
+                onPressed: () {},
+                icon: Icon(Icons.thumb_up, color: Color(0xff3BB143)),
+              ),
+              IconButton(
+                onPressed: () {},
+                icon: Icon(CupertinoIcons.camera_viewfinder,
+                    color: Colors.transparent), //space holder
+              ),
+              IconButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => Saved(uid: user!.uid)),
+                  ).then(
+                    (value) => setState(
+                      () {
+                        getLikedRecipesFirstCall = true;
+                        getRecipes(true);
+                      },
+                    ),
+                  );
+                },
+                icon: Icon(Icons.bookmark_outline, color: Color(0xff3BB143)),
+              ),
+              IconButton(
+                onPressed: () {},
+                icon: Icon(Icons.account_circle_outlined,
+                    color: Color(0xff3BB143)),
+              ),
+            ],
+          ),
+        ),
         // BottomAppBar(
         //   color: Colors.white,
         //   shape: CircularNotchedRectangle(),
