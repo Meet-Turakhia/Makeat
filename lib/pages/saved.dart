@@ -465,7 +465,9 @@ class _SavedState extends State<Saved> {
                                         builder: (context) => Recipe(
                                           uid: widget.uid,
                                           recipeId: ds.id,
-                                          previousPage: "saved",
+                                          homePage: false,
+                                          likesPage: false,
+                                          savedPage: true,
                                         ),
                                       ),
                                     ).then(
