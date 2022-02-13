@@ -897,7 +897,7 @@ class _RecipeState extends State<Recipe> {
                 icon: Icon(
                   widget.likesPage ? Icons.thumb_up : Icons.thumb_up_outlined,
                   color: Color(0xff3BB143),
-                  size: 27,
+                  size: 25,
                 ),
               ),
               IconButton(
