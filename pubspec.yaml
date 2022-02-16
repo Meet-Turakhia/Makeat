@@ -45,6 +45,8 @@ dependencies:
   fluttertoast: ^8.0.8
   material_floating_search_bar: ^0.3.6
   flutter_svg: ^1.0.3
+  sqflite: ^2.0.2
+  path: ^1.8.0
 
 dev_dependencies:
   flutter_test:
