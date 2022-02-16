@@ -2,7 +2,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
+import 'package:sqflite/sqflite.dart';
 import "../widgets/fonts.dart";
+
+getMatchedRecipesId(String query){
+  final sqliteDB = openDatabase("assets/sqlite/makeatDB.db");
+}
 
 Widget buildFloatingSearchBar() {
   // final isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
@@ -25,6 +30,7 @@ Widget buildFloatingSearchBar() {
     // width: isPortrait ? 600 : 500,
     debounceDelay: const Duration(milliseconds: 500),
     onQueryChanged: (query) {
+      getMatchedRecipesId(query);
       // Call your model, bloc, controller here.
     },
     // Specify a custom transition to be used for
