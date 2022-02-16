@@ -577,7 +577,11 @@ class _SavedState extends State<Saved> {
                     ),
                   );
                 },
-                icon: Icon(Icons.home_outlined, color: Color(0xff3BB143)),
+                icon: Icon(
+                  Icons.home_outlined,
+                  color: Color(0xff3BB143),
+                  size: 27,
+                ),
               ),
               IconButton(
                 onPressed: () {
@@ -594,7 +598,11 @@ class _SavedState extends State<Saved> {
                     ),
                   );
                 },
-                icon: Icon(Icons.thumb_up_outlined, color: Color(0xff3BB143)),
+                icon: Icon(
+                  Icons.thumb_up_outlined,
+                  color: Color(0xff3BB143),
+                  size: 25,
+                ),
               ),
               IconButton(
                 onPressed: () {},
@@ -603,12 +611,19 @@ class _SavedState extends State<Saved> {
               ),
               IconButton(
                 onPressed: () {},
-                icon: Icon(Icons.bookmark, color: Color(0xff3BB143)),
+                icon: Icon(
+                  Icons.bookmark,
+                  color: Color(0xff3BB143),
+                  size: 27,
+                ),
               ),
               IconButton(
                 onPressed: () {},
-                icon: Icon(Icons.account_circle_outlined,
-                    color: Color(0xff3BB143)),
+                icon: Icon(
+                  Icons.account_circle_outlined,
+                  color: Color(0xff3BB143),
+                  size: 27,
+                ),
               ),
             ],
           ),
