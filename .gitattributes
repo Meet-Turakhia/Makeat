@@ -1,3 +1,7 @@
 # *.json filter=lfs diff=lfs merge=lfs -text
+<<<<<<< HEAD
+# *.csv filter=lfs diff=lfs merge=lfs -text
+=======
 *.csv filter=lfs diff=lfs merge=lfs -text
+>>>>>>> f61e9dcc7c985cc8277e49f9db490001004ddaf7
 fpss.tar.gz filter=lfs diff=lfs merge=lfs -text

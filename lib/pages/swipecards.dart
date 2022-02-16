@@ -378,11 +378,7 @@ class _TinderswiperState extends State<Tinderswiper>
                         builder: (context) => Home(uid: user!.uid)),
                   );
                 },
-                icon: Icon(
-                  Icons.home_outlined,
-                  color: Color(0xff3BB143),
-                  size: 27,
-                ),
+                icon: Icon(Icons.home_outlined, color: Color(0xff3BB143)),
               ),
               IconButton(
                 onPressed: () {
@@ -392,11 +388,8 @@ class _TinderswiperState extends State<Tinderswiper>
                         builder: (context) => Likes(uid: user!.uid)),
                   );
                 },
-                icon: Icon(
-                  Icons.thumb_up_outlined,
-                  color: Color(0xff3BB143),
-                  size: 25,
-                ),
+                icon: Icon(Icons.thumb_up_outlined,
+                    color: Color(0xff3BB143)),
               ),
               IconButton(
                 onPressed: () {},
@@ -411,19 +404,12 @@ class _TinderswiperState extends State<Tinderswiper>
                         builder: (context) => Saved(uid: user!.uid)),
                   );
                 },
-                icon: Icon(
-                  Icons.bookmark_outlined,
-                  color: Color(0xff3BB143),
-                  size: 27,
-                ),
+                icon: Icon(Icons.bookmark_outlined, color: Color(0xff3BB143)),
               ),
               IconButton(
                 onPressed: () {},
-                icon: Icon(
-                  Icons.account_circle_outlined,
-                  color: Color(0xff3BB143),
-                  size: 27,
-                ),
+                icon: Icon(Icons.account_circle_outlined,
+                    color: Color(0xff3BB143)),
               ),
             ],
           ),

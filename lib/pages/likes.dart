@@ -577,19 +577,11 @@ class _LikesState extends State<Likes> {
                     ),
                   );
                 },
-                icon: Icon(
-                  Icons.home_outlined,
-                  color: Color(0xff3BB143),
-                  size: 27,
-                ),
+                icon: Icon(Icons.home_outlined, color: Color(0xff3BB143)),
               ),
               IconButton(
                 onPressed: () {},
-                icon: Icon(
-                  Icons.thumb_up,
-                  color: Color(0xff3BB143),
-                  size: 25,
-                ),
+                icon: Icon(Icons.thumb_up, color: Color(0xff3BB143)),
               ),
               IconButton(
                 onPressed: () {},
@@ -611,19 +603,12 @@ class _LikesState extends State<Likes> {
                     ),
                   );
                 },
-                icon: Icon(
-                  Icons.bookmark_outline,
-                  color: Color(0xff3BB143),
-                  size: 27,
-                ),
+                icon: Icon(Icons.bookmark_outline, color: Color(0xff3BB143)),
               ),
               IconButton(
                 onPressed: () {},
-                icon: Icon(
-                  Icons.account_circle_outlined,
-                  color: Color(0xff3BB143),
-                  size: 27,
-                ),
+                icon: Icon(Icons.account_circle_outlined,
+                    color: Color(0xff3BB143)),
               ),
             ],
           ),

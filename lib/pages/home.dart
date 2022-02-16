@@ -452,11 +452,7 @@ class _HomeState extends State<Home> {
             children: [
               IconButton(
                 onPressed: () {},
-                icon: Icon(
-                  Icons.home,
-                  color: Color(0xff3BB143),
-                  size: 27,
-                ),
+                icon: Icon(Icons.home, color: Color(0xff3BB143)),
               ),
               IconButton(
                 onPressed: () {
@@ -466,11 +462,7 @@ class _HomeState extends State<Home> {
                         builder: (context) => Likes(uid: user!.uid)),
                   );
                 },
-                icon: Icon(
-                  Icons.thumb_up_outlined,
-                  color: Color(0xff3BB143),
-                  size: 25,
-                ),
+                icon: Icon(Icons.thumb_up_outlined, color: Color(0xff3BB143)),
               ),
               IconButton(
                 onPressed: () {},
@@ -485,19 +477,12 @@ class _HomeState extends State<Home> {
                         builder: (context) => Saved(uid: user!.uid)),
                   );
                 },
-                icon: Icon(
-                  Icons.bookmark_outline,
-                  color: Color(0xff3BB143),
-                  size: 27,
-                ),
+                icon: Icon(Icons.bookmark_outline, color: Color(0xff3BB143)),
               ),
               IconButton(
                 onPressed: () {},
-                icon: Icon(
-                  Icons.account_circle_outlined,
-                  color: Color(0xff3BB143),
-                  size: 27,
-                ),
+                icon: Icon(Icons.account_circle_outlined,
+                    color: Color(0xff3BB143)),
               ),
             ],
           ),

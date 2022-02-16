@@ -1,3 +1,3 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:4c877983b7fe645c5c8bc37cca10c11598f5fe06f9d6e6ce45a1b06261909e3c
-size 70
+{
+    "java.configuration.updateBuildConfiguration": "interactive"
+}
