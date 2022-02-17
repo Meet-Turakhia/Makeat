@@ -42,8 +42,7 @@ class _SearchBarState extends State<SearchBar> {
       double currentScroll = scrollController.position.pixels;
       double delta = MediaQuery.of(context).size.height * 0.20;
       if (maxScroll - currentScroll <= delta) {
-        idOffset += 10;
-        getRecipes(query);
+        getRecipes();
       }
     });
     super.initState();
@@ -55,7 +54,7 @@ class _SearchBarState extends State<SearchBar> {
     super.dispose();
   }
 
-  Future<List> getMatchedRecipesId(String query) async {
+  Future<List> getMatchedRecipesId() async {
     List matchedRecipesId = [];
     if (idOffset > 99990) {
       return matchedRecipesId;
@@ -66,17 +65,18 @@ class _SearchBarState extends State<SearchBar> {
     for (var i = 0; i < matchedRecipes.length; i++) {
       matchedRecipesId.add(matchedRecipes[i]["RecipeId"].toString());
     }
+    idOffset += 10;
     return matchedRecipesId;
   }
 
-  getRecipes(String query) async {
+  getRecipes() async {
     if (isLoading) {
       return;
     }
     setState(() {
       isLoading = true;
     });
-    var matchedRecipesId = await getMatchedRecipesId(query);
+    var matchedRecipesId = await getMatchedRecipesId();
     if (matchedRecipesId.isEmpty) {
       setState(() {
         isLoading = false;
@@ -125,14 +125,14 @@ class _SearchBarState extends State<SearchBar> {
       openAxisAlignment: 0.0,
       // width: isPortrait ? 600 : 500,
       debounceDelay: const Duration(milliseconds: 500),
-      onQueryChanged: (query) {
+      onQueryChanged: (userQuery) {
         // Call your model, bloc, controller here.
         setState(() {
           recipes = [];
-          query = query;
+          query = userQuery;
           idOffset = 0;
         });
-        getRecipes(query);
+        getRecipes();
       },
       // Specify a custom transition to be used for
       // animating between opened and closed stated.
@@ -293,7 +293,7 @@ class _SearchBarState extends State<SearchBar> {
                           ),
                           onPressed: () {
                             User? user = FirebaseAuth.instance.currentUser;
-                            
+
                             Navigator.push(
                               context,
                               MaterialPageRoute(
