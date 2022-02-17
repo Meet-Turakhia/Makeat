@@ -56,32 +56,19 @@ class _SearchBarState extends State<SearchBar> {
     if (isLoading) {
       return;
     }
-    var matchedRecipesId = getMatchedRecipesId(query);
+    setState(() {
+      isLoading = true;
+    });
+    var matchedRecipesId = await getMatchedRecipesId(query);
     QuerySnapshot querySnapshot;
-    if (firstCall == true) {
-      querySnapshot = await db.collection("recipes").limit(documentLimit).get();
-      firstCall = false;
-      // ignore: unnecessary_null_comparison
-    } else if (lastDocument == null) {
-      setState(() {
-        isLoading = true;
-      });
-      querySnapshot = await db.collection("recipes").limit(documentLimit).get();
-    } else {
-      setState(() {
-        isLoading = true;
-      });
-      querySnapshot = await db
-          .collection("recipes")
-          .startAfterDocument(lastDocument)
-          .limit(documentLimit)
-          .get();
-    }
+    querySnapshot = await db
+        .collection("recipes")
+        .where("RecipeId", whereIn: matchedRecipesId)
+        .get();
     if (querySnapshot.docs.isEmpty) {
       setLoading(false);
       return;
     }
-    lastDocument = querySnapshot.docs[querySnapshot.docs.length - 1];
     recipes.addAll(querySnapshot.docs);
     controller.sink.add(recipes);
     setLoading(false);
