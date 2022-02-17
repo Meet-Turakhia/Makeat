@@ -418,7 +418,7 @@ class _HomeState extends State<Home> {
                     },
                   ),
                 ),
-                buildFloatingSearchBar(),
+                SearchBar(),
               ],
             ),
           ),
