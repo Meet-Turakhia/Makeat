@@ -59,6 +59,11 @@ class _SearchBarState extends State<SearchBar> {
     if (idOffset > 99990) {
       return matchedRecipesId;
     }
+    if (query.isEmpty) {
+      recipes = [];
+      controller.sink.add(recipes);
+      return matchedRecipesId;
+    }
     final makeatDB = await sqliteDB;
     var matchedRecipes = await makeatDB.rawQuery(
         "SELECT * FROM recipes WHERE Name LIKE '%$query%' LIMIT $idLimit OFFSET $idOffset");
@@ -317,7 +322,7 @@ class _SearchBarState extends State<SearchBar> {
                           child: isLoading
                               ? Center(
                                   child: CircularProgressIndicator(
-                                    color: Color(0xff3BB143),
+                                    color: Colors.lightGreen,
                                   ),
                                 )
                               : Center(
@@ -331,9 +336,7 @@ class _SearchBarState extends State<SearchBar> {
                     },
                   );
                 } else {
-                  return Center(
-                    child: CircularProgressIndicator(),
-                  );
+                  return Center();
                 }
               },
             ),
