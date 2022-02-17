@@ -27,10 +27,13 @@ class _SearchBarState extends State<SearchBar> {
   int idOffset = 0;
 
   Future<List> getMatchedRecipesId(String query) async {
+    List matchedRecipesId = [];
+    if (idLimit > 100000) {
+      return matchedRecipesId;
+    }
     final makeatDB = await sqliteDB;
     var matchedRecipes = makeatDB.rawQuery(
         "SELECT * FROM recipes WHERE Name LIKE '%$query%' LIMIT $idLimit OFFSET $idOffset");
-    List matchedRecipesId = [];
     for (var i = 0; i < matchedRecipes.length; i++) {
       matchedRecipesId.add(matchedRecipes[i]["RecipeId"]);
     }
@@ -63,7 +66,7 @@ class _SearchBarState extends State<SearchBar> {
     QuerySnapshot querySnapshot;
     querySnapshot = await db
         .collection("recipes")
-        .where("RecipeId", whereIn: matchedRecipesId)
+        .where("id", whereIn: matchedRecipesId)
         .get();
     if (querySnapshot.docs.isEmpty) {
       setLoading(false);
@@ -125,9 +128,11 @@ class _SearchBarState extends State<SearchBar> {
             elevation: 4.0,
             child: Column(
               mainAxisSize: MainAxisSize.min,
-              children: Colors.accents.map((color) {
-                return Container(height: 100, color: color);
-              }).toList(),
+              children: Colors.accents.map(
+                (color) {
+                  return Container(height: 100, color: color);
+                },
+              ).toList(),
             ),
           ),
         );
