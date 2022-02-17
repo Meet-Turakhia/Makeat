@@ -1,9 +1,11 @@
 // ignore_for_file: prefer_const_constructors
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:makeat_app/pages/recipe.dart';
 import 'package:makeat_app/widgets/globals.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 import "../widgets/fonts.dart";
@@ -289,7 +291,22 @@ class _SearchBarState extends State<SearchBar> {
                               ],
                             ),
                           ),
-                          onPressed: () {},
+                          onPressed: () {
+                            User? user = FirebaseAuth.instance.currentUser;
+                            
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => Recipe(
+                                  uid: user!.uid,
+                                  recipeId: ds.id,
+                                  homePage: true,
+                                  likesPage: false,
+                                  savedPage: false,
+                                ),
+                              ),
+                            );
+                          },
                         );
                       } else {
                         return Padding(
