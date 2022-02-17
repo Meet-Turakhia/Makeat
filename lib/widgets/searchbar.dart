@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:makeat_app/widgets/globals.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 import "../widgets/fonts.dart";
@@ -21,31 +22,28 @@ class _SearchBarState extends State<SearchBar> {
   bool isLoading = false;
   bool hasMore = true;
   bool firstCall = true;
-  int documentLimit = 15;
+  int documentLimit = 10;
   late DocumentSnapshot lastDocument;
-  int idLimit = 15;
+  int idLimit = 10;
   int idOffset = 0;
+  var query = "";
 
-  Future<List> getMatchedRecipesId(String query) async {
-    List matchedRecipesId = [];
-    if (idLimit > 100000) {
-      return matchedRecipesId;
-    }
-    final makeatDB = await sqliteDB;
-    var matchedRecipes = makeatDB.rawQuery(
-        "SELECT * FROM recipes WHERE Name LIKE '%$query%' LIMIT $idLimit OFFSET $idOffset");
-    for (var i = 0; i < matchedRecipes.length; i++) {
-      matchedRecipesId.add(matchedRecipes[i]["RecipeId"]);
-    }
-    return matchedRecipesId;
-  }
-
+  ScrollController scrollController = ScrollController();
   StreamController<List<DocumentSnapshot>> controller =
       StreamController<List<DocumentSnapshot>>();
   Stream<List<DocumentSnapshot>> get streamController => controller.stream;
 
   @override
   void initState() {
+    scrollController.addListener(() {
+      double maxScroll = scrollController.position.maxScrollExtent;
+      double currentScroll = scrollController.position.pixels;
+      double delta = MediaQuery.of(context).size.height * 0.20;
+      if (maxScroll - currentScroll <= delta) {
+        idOffset += 10;
+        getRecipes(query);
+      }
+    });
     super.initState();
   }
 
@@ -53,6 +51,20 @@ class _SearchBarState extends State<SearchBar> {
   void dispose() {
     controller.close();
     super.dispose();
+  }
+
+  Future<List> getMatchedRecipesId(String query) async {
+    List matchedRecipesId = [];
+    if (idOffset > 99990) {
+      return matchedRecipesId;
+    }
+    final makeatDB = await sqliteDB;
+    var matchedRecipes = await makeatDB.rawQuery(
+        "SELECT * FROM recipes WHERE Name LIKE '%$query%' LIMIT $idLimit OFFSET $idOffset");
+    for (var i = 0; i < matchedRecipes.length; i++) {
+      matchedRecipesId.add(matchedRecipes[i]["RecipeId"].toString());
+    }
+    return matchedRecipesId;
   }
 
   getRecipes(String query) async {
@@ -63,6 +75,12 @@ class _SearchBarState extends State<SearchBar> {
       isLoading = true;
     });
     var matchedRecipesId = await getMatchedRecipesId(query);
+    if (matchedRecipesId.isEmpty) {
+      setState(() {
+        isLoading = false;
+      });
+      return;
+    }
     QuerySnapshot querySnapshot;
     querySnapshot = await db
         .collection("recipes")
@@ -87,6 +105,7 @@ class _SearchBarState extends State<SearchBar> {
   Widget build(BuildContext context) {
     // final isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
     return FloatingSearchBar(
+      scrollController: scrollController,
       elevation: 10.0,
       borderRadius: BorderRadius.circular(10),
       margins: EdgeInsets.fromLTRB(20, 28, 20, 10),
@@ -96,7 +115,7 @@ class _SearchBarState extends State<SearchBar> {
       hintStyle: mfont15,
       queryStyle: mfont15,
       iconColor: Color(0xff3BB143),
-      scrollPadding: const EdgeInsets.only(top: 16, bottom: 56),
+      scrollPadding: const EdgeInsets.only(top: 16, bottom: 66),
       transitionDuration: const Duration(milliseconds: 500),
       transitionCurve: Curves.easeInOut,
       physics: const BouncingScrollPhysics(),
@@ -106,6 +125,11 @@ class _SearchBarState extends State<SearchBar> {
       debounceDelay: const Duration(milliseconds: 500),
       onQueryChanged: (query) {
         // Call your model, bloc, controller here.
+        setState(() {
+          recipes = [];
+          query = query;
+          idOffset = 0;
+        });
         getRecipes(query);
       },
       // Specify a custom transition to be used for
@@ -124,15 +148,177 @@ class _SearchBarState extends State<SearchBar> {
         return ClipRRect(
           borderRadius: BorderRadius.circular(10),
           child: Material(
-            color: Colors.white,
-            elevation: 4.0,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: Colors.accents.map(
-                (color) {
-                  return Container(height: 100, color: color);
-                },
-              ).toList(),
+            color: Color(0xff3BB143),
+            elevation: 10.0,
+            child: StreamBuilder<List<DocumentSnapshot>>(
+              stream: streamController,
+              builder: (context, snapshot) {
+                if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+                  return ListView.builder(
+                    padding: EdgeInsets.all(0),
+                    shrinkWrap: true,
+                    itemCount: snapshot.data!.length + 1,
+                    itemBuilder: (context, index) {
+                      if (index < snapshot.data!.length) {
+                        DocumentSnapshot ds = snapshot.data![index];
+                        String time = ds["TotalTime"].split("PT")[1];
+                        ImageProvider recipeImage;
+                        if (ds["Images"] == "character(0)") {
+                          recipeImage =
+                              AssetImage("assets/images/generic_image2.jpg");
+                        } else {
+                          recipeImage =
+                              NetworkImage("${ds['Images'].split('"')[1]}");
+                        }
+                        return CupertinoButton(
+                          padding: EdgeInsets.all(0),
+                          child: Container(
+                            color: Colors.white,
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 10),
+                            child: Row(
+                              children: [
+                                Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    image: DecorationImage(
+                                      image: recipeImage,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                  height: 80,
+                                  width: 100,
+                                ),
+                                SizedBox(width: 10),
+                                Expanded(
+                                  child: Column(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "${ds['Name']}",
+                                        style: GoogleFonts.ubuntu(
+                                            fontSize: 18,
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.bold),
+                                        softWrap: false,
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                      SizedBox(
+                                        height: 5,
+                                      ),
+                                      Wrap(
+                                        alignment: WrapAlignment.spaceBetween,
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Text(
+                                                "${ds['Calories']} Calories",
+                                                textAlign: TextAlign.start,
+                                                style: GoogleFonts.ubuntu(
+                                                  color: Colors.white,
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.w500,
+                                                  textStyle: TextStyle(
+                                                      background:
+                                                          Paint() //text black bg
+                                                            ..strokeWidth = 14.0
+                                                            ..color =
+                                                                Colors.black54
+                                                            ..style =
+                                                                PaintingStyle
+                                                                    .stroke
+                                                            ..strokeJoin =
+                                                                StrokeJoin
+                                                                    .round),
+                                                )),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Text("$time Time",
+                                                textAlign: TextAlign.start,
+                                                style: GoogleFonts.ubuntu(
+                                                  color: Colors.white,
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.w500,
+                                                  textStyle: TextStyle(
+                                                      background:
+                                                          Paint() //text black bg
+                                                            ..strokeWidth = 14.0
+                                                            ..color =
+                                                                Colors.black54
+                                                            ..style =
+                                                                PaintingStyle
+                                                                    .stroke
+                                                            ..strokeJoin =
+                                                                StrokeJoin
+                                                                    .round),
+                                                )),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Text(
+                                              "${ds['AggregatedRating']} Rating",
+                                              textAlign: TextAlign.start,
+                                              style: GoogleFonts.ubuntu(
+                                                color: Colors.white,
+                                                fontSize: 12,
+                                                fontWeight: FontWeight.w500,
+                                                textStyle: TextStyle(
+                                                    background:
+                                                        Paint() //text black bg
+                                                          ..strokeWidth = 14.0
+                                                          ..color =
+                                                              Color(0xff3BB143)
+                                                          ..style =
+                                                              PaintingStyle
+                                                                  .stroke
+                                                          ..strokeJoin =
+                                                              StrokeJoin.round),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                          onPressed: () {},
+                        );
+                      } else {
+                        return Padding(
+                          padding: EdgeInsets.only(
+                            bottom: 60.0,
+                            top: 32.0,
+                          ),
+                          child: isLoading
+                              ? Center(
+                                  child: CircularProgressIndicator(
+                                    color: Color(0xff3BB143),
+                                  ),
+                                )
+                              : Center(
+                                  child: Text(
+                                    "That's All Folks!",
+                                    style: mfont15,
+                                  ),
+                                ),
+                        );
+                      }
+                    },
+                  );
+                } else {
+                  return Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+              },
             ),
           ),
         );
