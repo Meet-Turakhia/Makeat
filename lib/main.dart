@@ -19,7 +19,7 @@ Future<void> main() async {
         data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
     await File(path).writeAsBytes(bytes);
   }
-  sqliteDB = openDatabase(path);
+  sqliteDB = await openDatabase(path);
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]).then(
     (value) => runApp(
       MaterialApp(
