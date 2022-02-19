@@ -7,6 +7,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:makeat_app/pages/recipe.dart';
 import 'package:makeat_app/widgets/globals.dart';
+import 'package:makeat_app/widgets/showtoast.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 import "../widgets/fonts.dart";
 
@@ -60,7 +61,6 @@ class _SearchBarState extends State<SearchBar> {
       return matchedRecipesId;
     }
     if (query.isEmpty) {
-      recipes = [];
       controller.sink.add(recipes);
       return matchedRecipesId;
     }
@@ -69,6 +69,9 @@ class _SearchBarState extends State<SearchBar> {
         "SELECT * FROM recipes WHERE Name LIKE '%$query%' LIMIT $idLimit OFFSET $idOffset");
     for (var i = 0; i < matchedRecipes.length; i++) {
       matchedRecipesId.add(matchedRecipes[i]["RecipeId"].toString());
+    }
+    if (matchedRecipesId.isEmpty && idOffset == 0) {
+      controller.sink.add(recipes);
     }
     idOffset += 10;
     return matchedRecipesId;
@@ -155,7 +158,7 @@ class _SearchBarState extends State<SearchBar> {
         return ClipRRect(
           borderRadius: BorderRadius.circular(10),
           child: Material(
-            color: Color(0xff3BB143),
+            color: Colors.white,
             elevation: 10.0,
             child: StreamBuilder<List<DocumentSnapshot>>(
               stream: streamController,
@@ -223,47 +226,48 @@ class _SearchBarState extends State<SearchBar> {
                                           Padding(
                                             padding: const EdgeInsets.all(8.0),
                                             child: Text(
-                                                "${ds['Calories']} Calories",
-                                                textAlign: TextAlign.start,
-                                                style: GoogleFonts.ubuntu(
-                                                  color: Colors.white,
-                                                  fontSize: 12,
-                                                  fontWeight: FontWeight.w500,
-                                                  textStyle: TextStyle(
-                                                      background:
-                                                          Paint() //text black bg
-                                                            ..strokeWidth = 14.0
-                                                            ..color =
-                                                                Colors.black54
-                                                            ..style =
-                                                                PaintingStyle
-                                                                    .stroke
-                                                            ..strokeJoin =
-                                                                StrokeJoin
-                                                                    .round),
-                                                )),
+                                              "${ds['Calories']} Calories",
+                                              textAlign: TextAlign.start,
+                                              style: GoogleFonts.ubuntu(
+                                                color: Colors.white,
+                                                fontSize: 12,
+                                                fontWeight: FontWeight.w500,
+                                                textStyle: TextStyle(
+                                                    background:
+                                                        Paint() //text black bg
+                                                          ..strokeWidth = 14.0
+                                                          ..color =
+                                                              Colors.black54
+                                                          ..style =
+                                                              PaintingStyle
+                                                                  .stroke
+                                                          ..strokeJoin =
+                                                              StrokeJoin.round),
+                                              ),
+                                            ),
                                           ),
                                           Padding(
                                             padding: const EdgeInsets.all(8.0),
-                                            child: Text("$time Time",
-                                                textAlign: TextAlign.start,
-                                                style: GoogleFonts.ubuntu(
-                                                  color: Colors.white,
-                                                  fontSize: 12,
-                                                  fontWeight: FontWeight.w500,
-                                                  textStyle: TextStyle(
-                                                      background:
-                                                          Paint() //text black bg
-                                                            ..strokeWidth = 14.0
-                                                            ..color =
-                                                                Colors.black54
-                                                            ..style =
-                                                                PaintingStyle
-                                                                    .stroke
-                                                            ..strokeJoin =
-                                                                StrokeJoin
-                                                                    .round),
-                                                )),
+                                            child: Text(
+                                              "$time Time",
+                                              textAlign: TextAlign.start,
+                                              style: GoogleFonts.ubuntu(
+                                                color: Colors.white,
+                                                fontSize: 12,
+                                                fontWeight: FontWeight.w500,
+                                                textStyle: TextStyle(
+                                                    background:
+                                                        Paint() //text black bg
+                                                          ..strokeWidth = 14.0
+                                                          ..color =
+                                                              Colors.black54
+                                                          ..style =
+                                                              PaintingStyle
+                                                                  .stroke
+                                                          ..strokeJoin =
+                                                              StrokeJoin.round),
+                                              ),
+                                            ),
                                           ),
                                           Padding(
                                             padding: const EdgeInsets.all(8.0),
@@ -322,7 +326,7 @@ class _SearchBarState extends State<SearchBar> {
                           child: isLoading
                               ? Center(
                                   child: CircularProgressIndicator(
-                                    color: Colors.lightGreen,
+                                    color: Color(0xff3BB143),
                                   ),
                                 )
                               : Center(
@@ -334,6 +338,35 @@ class _SearchBarState extends State<SearchBar> {
                         );
                       }
                     },
+                  );
+                } else if (snapshot.hasError) {
+                  popupMessage("Some Error Occured, Retrying!");
+                  return SizedBox(
+                    height: 95,
+                    child: Center(
+                      child: CircularProgressIndicator(
+                        color: Color(0xff3BB143),
+                      ),
+                    ),
+                  );
+                } else if (!isLoading && query.isNotEmpty) {
+                  return SizedBox(
+                    height: 95,
+                    child: Center(
+                      child: Text(
+                        "No Matching Recipes Found!",
+                        style: mfont15,
+                      ),
+                    ),
+                  );
+                } else if (isLoading && query.isNotEmpty) {
+                  return SizedBox(
+                    height: 95,
+                    child: Center(
+                      child: CircularProgressIndicator(
+                        color: Color(0xff3BB143),
+                      ),
+                    ),
                   );
                 } else {
                   return Center();
