@@ -284,15 +284,23 @@ class _SavedState extends State<Saved> {
                             itemCount: snapshot.data!.length + 1,
                             itemBuilder: (context, index) {
                               if (index < snapshot.data!.length) {
-                                DocumentSnapshot ds = snapshot.data![index];
+                                DocumentSnapshot docSnap =
+                                    snapshot.data![index];
+                                Map ds = docSnap.data() as Map;
+                                ds.forEach((key, value) {
+                                  if (value == "") {
+                                    ds[key] = "NA";
+                                  }
+                                });
                                 String time = ds["TotalTime"].split("PT")[1];
                                 ImageProvider recipeImage;
-                                if (ds["Images"] == "character(0)" || ds["Images"] == "") {
+                                if (ds["Images"] == "character(0)" ||
+                                    ds["Images"] == "") {
                                   recipeImage = AssetImage(
                                       "assets/images/generic_image2.jpg");
                                 } else {
-                                  recipeImage = NetworkImage(
-                                      "${ds['Images'][0]}");
+                                  recipeImage =
+                                      NetworkImage("${ds['Images'][0]}");
                                 }
                                 return CupertinoButton(
                                   child: Container(
@@ -305,7 +313,7 @@ class _SavedState extends State<Saved> {
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
                                       children: [
-                                        Text(ds["Name"],
+                                        Text("${ds['Name']}",
                                             style: GoogleFonts.ubuntu(
                                               textStyle: TextStyle(
                                                   background:
@@ -467,7 +475,7 @@ class _SavedState extends State<Saved> {
                                       MaterialPageRoute(
                                         builder: (context) => Recipe(
                                           uid: widget.uid,
-                                          recipeId: ds.id,
+                                          recipeId: docSnap.id,
                                           homePage: false,
                                           likesPage: false,
                                           savedPage: true,
