@@ -287,12 +287,12 @@ class _LikesState extends State<Likes> {
                                 DocumentSnapshot ds = snapshot.data![index];
                                 String time = ds["TotalTime"].split("PT")[1];
                                 ImageProvider recipeImage;
-                                if (ds["Images"] == "character(0)") {
+                                if (ds["Images"] == "character(0)" || ds["Images"] == "") {
                                   recipeImage = AssetImage(
                                       "assets/images/generic_image2.jpg");
                                 } else {
                                   recipeImage = NetworkImage(
-                                      "${ds['Images'].split('"')[1]}");
+                                      "${ds['Images'][0]}");
                                 }
                                 return CupertinoButton(
                                   child: Container(
