@@ -68,7 +68,7 @@ class _SearchBarState extends State<SearchBar> {
     var matchedRecipes = await makeatDB.rawQuery(
         "SELECT * FROM recipes WHERE Name LIKE '%$query%' LIMIT $idLimit OFFSET $idOffset");
     for (var i = 0; i < matchedRecipes.length; i++) {
-      matchedRecipesId.add(matchedRecipes[i]["RecipeId"].toString());
+      matchedRecipesId.add(matchedRecipes[i]["RecipeId"]);
     }
     if (matchedRecipesId.isEmpty && idOffset == 0) {
       controller.sink.add(recipes);
@@ -94,7 +94,7 @@ class _SearchBarState extends State<SearchBar> {
     QuerySnapshot querySnapshot;
     querySnapshot = await db
         .collection("recipes")
-        .where("id", whereIn: matchedRecipesId)
+        .where("RecipeId", whereIn: matchedRecipesId)
         .get();
     if (querySnapshot.docs.isEmpty) {
       setLoading(false);
