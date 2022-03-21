@@ -170,7 +170,13 @@ class _SearchBarState extends State<SearchBar> {
                     itemCount: snapshot.data!.length + 1,
                     itemBuilder: (context, index) {
                       if (index < snapshot.data!.length) {
-                        DocumentSnapshot ds = snapshot.data![index];
+                        DocumentSnapshot docSnap = snapshot.data![index];
+                        Map ds = docSnap.data() as Map;
+                        ds.forEach((key, value) {
+                          if (value == "") {
+                            ds[key] = "NA";
+                          }
+                        });
                         String time = ds["TotalTime"].split("PT")[1];
                         ImageProvider recipeImage;
                         if (ds["Images"] == "character(0)" ||
@@ -308,7 +314,7 @@ class _SearchBarState extends State<SearchBar> {
                               MaterialPageRoute(
                                 builder: (context) => Recipe(
                                   uid: user!.uid,
-                                  recipeId: ds.id,
+                                  recipeId: docSnap.id,
                                   homePage: true,
                                   likesPage: false,
                                   savedPage: false,
