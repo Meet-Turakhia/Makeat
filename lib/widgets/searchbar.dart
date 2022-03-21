@@ -173,12 +173,12 @@ class _SearchBarState extends State<SearchBar> {
                         DocumentSnapshot ds = snapshot.data![index];
                         String time = ds["TotalTime"].split("PT")[1];
                         ImageProvider recipeImage;
-                        if (ds["Images"] == "character(0)") {
+                        if (ds["Images"] == "character(0)" ||
+                            ds["Images"] == "") {
                           recipeImage =
                               AssetImage("assets/images/generic_image2.jpg");
                         } else {
-                          recipeImage =
-                              NetworkImage("${ds['Images'].split('"')[1]}");
+                          recipeImage = NetworkImage("${ds['Images'][0]}");
                         }
                         return CupertinoButton(
                           padding: EdgeInsets.all(0),
