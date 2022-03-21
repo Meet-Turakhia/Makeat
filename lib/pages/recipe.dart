@@ -157,10 +157,15 @@ class _RecipeState extends State<Recipe> {
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 Map<String, dynamic>? ds = snapshot.data!.data();
+                ds!.forEach((key, value) {
+                  if (value == "") {
+                    ds[key] = "NA";
+                  }
+                });
                 String totalTime;
                 String cookTime;
                 String prepTime;
-                if (ds!["TotalTime"] != "NA") {
+                if (ds["TotalTime"] != "NA") {
                   totalTime = ds["TotalTime"].split("PT")[1];
                 } else {
                   totalTime = "NA";
@@ -176,7 +181,7 @@ class _RecipeState extends State<Recipe> {
                   prepTime = "NA";
                 }
                 Image recipeImage;
-                if (ds["Images"] == "character(0)") {
+                if (ds["Images"] == "character(0)" || ds["Images"] == "") {
                   recipeImage = Image.asset(
                     "assets/images/generic_image2.jpg",
                     width: 800,
@@ -185,23 +190,16 @@ class _RecipeState extends State<Recipe> {
                   );
                 } else {
                   recipeImage = Image.network(
-                    "${ds['Images'].split('"')[1]}",
+                    "${ds['Images'][0]}",
                     width: 800,
                     height: 300,
                     fit: BoxFit.cover,
                   );
                 }
-                RegExp doubleQuotesPattern = RegExp('"([^"]*)"|NA');
                 List<String> ingredients = [];
                 int ingredientsIteration;
-                List<String?> ingredientNames = doubleQuotesPattern
-                    .allMatches(ds["RecipeIngredientParts"].toString())
-                    .map((e) => e.group(0))
-                    .toList();
-                List<String?> ingredientQuantities = doubleQuotesPattern
-                    .allMatches(ds["RecipeIngredientQuantities"].toString())
-                    .map((e) => e.group(0))
-                    .toList();
+                List ingredientNames = ds["RecipeIngredientParts"];
+                List ingredientQuantities = ds["RecipeIngredientQuantities"];
                 if (ingredientNames.length < ingredientQuantities.length) {
                   ingredientsIteration = ingredientNames.length;
                 } else {
@@ -217,10 +215,7 @@ class _RecipeState extends State<Recipe> {
                   ingredients
                       .add(ingredientNames[i].toString().replaceAll('"', ''));
                 }
-                List<String?> instructions = doubleQuotesPattern
-                    .allMatches(ds["RecipeInstructions"].toString())
-                    .map((e) => e.group(0))
-                    .toList();
+                List instructions = ds["RecipeInstructions"];
                 return Stack(
                   children: [
                     recipeImage,
@@ -275,7 +270,7 @@ class _RecipeState extends State<Recipe> {
                                           child: Title(
                                             color: Colors.black,
                                             child: Text(
-                                              ds["Name"],
+                                              "${ds['Name']}",
                                               textAlign: TextAlign.center,
                                               style: GoogleFonts.ubuntu(
                                                 fontSize: 20.0,
@@ -318,7 +313,7 @@ class _RecipeState extends State<Recipe> {
                                             ),
                                           ),
                                           Text(
-                                            ds["AggregatedRating"],
+                                            "${ds['AggregatedRating']}",
                                             style: GoogleFonts.ubuntu(
                                               fontWeight: FontWeight.bold,
                                               fontSize: 15.0,
@@ -344,7 +339,7 @@ class _RecipeState extends State<Recipe> {
                                             ),
                                           ),
                                           Text(
-                                            ds["RecipeCategory"],
+                                            "${ds['RecipeCategory']}",
                                             style: GoogleFonts.ubuntu(
                                               fontWeight: FontWeight.bold,
                                               fontSize: 15.0,
@@ -448,7 +443,7 @@ class _RecipeState extends State<Recipe> {
                                             ),
                                           ),
                                           Text(
-                                            ds["Calories"],
+                                            "${ds['Calories']}",
                                             style: GoogleFonts.ubuntu(
                                               fontWeight: FontWeight.bold,
                                               fontSize: 15.0,
@@ -682,7 +677,7 @@ class _RecipeState extends State<Recipe> {
                                             ),
                                           ),
                                           Text(
-                                            ds["RecipeServings"],
+                                            "${ds['RecipeServings']}",
                                             style: GoogleFonts.ubuntu(
                                               fontWeight: FontWeight.bold,
                                               fontSize: 15.0,
