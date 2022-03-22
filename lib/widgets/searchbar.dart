@@ -66,7 +66,7 @@ class _SearchBarState extends State<SearchBar> {
     }
     final makeatDB = await sqliteDB;
     var matchedRecipes = await makeatDB.rawQuery(
-        "SELECT * FROM recipes WHERE Name LIKE '%$query%' LIMIT $idLimit OFFSET $idOffset");
+        'SELECT * FROM recipes WHERE Name LIKE "%$query%" LIMIT $idLimit OFFSET $idOffset');
     for (var i = 0; i < matchedRecipes.length; i++) {
       matchedRecipesId.add(matchedRecipes[i]["RecipeId"]);
     }
@@ -178,13 +178,12 @@ class _SearchBarState extends State<SearchBar> {
                           }
                         });
                         String time = ds["TotalTime"].split("PT")[1];
-                        ImageProvider recipeImage;
+                        bool isNetworkImage;
                         if (ds["Images"] == "character(0)" ||
                             ds["Images"] == "") {
-                          recipeImage =
-                              AssetImage("assets/images/generic_image2.jpg");
+                          isNetworkImage = false;
                         } else {
-                          recipeImage = NetworkImage("${ds['Images'][0]}");
+                          isNetworkImage = true;
                         }
                         return CupertinoButton(
                           padding: EdgeInsets.all(0),
@@ -197,10 +196,25 @@ class _SearchBarState extends State<SearchBar> {
                                 Container(
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(10),
-                                    image: DecorationImage(
-                                      image: recipeImage,
-                                      fit: BoxFit.cover,
-                                    ),
+                                  ),
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(10),
+                                    child: isNetworkImage
+                                        ? Image.network(
+                                            "${ds['Images'][0]}",
+                                            errorBuilder:
+                                                (context, error, stackTrace) {
+                                              return Image.asset(
+                                                "assets/images/generic_image2.jpg",
+                                                fit: BoxFit.cover,
+                                              );
+                                            },
+                                            fit: BoxFit.cover,
+                                          )
+                                        : Image.asset(
+                                            "assets/images/generic_image2.jpg",
+                                            fit: BoxFit.cover,
+                                          ),
                                   ),
                                   height: 80,
                                   width: 100,
