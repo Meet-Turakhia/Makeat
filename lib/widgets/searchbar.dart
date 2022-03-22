@@ -30,6 +30,7 @@ class _SearchBarState extends State<SearchBar> {
   int idLimit = 10;
   int idOffset = 0;
   var query = "";
+  bool allFetched = false;
 
   ScrollController scrollController = ScrollController();
   StreamController<List<DocumentSnapshot>> controller =
@@ -78,7 +79,7 @@ class _SearchBarState extends State<SearchBar> {
   }
 
   getRecipes() async {
-    if (isLoading) {
+    if (isLoading || allFetched) {
       return;
     }
     setState(() {
@@ -86,6 +87,7 @@ class _SearchBarState extends State<SearchBar> {
     });
     var matchedRecipesId = await getMatchedRecipesId();
     if (matchedRecipesId.isEmpty) {
+      allFetched = true;
       setState(() {
         isLoading = false;
       });
@@ -139,6 +141,7 @@ class _SearchBarState extends State<SearchBar> {
           recipes = [];
           query = userQuery;
           idOffset = 0;
+          allFetched = false;
         });
         getRecipes();
       },
