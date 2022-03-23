@@ -196,10 +196,7 @@ class _SearchBarState extends State<SearchBar> {
                                 horizontal: 10, vertical: 10),
                             child: Row(
                               children: [
-                                Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
+                                SizedBox(
                                   child: ClipRRect(
                                     borderRadius: BorderRadius.circular(10),
                                     child: isNetworkImage
