@@ -42,6 +42,7 @@ class _LikesState extends State<Likes> {
     semanticsLabel: 'Like SVG',
   );
   var likePageTitle = "Your Favorites";
+  bool allFetched = false;
 
   StreamController<List<DocumentSnapshot>> controller =
       StreamController<List<DocumentSnapshot>>();
@@ -110,7 +111,7 @@ class _LikesState extends State<Likes> {
   }
 
   getRecipes(bool refresh) async {
-    if (isLoading) {
+    if (isLoading || allFetched) {
       return;
     }
     var likedRecipesIdList = await getLikedRecipesIdList();
@@ -147,6 +148,7 @@ class _LikesState extends State<Likes> {
         });
       }
       setLoading(false);
+      allFetched = true;
       return;
     } else if (listDS.first.data() == null && refresh) {
       setState(() {
@@ -155,6 +157,7 @@ class _LikesState extends State<Likes> {
       recipes = [];
       controller.sink.add(recipes);
       setLoading(false);
+      allFetched = true;
       return;
     }
     lastDocument = listDS[listDS.length - 1];
@@ -533,6 +536,7 @@ class _LikesState extends State<Likes> {
                                       (value) => setState(
                                         () {
                                           getLikedRecipesFirstCall = true;
+                                          allFetched = false;
                                           getRecipes(true);
                                         },
                                       ),
@@ -628,6 +632,7 @@ class _LikesState extends State<Likes> {
                     (value) => setState(
                       () {
                         getLikedRecipesFirstCall = true;
+                        allFetched = false;
                         getRecipes(true);
                       },
                     ),
@@ -662,6 +667,7 @@ class _LikesState extends State<Likes> {
                     (value) => setState(
                       () {
                         getLikedRecipesFirstCall = true;
+                        allFetched = false;
                         getRecipes(true);
                       },
                     ),
