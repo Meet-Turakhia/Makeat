@@ -194,6 +194,14 @@ class _RecipeState extends State<Recipe> {
                     width: 800,
                     height: 300,
                     fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) {
+                      return Image.asset(
+                        "assets/images/generic_image2.jpg",
+                        width: 800,
+                        height: 300,
+                        fit: BoxFit.cover,
+                      );
+                    },
                   );
                 }
                 List<String> ingredients = [];
