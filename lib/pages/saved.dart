@@ -42,6 +42,7 @@ class _SavedState extends State<Saved> {
     semanticsLabel: 'Save SVG',
   );
   var savedPageTitle = "Try These Next";
+  bool allFetched = false;
 
   StreamController<List<DocumentSnapshot>> controller =
       StreamController<List<DocumentSnapshot>>();
@@ -110,7 +111,7 @@ class _SavedState extends State<Saved> {
   }
 
   getRecipes(bool refresh) async {
-    if (isLoading) {
+    if (isLoading || allFetched) {
       return;
     }
     var savedRecipesIdList = await getSavedRecipesIdList();
@@ -147,6 +148,7 @@ class _SavedState extends State<Saved> {
         });
       }
       setLoading(false);
+      allFetched = true;
       return;
     } else if (listDS.first.data() == null && refresh) {
       setState(() {
@@ -155,6 +157,7 @@ class _SavedState extends State<Saved> {
       recipes = [];
       controller.sink.add(recipes);
       setLoading(false);
+      allFetched = true;
       return;
     }
     lastDocument = listDS[listDS.length - 1];
@@ -533,6 +536,7 @@ class _SavedState extends State<Saved> {
                                       (value) => setState(
                                         () {
                                           getSavedRecipesFirstCall = true;
+                                          allFetched = false;
                                           getRecipes(true);
                                         },
                                       ),
@@ -628,6 +632,7 @@ class _SavedState extends State<Saved> {
                     (value) => setState(
                       () {
                         getSavedRecipesFirstCall = true;
+                        allFetched = false;
                         getRecipes(true);
                       },
                     ),
@@ -649,6 +654,7 @@ class _SavedState extends State<Saved> {
                     (value) => setState(
                       () {
                         getSavedRecipesFirstCall = true;
+                        allFetched = false;
                         getRecipes(true);
                       },
                     ),
