@@ -34,6 +34,7 @@ class _HomeState extends State<Home> {
   bool firstCall = true;
   int documentLimit = 15;
   late DocumentSnapshot lastDocument;
+  bool allFetched = false;
 
   StreamController<List<DocumentSnapshot>> controller =
       StreamController<List<DocumentSnapshot>>();
@@ -53,7 +54,7 @@ class _HomeState extends State<Home> {
   }
 
   getRecipes() async {
-    if (isLoading) {
+    if (isLoading || allFetched) {
       return;
     }
     QuerySnapshot querySnapshot;
@@ -78,6 +79,7 @@ class _HomeState extends State<Home> {
     }
     if (querySnapshot.docs.isEmpty) {
       setLoading(false);
+      allFetched = true;
       return;
     }
     lastDocument = querySnapshot.docs[querySnapshot.docs.length - 1];
@@ -236,13 +238,15 @@ class _HomeState extends State<Home> {
                                               MainAxisAlignment.spaceBetween,
                                           children: [
                                             Padding(
-                                              padding: const EdgeInsets.all(20.0),
+                                              padding:
+                                                  const EdgeInsets.all(20.0),
                                               child: Text("${ds['Name']}",
                                                   style: GoogleFonts.ubuntu(
                                                     textStyle: TextStyle(
                                                         background:
                                                             Paint() //text black bg
-                                                              ..strokeWidth = 21.0
+                                                              ..strokeWidth =
+                                                                  21.0
                                                               ..color =
                                                                   Colors.black54
                                                               ..style =
@@ -270,7 +274,8 @@ class _HomeState extends State<Home> {
                                                   )),
                                             ),
                                             Padding(
-                                              padding: const EdgeInsets.all(8.0),
+                                              padding:
+                                                  const EdgeInsets.all(8.0),
                                               child: SizedBox(
                                                 // color: Colors.red,
                                                 height: 35,
@@ -286,7 +291,8 @@ class _HomeState extends State<Home> {
                                                         "${ds['Calories']} Calories",
                                                         textAlign:
                                                             TextAlign.start,
-                                                        style: GoogleFonts.ubuntu(
+                                                        style:
+                                                            GoogleFonts.ubuntu(
                                                           textStyle: TextStyle(
                                                               background:
                                                                   Paint() //text black bg
@@ -307,20 +313,23 @@ class _HomeState extends State<Home> {
                                                           shadows: <Shadow>[
                                                             //text shadow of card
                                                             Shadow(
-                                                              offset:
-                                                                  Offset(2, 2.0),
+                                                              offset: Offset(
+                                                                  2, 2.0),
                                                               blurRadius: 20.0,
-                                                              color: Colors.white,
+                                                              color:
+                                                                  Colors.white,
                                                             ),
                                                           ],
                                                         )),
                                                     Padding(
-                                                      padding: EdgeInsets.all(12),
+                                                      padding:
+                                                          EdgeInsets.all(12),
                                                     ),
                                                     Text("$time Time",
                                                         textAlign:
                                                             TextAlign.start,
-                                                        style: GoogleFonts.ubuntu(
+                                                        style:
+                                                            GoogleFonts.ubuntu(
                                                           textStyle: TextStyle(
                                                               background:
                                                                   Paint() //text black bg
@@ -341,19 +350,22 @@ class _HomeState extends State<Home> {
                                                           shadows: <Shadow>[
                                                             //text shadow of card
                                                             Shadow(
-                                                              offset:
-                                                                  Offset(2, 2.0),
+                                                              offset: Offset(
+                                                                  2, 2.0),
                                                               blurRadius: 20.0,
-                                                              color: Colors.white,
+                                                              color:
+                                                                  Colors.white,
                                                             ),
                                                           ],
                                                         )),
                                                     Padding(
-                                                      padding: EdgeInsets.all(12),
+                                                      padding:
+                                                          EdgeInsets.all(12),
                                                     ),
                                                     Text(
                                                       "${ds['AggregatedRating']} Rating",
-                                                      textAlign: TextAlign.start,
+                                                      textAlign:
+                                                          TextAlign.start,
                                                       style: GoogleFonts.ubuntu(
                                                         textStyle: TextStyle(
                                                             background:
