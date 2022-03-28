@@ -150,7 +150,7 @@ class _SearchBarState extends State<SearchBar> {
       margins: EdgeInsets.fromLTRB(20, 28, 20, 10),
       automaticallyImplyBackButton: false,
       closeOnBackdropTap: true,
-      hint: 'Search Recipes/Keywords/Preferences',
+      hint: 'Search Recipes / Keywords / Preferences',
       hintStyle: mfont15,
       queryStyle: mfont15,
       iconColor: Color(0xff3BB143),
