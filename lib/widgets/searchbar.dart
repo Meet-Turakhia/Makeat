@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, unnecessary_string_escapes, prefer_typing_uninitialized_variables
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -58,6 +58,7 @@ class _SearchBarState extends State<SearchBar> {
 
   Future<List> getMatchedRecipesId() async {
     List matchedRecipesId = [];
+    var matchedRecipes;
     if (idOffset > 99990) {
       return matchedRecipesId;
     }
@@ -66,8 +67,32 @@ class _SearchBarState extends State<SearchBar> {
       return matchedRecipesId;
     }
     final makeatDB = await sqliteDB;
-    var matchedRecipes = await makeatDB.rawQuery(
-        'SELECT * FROM recipes WHERE Name LIKE "%$query%" LIMIT $idLimit OFFSET $idOffset');
+    var caloriesExp = RegExp(r"(?:cal:)\d+", caseSensitive: false);
+    var timeExp = RegExp(r"(?:time:)\d+", caseSensitive: false);
+    var calories = caloriesExp.firstMatch(query)?.group(0)?.split(":")[1];
+    var time = timeExp.firstMatch(query)?.group(0)?.split(":")[1];
+    var processedquery =
+        query.replaceAll(caloriesExp, "").replaceAll(timeExp, "").trim();
+    if (calories != null && time != null) {
+      var calPosition = caloriesExp.firstMatch(query)?.start;
+      var timePosition = timeExp.firstMatch(query)?.start;
+      if (calPosition! < timePosition!) {
+        matchedRecipes = await makeatDB.rawQuery(
+            'SELECT * FROM recipes WHERE (Name LIKE "%$processedquery%" OR Keywords LIKE "%$processedquery%") AND Calories <= $calories AND TotalMins <= $time ORDER BY ABS($calories - Calories) LIMIT $idLimit OFFSET $idOffset');
+      } else {
+        matchedRecipes = await makeatDB.rawQuery(
+            'SELECT * FROM recipes WHERE (Name LIKE "%$processedquery%" OR Keywords LIKE "%$processedquery%") AND Calories <= $calories AND TotalMins <= $time ORDER BY ABS($time - TotalMins) LIMIT $idLimit OFFSET $idOffset');
+      }
+    } else if (calories != null && time == null) {
+      matchedRecipes = await makeatDB.rawQuery(
+          'SELECT * FROM recipes WHERE Name LIKE "%$processedquery%" OR Keywords LIKE "%$processedquery%" ORDER BY ABS($calories - Calories) LIMIT $idLimit OFFSET $idOffset');
+    } else if (calories == null && time != null) {
+      matchedRecipes = await makeatDB.rawQuery(
+          'SELECT * FROM recipes WHERE Name LIKE "%$processedquery%" OR Keywords LIKE "%$processedquery%" ORDER BY ABS($time - TotalMins) LIMIT $idLimit OFFSET $idOffset');
+    } else {
+      matchedRecipes = await makeatDB.rawQuery(
+          'SELECT * FROM recipes WHERE Name LIKE "%$processedquery%" OR Keywords LIKE "%$processedquery%" LIMIT $idLimit OFFSET $idOffset');
+    }
     for (var i = 0; i < matchedRecipes.length; i++) {
       matchedRecipesId.add(matchedRecipes[i]["RecipeId"]);
     }
@@ -93,16 +118,18 @@ class _SearchBarState extends State<SearchBar> {
       });
       return;
     }
-    QuerySnapshot querySnapshot;
-    querySnapshot = await db
-        .collection("recipes")
-        .where("RecipeId", whereIn: matchedRecipesId)
-        .get();
-    if (querySnapshot.docs.isEmpty) {
+    DocumentSnapshot documentSnapshot;
+    List<DocumentSnapshot> listDS = [];
+    for (var id in matchedRecipesId) {
+      documentSnapshot =
+          await db.collection("recipes").doc(id.toString()).get();
+      listDS.add(documentSnapshot);
+    }
+    if (listDS.isEmpty) {
       setLoading(false);
       return;
     }
-    recipes.addAll(querySnapshot.docs);
+    recipes.addAll(listDS);
     controller.sink.add(recipes);
     setLoading(false);
   }
@@ -123,7 +150,7 @@ class _SearchBarState extends State<SearchBar> {
       margins: EdgeInsets.fromLTRB(20, 28, 20, 10),
       automaticallyImplyBackButton: false,
       closeOnBackdropTap: true,
-      hint: 'Search Recipe...',
+      hint: 'Search Recipes/Keywords/Preferences',
       hintStyle: mfont15,
       queryStyle: mfont15,
       iconColor: Color(0xff3BB143),
