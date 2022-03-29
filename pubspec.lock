@@ -200,6 +200,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.2.0"
+  flutter_voice_processor:
+    dependency: "direct main"
+    description:
+      name: flutter_voice_processor
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.6"
   flutter_web_plugins:
     dependency: transitive
     description: flutter
@@ -401,6 +408,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "4.4.0"
+  picovoice_flutter:
+    dependency: "direct main"
+    description:
+      name: picovoice_flutter
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.1.1"
   platform:
     dependency: transitive
     description:
@@ -415,6 +429,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.2"
+  porcupine_flutter:
+    dependency: transitive
+    description:
+      name: porcupine_flutter
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.1.1"
   process:
     dependency: transitive
     description:
@@ -429,6 +450,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.0.1+1"
+  rhino_flutter:
+    dependency: transitive
+    description:
+      name: rhino_flutter
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.1.1"
   sky_engine:
     dependency: transitive
     description: flutter

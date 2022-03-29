@@ -10,6 +10,8 @@ import 'package:makeat_app/pages/saved.dart';
 import 'package:makeat_app/widgets/showtoast.dart';
 import "../widgets/fonts.dart";
 import 'swipecards.dart';
+import 'package:picovoice_flutter/picovoice_error.dart';
+import 'package:picovoice_flutter/picovoice_manager.dart';
 
 class Recipe extends StatefulWidget {
   final String uid;
@@ -42,6 +44,7 @@ class _RecipeState extends State<Recipe> {
   // ignore: prefer_typing_uninitialized_variables
   var isSavedDoc;
   bool isSaved = false;
+  late PicovoiceManager picovoiceManager;
 
   void setLike() async {
     isLikedDoc = await likesCollection
@@ -111,6 +114,21 @@ class _RecipeState extends State<Recipe> {
     }
     setSave();
   }
+
+  void initPicovoice() async {
+    var accessKey = "7H86FCtrVjrcf8/3TfUwPT+qGGMnhnkR5ObFcv+wqFdSF2kPSJQIGQ==";
+    var keywordPath = "assets/picovoice/keyword.ppn";
+    var contextPath = "assets/picovoice/context.rhn";
+    try {
+      picovoiceManager = await PicovoiceManager.create(accessKey, keywordPath,
+          wakeWordCallback, contextPath, (inference) {});
+      picovoiceManager.start();
+    } on PicovoiceException catch (ex) {
+      print(ex);
+    }
+  }
+
+  void wakeWordCallback() {}
 
   @override
   Widget build(BuildContext context) {
