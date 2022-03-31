@@ -12,6 +12,8 @@ import "../widgets/fonts.dart";
 import 'swipecards.dart';
 import 'package:picovoice_flutter/picovoice_error.dart';
 import 'package:picovoice_flutter/picovoice_manager.dart';
+import 'package:just_audio/just_audio.dart';
+import 'package:text_to_speech/text_to_speech.dart';
 
 class Recipe extends StatefulWidget {
   final String uid;
@@ -45,6 +47,12 @@ class _RecipeState extends State<Recipe> {
   var isSavedDoc;
   bool isSaved = false;
   late PicovoiceManager picovoiceManager;
+  late AudioPlayer player;
+  late TextToSpeech tts;
+  int instructionPointer = -1;
+  late List recipeInstructionsList;
+  bool isChefUp = false;
+  var recipeName = "";
 
   void setLike() async {
     isLikedDoc = await likesCollection
@@ -73,6 +81,18 @@ class _RecipeState extends State<Recipe> {
     super.initState();
     setLike();
     setSave();
+    initPicovoice();
+    player = AudioPlayer();
+    tts = TextToSpeech();
+    tts.setVolume(1);
+    tts.setRate(0.8);
+  }
+
+  @override
+  void dispose() {
+    picovoiceManager.stop();
+    player.dispose();
+    super.dispose();
   }
 
   _likeispressed() {
@@ -120,15 +140,105 @@ class _RecipeState extends State<Recipe> {
     var keywordPath = "assets/picovoice/keyword.ppn";
     var contextPath = "assets/picovoice/context.rhn";
     try {
-      picovoiceManager = await PicovoiceManager.create(accessKey, keywordPath,
-          wakeWordCallback, contextPath, (inference) {});
+      picovoiceManager = await PicovoiceManager.create(
+          accessKey, keywordPath, wakeWordCallback, contextPath, (inference) {
+        switch (inference.intent) {
+          case "WakeUp":
+            {
+              if (!isChefUp) {
+                instructionPointer = -1;
+                var greeting = getGreeting();
+                tts.speak(greeting + ", lets make" + recipeName);
+                isChefUp = true;
+              } else {
+                tts.speak("I am right here, let me know if you need something");
+              }
+            }
+            break;
+          case "Next":
+            {
+              if (isChefUp) {
+                instructionPointer += 1;
+                if (instructionPointer < recipeInstructionsList.length) {
+                  tts.speak(recipeInstructionsList[instructionPointer]);
+                } else {
+                  instructionPointer -= 1;
+                  tts.speak("We are done with the recipe, go enjoy your" +
+                      recipeName);
+                }
+              }
+            }
+            break;
+          case "Previous":
+            {
+              if (isChefUp) {
+                instructionPointer -= 1;
+                if (instructionPointer == -2) {
+                  instructionPointer += 1;
+                  tts.speak(
+                      "Recipe instructions are not yet initialised, please do that first");
+                } else if (instructionPointer < 0) {
+                  instructionPointer += 1;
+                  tts.speak("You are already at the first recipe instruction");
+                } else {
+                  tts.speak(recipeInstructionsList[instructionPointer]);
+                }
+              }
+            }
+            break;
+          case "Repeat":
+            {
+              if (isChefUp) {
+                if (instructionPointer == -1) {
+                  tts.speak(
+                      "Initialise recipe instructions first, so that I can repeat them");
+                } else {
+                  tts.speak(recipeInstructionsList[instructionPointer]);
+                }
+              }
+            }
+            break;
+          case "Commands":
+            {
+              print("Pending");
+            }
+            break;
+          case "Exit":
+            {
+              if (isChefUp) {
+                tts.speak(
+                    "Bye and have a good day, wake me up again if you need me");
+                isChefUp = false;
+              }
+            }
+            break;
+        }
+      });
       picovoiceManager.start();
     } on PicovoiceException catch (ex) {
       print(ex);
     }
   }
 
-  void wakeWordCallback() {}
+  void wakeWordCallback() {
+    chefSoundEffect();
+  }
+
+  Future<void> chefSoundEffect() async {
+    await player.setAsset("assets/audio/chefSoundEffect.wav");
+    await player.play();
+  }
+
+  String getGreeting() {
+    var hour = DateTime.now().hour;
+    if (hour < 12) {
+      return 'Good Morning';
+    }
+    if (hour < 18) {
+      return 'Good Afternoon';
+    }
+    return 'Good Evening';
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -224,6 +334,14 @@ class _RecipeState extends State<Recipe> {
                 }
                 List<String> ingredients = [];
                 int ingredientsIteration;
+                if (ds["RecipeIngredientParts"].runtimeType != List) {
+                  ds["RecipeIngredientParts"] =
+                      ds["RecipeIngredientParts"].toString().split(" ");
+                }
+                if (ds["RecipeIngredientQuantities"].runtimeType != List) {
+                  ds["RecipeIngredientQuantities"] =
+                      ds["RecipeIngredientQuantities"].toString().split(" ");
+                }
                 List ingredientNames = ds["RecipeIngredientParts"];
                 List ingredientQuantities = ds["RecipeIngredientQuantities"];
                 if (ingredientNames.length < ingredientQuantities.length) {
@@ -242,6 +360,8 @@ class _RecipeState extends State<Recipe> {
                       .add(ingredientNames[i].toString().replaceAll('"', ''));
                 }
                 List instructions = ds["RecipeInstructions"];
+                recipeInstructionsList = instructions;
+                recipeName = ds["Name"];
                 return Stack(
                   children: [
                     recipeImage,
@@ -828,7 +948,7 @@ class _RecipeState extends State<Recipe> {
                                         size: 40,
                                       ),
                                       label: Text(
-                                        "MVA ",
+                                        "Chef ",
                                         style: GoogleFonts.ubuntu(
                                           fontWeight: FontWeight.bold,
                                           color: Colors.black,
