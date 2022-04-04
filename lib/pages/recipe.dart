@@ -10,9 +10,6 @@ import 'package:makeat_app/pages/saved.dart';
 import 'package:makeat_app/widgets/showtoast.dart';
 import "../widgets/fonts.dart";
 import 'swipecards.dart';
-import 'package:picovoice_flutter/picovoice_error.dart';
-import 'package:picovoice_flutter/picovoice_manager.dart';
-import 'package:just_audio/just_audio.dart';
 import 'package:text_to_speech/text_to_speech.dart';
 
 class Recipe extends StatefulWidget {
@@ -46,8 +43,6 @@ class _RecipeState extends State<Recipe> {
   // ignore: prefer_typing_uninitialized_variables
   var isSavedDoc;
   bool isSaved = false;
-  late PicovoiceManager picovoiceManager;
-  late AudioPlayer player;
   late TextToSpeech tts;
   int instructionPointer = -1;
   late List recipeInstructionsList;
@@ -81,8 +76,6 @@ class _RecipeState extends State<Recipe> {
     super.initState();
     setLike();
     setSave();
-    initPicovoice();
-    player = AudioPlayer();
     tts = TextToSpeech();
     tts.setVolume(1);
     tts.setRate(0.8);
@@ -90,8 +83,6 @@ class _RecipeState extends State<Recipe> {
 
   @override
   void dispose() {
-    picovoiceManager.stop();
-    player.dispose();
     super.dispose();
   }
 
@@ -133,100 +124,6 @@ class _RecipeState extends State<Recipe> {
       });
     }
     setSave();
-  }
-
-  void initPicovoice() async {
-    var accessKey = "7H86FCtrVjrcf8/3TfUwPT+qGGMnhnkR5ObFcv+wqFdSF2kPSJQIGQ==";
-    var keywordPath = "assets/picovoice/keyword.ppn";
-    var contextPath = "assets/picovoice/context.rhn";
-    try {
-      picovoiceManager = await PicovoiceManager.create(
-          accessKey, keywordPath, wakeWordCallback, contextPath, (inference) {
-        switch (inference.intent) {
-          case "WakeUp":
-            {
-              if (!isChefUp) {
-                instructionPointer = -1;
-                var greeting = getGreeting();
-                tts.speak(greeting + ", lets make" + recipeName);
-                isChefUp = true;
-              } else {
-                tts.speak("I am right here, let me know if you need something");
-              }
-            }
-            break;
-          case "Next":
-            {
-              if (isChefUp) {
-                instructionPointer += 1;
-                if (instructionPointer < recipeInstructionsList.length) {
-                  tts.speak(recipeInstructionsList[instructionPointer]);
-                } else {
-                  instructionPointer -= 1;
-                  tts.speak("We are done with the recipe, go enjoy your" +
-                      recipeName);
-                }
-              }
-            }
-            break;
-          case "Previous":
-            {
-              if (isChefUp) {
-                instructionPointer -= 1;
-                if (instructionPointer == -2) {
-                  instructionPointer += 1;
-                  tts.speak(
-                      "Recipe instructions are not yet initialised, please do that first");
-                } else if (instructionPointer < 0) {
-                  instructionPointer += 1;
-                  tts.speak("You are already at the first recipe instruction");
-                } else {
-                  tts.speak(recipeInstructionsList[instructionPointer]);
-                }
-              }
-            }
-            break;
-          case "Repeat":
-            {
-              if (isChefUp) {
-                if (instructionPointer == -1) {
-                  tts.speak(
-                      "Initialise recipe instructions first, so that I can repeat them");
-                } else {
-                  tts.speak(recipeInstructionsList[instructionPointer]);
-                }
-              }
-            }
-            break;
-          case "Commands":
-            {
-              print("Pending");
-            }
-            break;
-          case "Exit":
-            {
-              if (isChefUp) {
-                tts.speak(
-                    "Bye and have a good day, wake me up again if you need me");
-                isChefUp = false;
-              }
-            }
-            break;
-        }
-      });
-      picovoiceManager.start();
-    } on PicovoiceException catch (ex) {
-      print(ex);
-    }
-  }
-
-  void wakeWordCallback() {
-    chefSoundEffect();
-  }
-
-  Future<void> chefSoundEffect() async {
-    await player.setAsset("assets/audio/chefSoundEffect.wav");
-    await player.play();
   }
 
   String getGreeting() {

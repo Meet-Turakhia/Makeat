@@ -602,6 +602,15 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.1"
+  vosk_flutter_plugin:
+    dependency: "direct main"
+    description:
+      path: "."
+      ref: HEAD
+      resolved-ref: e752836c669b11ae72de2deefdfe9fced32881ec
+      url: "https://github.com/alphacep/vosk-flutter.git"
+    source: git
+    version: "1.0.2"
   win32:
     dependency: transitive
     description:
