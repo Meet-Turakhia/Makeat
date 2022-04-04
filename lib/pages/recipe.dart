@@ -3,11 +3,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:makeat_app/pages/home.dart';
 import 'package:makeat_app/pages/likes.dart';
 import 'package:makeat_app/pages/saved.dart';
 import 'package:makeat_app/widgets/showtoast.dart';
+import 'package:vosk_flutter_plugin/vosk_flutter_plugin.dart';
 import "../widgets/fonts.dart";
 import 'swipecards.dart';
 import 'package:text_to_speech/text_to_speech.dart';
@@ -48,6 +50,8 @@ class _RecipeState extends State<Recipe> {
   late List recipeInstructionsList;
   bool isChefUp = false;
   var recipeName = "";
+  bool isVoiceCommandsInitialised = false;
+  bool isChefBusy = false;
 
   void setLike() async {
     isLikedDoc = await likesCollection
@@ -83,6 +87,7 @@ class _RecipeState extends State<Recipe> {
 
   @override
   void dispose() {
+    VoskFlutterPlugin.stop();
     super.dispose();
   }
 
@@ -124,6 +129,106 @@ class _RecipeState extends State<Recipe> {
       });
     }
     setSave();
+  }
+
+  Future<void> initVoiceCommands() async {
+    if (!isVoiceCommandsInitialised) {
+      setState(() {
+        isVoiceCommandsInitialised = true;
+      });
+      ByteData modelZip =
+          await rootBundle.load('assets/vosk/vosk-model-small-en-us-0.15.zip');
+      await VoskFlutterPlugin.initModel(modelZip);
+      VoskFlutterPlugin.start();
+      tts.speak("voice commands initialised");
+    } else {
+      setState(() {
+        isVoiceCommandsInitialised = false;
+      });
+      isChefUp = false;
+      instructionPointer = -1;
+      VoskFlutterPlugin.stop();
+      tts.speak("voice commands turned off");
+    }
+  }
+
+  void chefAssist(String command) {
+    if (isChefBusy) {
+      return;
+    }
+    isChefBusy = true;
+    switch (command) {
+      case "start":
+        {
+          if (!isChefUp) {
+            instructionPointer = -1;
+            var greeting = getGreeting();
+            tts.speak(greeting + ", lets make" + recipeName);
+            isChefUp = true;
+          } else {
+            tts.speak("I am right here, let me know if you need something");
+          }
+        }
+        break;
+      case "next":
+        {
+          if (isChefUp) {
+            instructionPointer += 1;
+            if (instructionPointer < recipeInstructionsList.length) {
+              tts.speak(recipeInstructionsList[instructionPointer]);
+            } else {
+              instructionPointer -= 1;
+              tts.speak(
+                  "We are done with the recipe, go enjoy your" + recipeName);
+            }
+          }
+        }
+        break;
+      case "previous":
+        {
+          if (isChefUp) {
+            instructionPointer -= 1;
+            if (instructionPointer == -2) {
+              instructionPointer += 1;
+              tts.speak(
+                  "Recipe instructions are not yet initialised, please do that first");
+            } else if (instructionPointer < 0) {
+              instructionPointer += 1;
+              tts.speak("You are already at the first recipe instruction");
+            } else {
+              tts.speak(recipeInstructionsList[instructionPointer]);
+            }
+          }
+        }
+        break;
+      case "repeat":
+        {
+          if (isChefUp) {
+            if (instructionPointer == -1) {
+              tts.speak(
+                  "Initialise recipe instructions first, so that I can repeat them");
+            } else {
+              tts.speak(recipeInstructionsList[instructionPointer]);
+            }
+          }
+        }
+        break;
+      case "commands":
+        {
+          print("Pending");
+        }
+        break;
+      case "exit":
+        {
+          if (isChefUp) {
+            tts.speak(
+                "Bye and have a good day, use start command if you need me again");
+            isChefUp = false;
+          }
+        }
+        break;
+    }
+    isChefBusy = false;
   }
 
   String getGreeting() {
@@ -259,608 +364,641 @@ class _RecipeState extends State<Recipe> {
                 List instructions = ds["RecipeInstructions"];
                 recipeInstructionsList = instructions;
                 recipeName = ds["Name"];
-                return Stack(
-                  children: [
-                    recipeImage,
-                    ListView(
-                      physics: const BouncingScrollPhysics(),
+                return StreamBuilder<dynamic>(
+                  stream: VoskFlutterPlugin.onResult(),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      var userCommand = snapshot.data
+                          .toString()
+                          .replaceAll("{", "")
+                          .replaceAll("}", "")
+                          .replaceAll('"', "")
+                          .split(":")[1]
+                          .trim();
+                      if (userCommand.isNotEmpty) {
+                        chefAssist(userCommand);
+                      }
+                    }
+                    return Stack(
                       children: [
-                        Container(
-                          // height: 600,
-                          width: 50,
-                          margin: EdgeInsets.fromLTRB(10, 250, 10, 20),
-                          padding: EdgeInsets.fromLTRB(15, 15, 15, 15),
-                          decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                              begin: Alignment.bottomCenter,
-                              end: Alignment.topCenter,
-                              colors: const [Color(0xff3BB143), Colors.white],
-                            ),
-                            borderRadius: BorderRadius.circular(20),
-                            boxShadow: const [
-                              BoxShadow(
-                                color: Colors.black,
-                                spreadRadius: 15,
-                                blurRadius: 50,
-                                offset: Offset(
-                                    0, -10), // changes position of card shadow
+                        recipeImage,
+                        ListView(
+                          physics: const BouncingScrollPhysics(),
+                          children: [
+                            Container(
+                              // height: 600,
+                              width: 50,
+                              margin: EdgeInsets.fromLTRB(10, 250, 10, 20),
+                              padding: EdgeInsets.fromLTRB(15, 15, 15, 15),
+                              decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                  begin: Alignment.bottomCenter,
+                                  end: Alignment.topCenter,
+                                  colors: const [
+                                    Color(0xff3BB143),
+                                    Colors.white
+                                  ],
+                                ),
+                                borderRadius: BorderRadius.circular(20),
+                                boxShadow: const [
+                                  BoxShadow(
+                                    color: Colors.black,
+                                    spreadRadius: 15,
+                                    blurRadius: 50,
+                                    offset: Offset(0,
+                                        -10), // changes position of card shadow
+                                  ),
+                                ],
                               ),
-                            ],
-                          ),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              ShaderMask(
-                                shaderCallback: (Rect bounds) {
-                                  return LinearGradient(
-                                    begin: Alignment.centerRight,
-                                    end: Alignment.center,
-                                    colors: const <Color>[
-                                      Colors.transparent,
-                                      Colors.red
-                                    ],
-                                  ).createShader(bounds);
-                                },
-                                child: SizedBox(
-                                  height: 30,
-                                  child: Center(
-                                    child: ListView(
-                                      shrinkWrap: true,
-                                      scrollDirection: Axis.horizontal,
-                                      physics: const BouncingScrollPhysics(),
-                                      children: [
-                                        Center(
-                                          child: Title(
-                                            color: Colors.black,
-                                            child: Text(
-                                              "${ds['Name']}",
-                                              textAlign: TextAlign.center,
-                                              style: GoogleFonts.ubuntu(
-                                                fontSize: 20.0,
-                                                fontWeight: FontWeight.bold,
+                              child: Column(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  ShaderMask(
+                                    shaderCallback: (Rect bounds) {
+                                      return LinearGradient(
+                                        begin: Alignment.centerRight,
+                                        end: Alignment.center,
+                                        colors: const <Color>[
+                                          Colors.transparent,
+                                          Colors.red
+                                        ],
+                                      ).createShader(bounds);
+                                    },
+                                    child: SizedBox(
+                                      height: 30,
+                                      child: Center(
+                                        child: ListView(
+                                          shrinkWrap: true,
+                                          scrollDirection: Axis.horizontal,
+                                          physics:
+                                              const BouncingScrollPhysics(),
+                                          children: [
+                                            Center(
+                                              child: Title(
+                                                color: Colors.black,
+                                                child: Text(
+                                                  "${ds['Name']}",
+                                                  textAlign: TextAlign.center,
+                                                  style: GoogleFonts.ubuntu(
+                                                    fontSize: 20.0,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
                                               ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.all(5.0),
+                                    child: Divider(
+                                      height: 5,
+                                      thickness: 1,
+                                      indent: 10,
+                                      endIndent: 10,
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 55,
+                                    child: Center(
+                                      child: ListView(
+                                        // mainAxisAlignment: MainAxisAlignment.center,
+                                        shrinkWrap: true,
+                                        scrollDirection: Axis.horizontal,
+                                        physics: const BouncingScrollPhysics(),
+                                        children: [
+                                          Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Text(
+                                                "Rating",
+                                                style: GoogleFonts.ubuntu(
+                                                  fontSize: 15.0,
+                                                ),
+                                              ),
+                                              Text(
+                                                "${ds['AggregatedRating']}",
+                                                style: GoogleFonts.ubuntu(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 15.0,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          VerticalDivider(
+                                            color: Colors.black,
+                                            indent: 20,
+                                            endIndent: 20,
+                                            width: 30,
+                                            thickness: 2,
+                                          ),
+                                          Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Text(
+                                                "Recipe Category",
+                                                style: GoogleFonts.ubuntu(
+                                                  fontSize: 15.0,
+                                                ),
+                                              ),
+                                              Text(
+                                                "${ds['RecipeCategory']}",
+                                                style: GoogleFonts.ubuntu(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 15.0,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          VerticalDivider(
+                                            color: Colors.black,
+                                            indent: 20,
+                                            endIndent: 20,
+                                            width: 30,
+                                            thickness: 2,
+                                          ),
+                                          Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Text(
+                                                "Total Cook Time",
+                                                style: GoogleFonts.ubuntu(
+                                                  fontSize: 15.0,
+                                                ),
+                                              ),
+                                              Text(
+                                                totalTime,
+                                                style: GoogleFonts.ubuntu(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 15.0,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          VerticalDivider(
+                                            color: Colors.black,
+                                            indent: 20,
+                                            endIndent: 20,
+                                            width: 30,
+                                            thickness: 2,
+                                          ),
+                                          Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Text(
+                                                "Cook Time",
+                                                style: GoogleFonts.ubuntu(
+                                                  fontSize: 15.0,
+                                                ),
+                                              ),
+                                              Text(
+                                                cookTime,
+                                                style: GoogleFonts.ubuntu(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 15.0,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          VerticalDivider(
+                                            color: Colors.black,
+                                            indent: 20,
+                                            endIndent: 20,
+                                            width: 30,
+                                            thickness: 2,
+                                          ),
+                                          Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Text(
+                                                "Prep Time",
+                                                style: GoogleFonts.ubuntu(
+                                                  fontSize: 15.0,
+                                                ),
+                                              ),
+                                              Text(
+                                                prepTime,
+                                                style: GoogleFonts.ubuntu(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 15.0,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          VerticalDivider(
+                                            color: Colors.black,
+                                            indent: 20,
+                                            endIndent: 20,
+                                            width: 30,
+                                            thickness: 2,
+                                          ),
+                                          Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Text(
+                                                "Calories",
+                                                style: GoogleFonts.ubuntu(
+                                                  fontSize: 15.0,
+                                                ),
+                                              ),
+                                              Text(
+                                                "${ds['Calories']}",
+                                                style: GoogleFonts.ubuntu(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 15.0,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          VerticalDivider(
+                                            color: Colors.black,
+                                            indent: 20,
+                                            endIndent: 20,
+                                            width: 30,
+                                            thickness: 2,
+                                          ),
+                                          Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Text(
+                                                "Carbohydrate Content",
+                                                style: GoogleFonts.ubuntu(
+                                                  fontSize: 15.0,
+                                                ),
+                                              ),
+                                              Text(
+                                                "${ds["CarbohydrateContent"]} g",
+                                                style: GoogleFonts.ubuntu(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 15.0,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          VerticalDivider(
+                                            color: Colors.black,
+                                            indent: 20,
+                                            endIndent: 20,
+                                            width: 30,
+                                            thickness: 2,
+                                          ),
+                                          Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Text(
+                                                "Cholesterol Content",
+                                                style: GoogleFonts.ubuntu(
+                                                  fontSize: 15.0,
+                                                ),
+                                              ),
+                                              Text(
+                                                "${ds["CholesterolContent"]} mg",
+                                                style: GoogleFonts.ubuntu(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 15.0,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          VerticalDivider(
+                                            color: Colors.black,
+                                            indent: 20,
+                                            endIndent: 20,
+                                            width: 30,
+                                            thickness: 2,
+                                          ),
+                                          Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Text(
+                                                "Fat Content",
+                                                style: GoogleFonts.ubuntu(
+                                                  fontSize: 15.0,
+                                                ),
+                                              ),
+                                              Text(
+                                                "${ds["FatContent"]} g",
+                                                style: GoogleFonts.ubuntu(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 15.0,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          VerticalDivider(
+                                            color: Colors.black,
+                                            indent: 20,
+                                            endIndent: 20,
+                                            width: 30,
+                                            thickness: 2,
+                                          ),
+                                          Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Text(
+                                                "Fiber Content",
+                                                style: GoogleFonts.ubuntu(
+                                                  fontSize: 15.0,
+                                                ),
+                                              ),
+                                              Text(
+                                                "${ds["FiberContent"]} g",
+                                                style: GoogleFonts.ubuntu(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 15.0,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          VerticalDivider(
+                                            color: Colors.black,
+                                            indent: 20,
+                                            endIndent: 20,
+                                            width: 30,
+                                            thickness: 2,
+                                          ),
+                                          Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Text(
+                                                "Protein Content",
+                                                style: GoogleFonts.ubuntu(
+                                                  fontSize: 15.0,
+                                                ),
+                                              ),
+                                              Text(
+                                                "${ds["ProteinContent"]} g",
+                                                style: GoogleFonts.ubuntu(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 15.0,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          VerticalDivider(
+                                            color: Colors.black,
+                                            indent: 20,
+                                            endIndent: 20,
+                                            width: 30,
+                                            thickness: 2,
+                                          ),
+                                          Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Text(
+                                                "Saturated Fat Content",
+                                                style: GoogleFonts.ubuntu(
+                                                  fontSize: 15.0,
+                                                ),
+                                              ),
+                                              Text(
+                                                "${ds["SaturatedFatContent"]} g",
+                                                style: GoogleFonts.ubuntu(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 15.0,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          VerticalDivider(
+                                            color: Colors.black,
+                                            indent: 20,
+                                            endIndent: 20,
+                                            width: 30,
+                                            thickness: 2,
+                                          ),
+                                          Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Text(
+                                                "Sodium Content",
+                                                style: GoogleFonts.ubuntu(
+                                                  fontSize: 15.0,
+                                                ),
+                                              ),
+                                              Text(
+                                                "${ds["SodiumContent"]} mg",
+                                                style: GoogleFonts.ubuntu(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 15.0,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          VerticalDivider(
+                                            color: Colors.black,
+                                            indent: 20,
+                                            endIndent: 20,
+                                            width: 30,
+                                            thickness: 2,
+                                          ),
+                                          Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Text(
+                                                "Sugar Content",
+                                                style: GoogleFonts.ubuntu(
+                                                  fontSize: 15.0,
+                                                ),
+                                              ),
+                                              Text(
+                                                "${ds["SugarContent"]} g",
+                                                style: GoogleFonts.ubuntu(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 15.0,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          VerticalDivider(
+                                            color: Colors.black,
+                                            indent: 20,
+                                            endIndent: 20,
+                                            width: 30,
+                                            thickness: 2,
+                                          ),
+                                          Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Text(
+                                                "Recipe Servings",
+                                                style: GoogleFonts.ubuntu(
+                                                  fontSize: 15.0,
+                                                ),
+                                              ),
+                                              Text(
+                                                "${ds['RecipeServings']}",
+                                                style: GoogleFonts.ubuntu(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 15.0,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.all(5.0),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceAround,
+                                      children: [
+                                        CircleAvatar(
+                                          radius: 20,
+                                          backgroundColor: Color(0xff3BB143),
+                                          child: IconButton(
+                                            color: Colors.black,
+                                            icon: Icon(isLiked
+                                                ? CupertinoIcons
+                                                    .hand_thumbsup_fill
+                                                : CupertinoIcons.hand_thumbsup),
+                                            tooltip: "Like",
+                                            onPressed: () {
+                                              _likeispressed();
+                                            },
+                                          ),
+                                        ),
+                                        CircleAvatar(
+                                          radius: 20,
+                                          backgroundColor: Color(0xff3BB143),
+                                          child: IconButton(
+                                            color: Colors.black,
+                                            icon: Icon(
+                                              isSaved
+                                                  ? CupertinoIcons.bookmark_fill
+                                                  : CupertinoIcons.bookmark,
+                                            ),
+                                            tooltip: "Save for later",
+                                            onPressed: () {
+                                              _saveispressed();
+                                            },
+                                          ),
+                                        ),
+
+                                        // IconButton(
+                                        //   onPressed: () {
+                                        //     _likeispressed();
+                                        //   },
+                                        //   icon: Icon(likeisPressed ? CupertinoIcons.hand_thumbsup_fill:CupertinoIcons.hand_thumbsup),
+                                        //   tooltip: "Like",
+                                        // ),
+                                      ],
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 5,
+                                  ),
+                                  Text(
+                                    "Ingredients",
+                                    softWrap: true,
+                                    style: mfontbl,
+                                    textAlign: TextAlign.justify,
+                                  ),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  Text(
+                                    "${ingredients.join(", ")}.",
+                                    softWrap: true,
+                                    style: mfont15,
+                                    textAlign: TextAlign.justify,
+                                  ),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  Text(
+                                    "Instructions",
+                                    softWrap: true,
+                                    style: mfontbl,
+                                    textAlign: TextAlign.justify,
+                                  ),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  Text(
+                                    instructions
+                                        .join()
+                                        .replaceAll('"', '')
+                                        .replaceAll('.', '. '),
+                                    softWrap: true,
+                                    style: mfont15,
+                                    textAlign: TextAlign.justify,
+                                  ),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceAround,
+                                      children: [
+                                        TextButton.icon(
+                                          style: TextButton.styleFrom(
+                                            textStyle: mfont15,
+                                            backgroundColor: Colors.white24,
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(50.0),
+                                            ),
+                                            splashFactory:
+                                                InkSplash.splashFactory,
+                                          ),
+                                          onPressed: () => {
+                                            initVoiceCommands(),
+                                          },
+                                          icon: isVoiceCommandsInitialised
+                                              ? Icon(
+                                                  CupertinoIcons
+                                                      .pause_circle_fill,
+                                                  color: Colors.black,
+                                                  size: 40,
+                                                )
+                                              : Icon(
+                                                  CupertinoIcons
+                                                      .arrowtriangle_right_circle_fill,
+                                                  color: Colors.black,
+                                                  size: 40,
+                                                ),
+                                          label: Text(
+                                            "Chef ",
+                                            style: GoogleFonts.ubuntu(
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.black,
                                             ),
                                           ),
                                         ),
                                       ],
                                     ),
-                                  ),
-                                ),
+                                  )
+                                ],
                               ),
-                              Padding(
-                                padding: EdgeInsets.all(5.0),
-                                child: Divider(
-                                  height: 5,
-                                  thickness: 1,
-                                  indent: 10,
-                                  endIndent: 10,
-                                ),
-                              ),
-                              SizedBox(
-                                height: 55,
-                                child: Center(
-                                  child: ListView(
-                                    // mainAxisAlignment: MainAxisAlignment.center,
-                                    shrinkWrap: true,
-                                    scrollDirection: Axis.horizontal,
-                                    physics: const BouncingScrollPhysics(),
-                                    children: [
-                                      Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Text(
-                                            "Rating",
-                                            style: GoogleFonts.ubuntu(
-                                              fontSize: 15.0,
-                                            ),
-                                          ),
-                                          Text(
-                                            "${ds['AggregatedRating']}",
-                                            style: GoogleFonts.ubuntu(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 15.0,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      VerticalDivider(
-                                        color: Colors.black,
-                                        indent: 20,
-                                        endIndent: 20,
-                                        width: 30,
-                                        thickness: 2,
-                                      ),
-                                      Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Text(
-                                            "Recipe Category",
-                                            style: GoogleFonts.ubuntu(
-                                              fontSize: 15.0,
-                                            ),
-                                          ),
-                                          Text(
-                                            "${ds['RecipeCategory']}",
-                                            style: GoogleFonts.ubuntu(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 15.0,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      VerticalDivider(
-                                        color: Colors.black,
-                                        indent: 20,
-                                        endIndent: 20,
-                                        width: 30,
-                                        thickness: 2,
-                                      ),
-                                      Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Text(
-                                            "Total Cook Time",
-                                            style: GoogleFonts.ubuntu(
-                                              fontSize: 15.0,
-                                            ),
-                                          ),
-                                          Text(
-                                            totalTime,
-                                            style: GoogleFonts.ubuntu(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 15.0,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      VerticalDivider(
-                                        color: Colors.black,
-                                        indent: 20,
-                                        endIndent: 20,
-                                        width: 30,
-                                        thickness: 2,
-                                      ),
-                                      Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Text(
-                                            "Cook Time",
-                                            style: GoogleFonts.ubuntu(
-                                              fontSize: 15.0,
-                                            ),
-                                          ),
-                                          Text(
-                                            cookTime,
-                                            style: GoogleFonts.ubuntu(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 15.0,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      VerticalDivider(
-                                        color: Colors.black,
-                                        indent: 20,
-                                        endIndent: 20,
-                                        width: 30,
-                                        thickness: 2,
-                                      ),
-                                      Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Text(
-                                            "Prep Time",
-                                            style: GoogleFonts.ubuntu(
-                                              fontSize: 15.0,
-                                            ),
-                                          ),
-                                          Text(
-                                            prepTime,
-                                            style: GoogleFonts.ubuntu(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 15.0,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      VerticalDivider(
-                                        color: Colors.black,
-                                        indent: 20,
-                                        endIndent: 20,
-                                        width: 30,
-                                        thickness: 2,
-                                      ),
-                                      Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Text(
-                                            "Calories",
-                                            style: GoogleFonts.ubuntu(
-                                              fontSize: 15.0,
-                                            ),
-                                          ),
-                                          Text(
-                                            "${ds['Calories']}",
-                                            style: GoogleFonts.ubuntu(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 15.0,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      VerticalDivider(
-                                        color: Colors.black,
-                                        indent: 20,
-                                        endIndent: 20,
-                                        width: 30,
-                                        thickness: 2,
-                                      ),
-                                      Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Text(
-                                            "Carbohydrate Content",
-                                            style: GoogleFonts.ubuntu(
-                                              fontSize: 15.0,
-                                            ),
-                                          ),
-                                          Text(
-                                            "${ds["CarbohydrateContent"]} g",
-                                            style: GoogleFonts.ubuntu(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 15.0,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      VerticalDivider(
-                                        color: Colors.black,
-                                        indent: 20,
-                                        endIndent: 20,
-                                        width: 30,
-                                        thickness: 2,
-                                      ),
-                                      Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Text(
-                                            "Cholesterol Content",
-                                            style: GoogleFonts.ubuntu(
-                                              fontSize: 15.0,
-                                            ),
-                                          ),
-                                          Text(
-                                            "${ds["CholesterolContent"]} mg",
-                                            style: GoogleFonts.ubuntu(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 15.0,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      VerticalDivider(
-                                        color: Colors.black,
-                                        indent: 20,
-                                        endIndent: 20,
-                                        width: 30,
-                                        thickness: 2,
-                                      ),
-                                      Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Text(
-                                            "Fat Content",
-                                            style: GoogleFonts.ubuntu(
-                                              fontSize: 15.0,
-                                            ),
-                                          ),
-                                          Text(
-                                            "${ds["FatContent"]} g",
-                                            style: GoogleFonts.ubuntu(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 15.0,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      VerticalDivider(
-                                        color: Colors.black,
-                                        indent: 20,
-                                        endIndent: 20,
-                                        width: 30,
-                                        thickness: 2,
-                                      ),
-                                      Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Text(
-                                            "Fiber Content",
-                                            style: GoogleFonts.ubuntu(
-                                              fontSize: 15.0,
-                                            ),
-                                          ),
-                                          Text(
-                                            "${ds["FiberContent"]} g",
-                                            style: GoogleFonts.ubuntu(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 15.0,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      VerticalDivider(
-                                        color: Colors.black,
-                                        indent: 20,
-                                        endIndent: 20,
-                                        width: 30,
-                                        thickness: 2,
-                                      ),
-                                      Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Text(
-                                            "Protein Content",
-                                            style: GoogleFonts.ubuntu(
-                                              fontSize: 15.0,
-                                            ),
-                                          ),
-                                          Text(
-                                            "${ds["ProteinContent"]} g",
-                                            style: GoogleFonts.ubuntu(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 15.0,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      VerticalDivider(
-                                        color: Colors.black,
-                                        indent: 20,
-                                        endIndent: 20,
-                                        width: 30,
-                                        thickness: 2,
-                                      ),
-                                      Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Text(
-                                            "Saturated Fat Content",
-                                            style: GoogleFonts.ubuntu(
-                                              fontSize: 15.0,
-                                            ),
-                                          ),
-                                          Text(
-                                            "${ds["SaturatedFatContent"]} g",
-                                            style: GoogleFonts.ubuntu(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 15.0,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      VerticalDivider(
-                                        color: Colors.black,
-                                        indent: 20,
-                                        endIndent: 20,
-                                        width: 30,
-                                        thickness: 2,
-                                      ),
-                                      Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Text(
-                                            "Sodium Content",
-                                            style: GoogleFonts.ubuntu(
-                                              fontSize: 15.0,
-                                            ),
-                                          ),
-                                          Text(
-                                            "${ds["SodiumContent"]} mg",
-                                            style: GoogleFonts.ubuntu(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 15.0,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      VerticalDivider(
-                                        color: Colors.black,
-                                        indent: 20,
-                                        endIndent: 20,
-                                        width: 30,
-                                        thickness: 2,
-                                      ),
-                                      Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Text(
-                                            "Sugar Content",
-                                            style: GoogleFonts.ubuntu(
-                                              fontSize: 15.0,
-                                            ),
-                                          ),
-                                          Text(
-                                            "${ds["SugarContent"]} g",
-                                            style: GoogleFonts.ubuntu(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 15.0,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      VerticalDivider(
-                                        color: Colors.black,
-                                        indent: 20,
-                                        endIndent: 20,
-                                        width: 30,
-                                        thickness: 2,
-                                      ),
-                                      Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Text(
-                                            "Recipe Servings",
-                                            style: GoogleFonts.ubuntu(
-                                              fontSize: 15.0,
-                                            ),
-                                          ),
-                                          Text(
-                                            "${ds['RecipeServings']}",
-                                            style: GoogleFonts.ubuntu(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 15.0,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.all(5.0),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceAround,
-                                  children: [
-                                    CircleAvatar(
-                                      radius: 20,
-                                      backgroundColor: Color(0xff3BB143),
-                                      child: IconButton(
-                                        color: Colors.black,
-                                        icon: Icon(isLiked
-                                            ? CupertinoIcons.hand_thumbsup_fill
-                                            : CupertinoIcons.hand_thumbsup),
-                                        tooltip: "Like",
-                                        onPressed: () {
-                                          _likeispressed();
-                                        },
-                                      ),
-                                    ),
-                                    CircleAvatar(
-                                      radius: 20,
-                                      backgroundColor: Color(0xff3BB143),
-                                      child: IconButton(
-                                        color: Colors.black,
-                                        icon: Icon(
-                                          isSaved
-                                              ? CupertinoIcons.bookmark_fill
-                                              : CupertinoIcons.bookmark,
-                                        ),
-                                        tooltip: "Save for later",
-                                        onPressed: () {
-                                          _saveispressed();
-                                        },
-                                      ),
-                                    ),
-
-                                    // IconButton(
-                                    //   onPressed: () {
-                                    //     _likeispressed();
-                                    //   },
-                                    //   icon: Icon(likeisPressed ? CupertinoIcons.hand_thumbsup_fill:CupertinoIcons.hand_thumbsup),
-                                    //   tooltip: "Like",
-                                    // ),
-                                  ],
-                                ),
-                              ),
-                              SizedBox(
-                                height: 5,
-                              ),
-                              Text(
-                                "Ingredients",
-                                softWrap: true,
-                                style: mfontbl,
-                                textAlign: TextAlign.justify,
-                              ),
-                              SizedBox(
-                                height: 10,
-                              ),
-                              Text(
-                                "${ingredients.join(", ")}.",
-                                softWrap: true,
-                                style: mfont15,
-                                textAlign: TextAlign.justify,
-                              ),
-                              SizedBox(
-                                height: 10,
-                              ),
-                              Text(
-                                "Instructions",
-                                softWrap: true,
-                                style: mfontbl,
-                                textAlign: TextAlign.justify,
-                              ),
-                              SizedBox(
-                                height: 10,
-                              ),
-                              Text(
-                                instructions
-                                    .join()
-                                    .replaceAll('"', '')
-                                    .replaceAll('.', '. '),
-                                softWrap: true,
-                                style: mfont15,
-                                textAlign: TextAlign.justify,
-                              ),
-                              SizedBox(
-                                height: 10,
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceAround,
-                                  children: [
-                                    TextButton.icon(
-                                      style: TextButton.styleFrom(
-                                        textStyle: mfont15,
-                                        backgroundColor: Colors.white24,
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(50.0),
-                                        ),
-                                        splashFactory: InkSplash.splashFactory,
-                                      ),
-                                      onPressed: () => {},
-                                      icon: Icon(
-                                        CupertinoIcons
-                                            .arrowtriangle_right_circle_fill,
-                                        color: Colors.black,
-                                        size: 40,
-                                      ),
-                                      label: Text(
-                                        "Chef ",
-                                        style: GoogleFonts.ubuntu(
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.black,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              )
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
                       ],
-                    ),
-                  ],
+                    );
+                  },
                 );
               } else if (snapshot.hasError) {
                 popupMessage("Some Error Occured, Retrying.../");
