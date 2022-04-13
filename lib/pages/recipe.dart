@@ -136,10 +136,11 @@ class _RecipeState extends State<Recipe> {
       setState(() {
         isVoiceCommandsInitialised = true;
       });
+      tts.speak("initialising voice commands, please wait");
       ByteData modelZip =
           await rootBundle.load('assets/vosk/vosk-model-small-en-us-0.15.zip');
       await VoskFlutterPlugin.initModel(modelZip);
-      VoskFlutterPlugin.start();
+      await VoskFlutterPlugin.start();
       tts.speak("voice commands initialised");
     } else {
       setState(() {
@@ -147,7 +148,7 @@ class _RecipeState extends State<Recipe> {
       });
       isChefUp = false;
       instructionPointer = -1;
-      VoskFlutterPlugin.stop();
+      await VoskFlutterPlugin.stop();
       tts.speak("voice commands turned off");
     }
   }
