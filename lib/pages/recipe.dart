@@ -136,12 +136,17 @@ class _RecipeState extends State<Recipe> {
       setState(() {
         isVoiceCommandsInitialised = true;
       });
-      tts.speak("initialising voice commands, please wait");
+      await tts.speak("initialising voice commands, please wait");
       ByteData modelZip =
           await rootBundle.load('assets/vosk/vosk-model-small-en-us-0.15.zip');
       await VoskFlutterPlugin.initModel(modelZip);
-      await VoskFlutterPlugin.start();
-      tts.speak("voice commands initialised");
+      try {
+        await VoskFlutterPlugin.start();
+      } catch (e) {
+        await VoskFlutterPlugin.initModel(modelZip);
+        await VoskFlutterPlugin.start();
+      }
+      await tts.speak("voice commands initialised");
     } else {
       setState(() {
         isVoiceCommandsInitialised = false;
@@ -149,7 +154,7 @@ class _RecipeState extends State<Recipe> {
       isChefUp = false;
       instructionPointer = -1;
       await VoskFlutterPlugin.stop();
-      tts.speak("voice commands turned off");
+      await tts.speak("voice commands turned off");
     }
   }
 
@@ -241,6 +246,151 @@ class _RecipeState extends State<Recipe> {
       return 'Good Afternoon';
     }
     return 'Good Evening';
+  }
+
+  void displayCommands() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          scrollable: true,
+          shape: RoundedRectangleBorder(
+            side: BorderSide(color: Color(0xff3BB143), width: 2.0),
+            borderRadius: BorderRadius.circular(15.0),
+          ),
+          title: Center(
+            child: Text(
+              "Chef Voice Commands",
+              style: mfontgbl21,
+            ),
+          ),
+          content: ListView(
+            shrinkWrap: true,
+            physics: BouncingScrollPhysics(),
+            children: [
+              Row(
+                children: [
+                  Text(
+                    "Start ",
+                    style: mfontg15,
+                  ),
+                  Icon(
+                    CupertinoIcons.arrowtriangle_right_circle_fill,
+                    color: Color(0xff3BB143),
+                    size: 20.0,
+                  )
+                ],
+              ),
+              Padding(
+                padding: EdgeInsets.only(top: 5.0, bottom: 15.0),
+                child: Text(
+                  "Initialises Chef Voice Assistance",
+                  style: mfont15,
+                ),
+              ),
+              Row(
+                children: [
+                  Text(
+                    "Next ",
+                    style: mfontg15,
+                  ),
+                  Icon(
+                    CupertinoIcons.arrow_right_circle_fill,
+                    color: Color(0xff3BB143),
+                    size: 20.0,
+                  )
+                ],
+              ),
+              Padding(
+                padding: EdgeInsets.only(top: 5.0, bottom: 15.0),
+                child: Text(
+                  "Speaks the first/next instruction",
+                  style: mfont15,
+                ),
+              ),
+              Row(
+                children: [
+                  Text(
+                    "Previous ",
+                    style: mfontg15,
+                  ),
+                  Icon(
+                    CupertinoIcons.arrow_left_circle_fill,
+                    color: Color(0xff3BB143),
+                    size: 20.0,
+                  )
+                ],
+              ),
+              Padding(
+                padding: EdgeInsets.only(top: 5.0, bottom: 15.0),
+                child: Text(
+                  "Speaks the previous instruction",
+                  style: mfont15,
+                ),
+              ),
+              Row(
+                children: [
+                  Text(
+                    "Repeat ",
+                    style: mfontg15,
+                  ),
+                  Icon(
+                    CupertinoIcons.arrow_2_circlepath_circle_fill,
+                    color: Color(0xff3BB143),
+                    size: 20.0,
+                  )
+                ],
+              ),
+              Padding(
+                padding: EdgeInsets.only(top: 5.0, bottom: 15.0),
+                child: Text(
+                  "Repeats the current instruction",
+                  style: mfont15,
+                ),
+              ),
+              Row(
+                children: [
+                  Text(
+                    "Exit ",
+                    style: mfontg15,
+                  ),
+                  Icon(
+                    CupertinoIcons.square_arrow_left_fill,
+                    color: Color(0xff3BB143),
+                    size: 20.0,
+                  )
+                ],
+              ),
+              Padding(
+                padding: EdgeInsets.only(top: 5.0),
+                child: Text(
+                  "Exits Chef Voice Assistance",
+                  style: mfont15,
+                ),
+              ),
+            ],
+          ),
+          actions: [
+            Center(
+              child: ElevatedButton(
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all(
+                    Color(0xff3BB143),
+                  ),
+                ),
+                onPressed: () {
+                  Navigator.of(context, rootNavigator: true).pop();
+                },
+                child: Text(
+                  "Ok",
+                  style: mfontw15,
+                ),
+              ),
+            )
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -965,8 +1115,14 @@ class _RecipeState extends State<Recipe> {
                                             splashFactory:
                                                 InkSplash.splashFactory,
                                           ),
-                                          onPressed: () => {
-                                            initVoiceCommands(),
+                                          onPressed: () async {
+                                            await initVoiceCommands();
+                                            if (isVoiceCommandsInitialised) {
+                                              displayCommands();
+                                            }
+                                          },
+                                          onLongPress: () {
+                                            displayCommands();
                                           },
                                           icon: isVoiceCommandsInitialised
                                               ? Icon(
