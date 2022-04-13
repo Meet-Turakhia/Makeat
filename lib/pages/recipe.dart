@@ -1049,7 +1049,7 @@ class _RecipeState extends State<Recipe> {
                 onPressed: () {
                   widget.homePage
                       ? Navigator.pop(context)
-                      : Navigator.push(
+                      : Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
                               builder: (context) => Home(uid: user!.uid)),
@@ -1065,7 +1065,7 @@ class _RecipeState extends State<Recipe> {
                 onPressed: () {
                   widget.likesPage
                       ? Navigator.pop(context)
-                      : Navigator.push(
+                      : Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
                               builder: (context) => Likes(uid: user!.uid)),
@@ -1086,7 +1086,7 @@ class _RecipeState extends State<Recipe> {
                 onPressed: () {
                   widget.savedPage
                       ? Navigator.pop(context)
-                      : Navigator.push(
+                      : Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
                               builder: (context) => Saved(uid: user!.uid)),
