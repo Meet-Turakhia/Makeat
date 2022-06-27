@@ -270,14 +270,14 @@ class _RecipeState extends State<Recipe> {
             children: [
               Row(
                 children: [
-                  Text(
-                    "Start ",
-                    style: mfontg15,
-                  ),
                   Icon(
                     CupertinoIcons.arrowtriangle_right_circle_fill,
                     color: Color(0xff3BB143),
                     size: 20.0,
+                  ),
+                  Text(
+                    " Start",
+                    style: mfontg15,
                   )
                 ],
               ),
@@ -290,14 +290,14 @@ class _RecipeState extends State<Recipe> {
               ),
               Row(
                 children: [
-                  Text(
-                    "Next ",
-                    style: mfontg15,
-                  ),
                   Icon(
                     CupertinoIcons.arrow_right_circle_fill,
                     color: Color(0xff3BB143),
                     size: 20.0,
+                  ),
+                  Text(
+                    " Next",
+                    style: mfontg15,
                   )
                 ],
               ),
@@ -310,14 +310,14 @@ class _RecipeState extends State<Recipe> {
               ),
               Row(
                 children: [
-                  Text(
-                    "Previous ",
-                    style: mfontg15,
-                  ),
                   Icon(
                     CupertinoIcons.arrow_left_circle_fill,
                     color: Color(0xff3BB143),
                     size: 20.0,
+                  ),
+                  Text(
+                    " Previous",
+                    style: mfontg15,
                   )
                 ],
               ),
@@ -330,14 +330,14 @@ class _RecipeState extends State<Recipe> {
               ),
               Row(
                 children: [
-                  Text(
-                    "Repeat ",
-                    style: mfontg15,
-                  ),
                   Icon(
                     CupertinoIcons.arrow_2_circlepath_circle_fill,
                     color: Color(0xff3BB143),
                     size: 20.0,
+                  ),
+                  Text(
+                    " Repeat",
+                    style: mfontg15,
                   )
                 ],
               ),
@@ -350,14 +350,14 @@ class _RecipeState extends State<Recipe> {
               ),
               Row(
                 children: [
-                  Text(
-                    "Exit ",
-                    style: mfontg15,
-                  ),
                   Icon(
                     CupertinoIcons.square_arrow_left_fill,
                     color: Color(0xff3BB143),
                     size: 20.0,
+                  ),
+                  Text(
+                    " Exit",
+                    style: mfontg15,
                   )
                 ],
               ),
