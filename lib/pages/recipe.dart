@@ -283,9 +283,11 @@ class _RecipeState extends State<Recipe> {
               ),
               Padding(
                 padding: EdgeInsets.only(top: 5.0, bottom: 15.0),
-                child: Text(
-                  "Initialises Chef Voice Assistance",
-                  style: mfont15,
+                child: Flexible(
+                  child: Text(
+                    "Initialises Chef Voice Assistance",
+                    style: mfont15,
+                  ),
                 ),
               ),
               Row(
@@ -303,9 +305,11 @@ class _RecipeState extends State<Recipe> {
               ),
               Padding(
                 padding: EdgeInsets.only(top: 5.0, bottom: 15.0),
-                child: Text(
-                  "Speaks the first/next instruction",
-                  style: mfont15,
+                child: Flexible(
+                  child: Text(
+                    "Speaks the first/next instruction",
+                    style: mfont15,
+                  ),
                 ),
               ),
               Row(
@@ -323,9 +327,11 @@ class _RecipeState extends State<Recipe> {
               ),
               Padding(
                 padding: EdgeInsets.only(top: 5.0, bottom: 15.0),
-                child: Text(
-                  "Speaks the previous instruction",
-                  style: mfont15,
+                child: Flexible(
+                  child: Text(
+                    "Speaks the previous instruction",
+                    style: mfont15,
+                  ),
                 ),
               ),
               Row(
@@ -343,9 +349,11 @@ class _RecipeState extends State<Recipe> {
               ),
               Padding(
                 padding: EdgeInsets.only(top: 5.0, bottom: 15.0),
-                child: Text(
-                  "Repeats the current instruction",
-                  style: mfont15,
+                child: Flexible(
+                  child: Text(
+                    "Repeats the current instruction",
+                    style: mfont15,
+                  ),
                 ),
               ),
               Row(
@@ -362,11 +370,28 @@ class _RecipeState extends State<Recipe> {
                 ],
               ),
               Padding(
-                padding: EdgeInsets.only(top: 5.0),
-                child: Text(
-                  "Exits Chef Voice Assistance",
-                  style: mfont15,
+                padding: EdgeInsets.only(top: 5.0, bottom: 15.0),
+                child: Flexible(
+                  child: Text(
+                    "Exits Chef Voice Assistance",
+                    style: mfont15,
+                  ),
                 ),
+              ),
+              Row(
+                children: [
+                  Icon(
+                    CupertinoIcons.exclamationmark_circle_fill,
+                    color: Colors.blue,
+                    size: 20.0,
+                  ),
+                  Flexible(
+                    child: Text(
+                      " Long Press Chef Button to Open this Dialog!",
+                      style: mfontb12,
+                    ),
+                  )
+                ],
               ),
             ],
           ),

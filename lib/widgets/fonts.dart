@@ -4,6 +4,7 @@ import "package:flutter/material.dart";
 
 var mfont10 = GoogleFonts.ubuntu(color: Colors.black, fontSize: 10.0);
 var mfontw10 = GoogleFonts.ubuntu(color: Colors.white, fontSize: 10.0);
+var mfontb12 = GoogleFonts.ubuntu(color: Colors.blue, fontSize: 12.0);
 var mfont15 = GoogleFonts.ubuntu(color: Colors.black, fontSize: 15.0);
 var mfontw15 = GoogleFonts.ubuntu(color: Colors.white, fontSize: 15.0);
 var mfontg15 = GoogleFonts.ubuntu(color: Color(0xff3BB143), fontSize: 15.0);
