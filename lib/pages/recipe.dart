@@ -258,11 +258,19 @@ class _RecipeState extends State<Recipe> {
             side: BorderSide(color: Color(0xff3BB143), width: 2.0),
             borderRadius: BorderRadius.circular(15.0),
           ),
-          title: Center(
-            child: Text(
-              "Chef Voice Commands",
-              style: mfontgbl21,
-            ),
+          title: Row(
+            children: [
+              Image(
+                image: AssetImage("assets/icons/chef.png"),
+                width: 52.0,
+              ),
+              Center(
+                child: Text(
+                  "Chef Voice Commands",
+                  style: mfontgbl17,
+                ),
+              ),
+            ],
           ),
           content: ListView(
             shrinkWrap: true,
