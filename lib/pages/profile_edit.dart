@@ -19,52 +19,52 @@ class _EditProfileState extends State<EditProfile> {
   @override
   Widget build(BuildContext context) {
     return Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.bottomCenter,
-            end: Alignment.topCenter,
-            colors: const [Color(0xff3BB143), Colors.white],
-          ),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.bottomCenter,
+          end: Alignment.topCenter,
+          colors: const [Color(0xff3BB143), Colors.white],
         ),
-        child: Scaffold(
+      ),
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        resizeToAvoidBottomInset: true,
+        appBar: AppBar(
           backgroundColor: Colors.transparent,
-          resizeToAvoidBottomInset: true,
-          appBar: AppBar(
-            backgroundColor: Colors.transparent,
-            iconTheme: IconThemeData(color: Color(0xff3BB143)),
-            automaticallyImplyLeading: true, // back button appbar
-            leading: IconButton(
-              icon: Icon(CupertinoIcons.back),
-              onPressed: () => Navigator.of(context).pop(),
-            ),
-            actions: [
-              Padding(
-                padding: EdgeInsets.fromLTRB(2, 2, 10, 2),
-                child: Image.asset('assets/makeat_transparent.png'),
-              ),
-              // Image.asset('assets/makeat_transparent.png', scale: 15),
-            ],
-            elevation: 0.0,
+          iconTheme: IconThemeData(color: Color(0xff3BB143)),
+          automaticallyImplyLeading: true, // back button appbar
+          leading: IconButton(
+            icon: Icon(CupertinoIcons.back),
+            onPressed: () => Navigator.of(context).pop(),
           ),
-          body: ListView(
-            padding: EdgeInsets.symmetric(horizontal: 32),
-            physics: BouncingScrollPhysics(),
-            children: [
-              ProfileWidget(
-                imagePath: user.imagePath,
-                // imagePath: isImg ? imageFile.toString() : user.imagePath,
-                isEdit: true,
-                onClicked: () async {
-                  // _getFromGallery();
-                },
-              ),
-              Text("Change profile picture here.",
-                  textAlign: TextAlign.center,
-                  style: GoogleFonts.ubuntu(
-                      fontSize: 12, color: Colors.grey, height: 2)),
-              const SizedBox(height: 24),
-              Form(
-                  child: Column(
+          actions: [
+            Padding(
+              padding: EdgeInsets.fromLTRB(2, 2, 10, 2),
+              child: Image.asset('assets/logo/makeat_transparent.png'),
+            ),
+            // Image.asset('assets/makeat_transparent.png', scale: 15),
+          ],
+          elevation: 0.0,
+        ),
+        body: ListView(
+          padding: EdgeInsets.symmetric(horizontal: 32),
+          physics: BouncingScrollPhysics(),
+          children: [
+            ProfileWidget(
+              imagePath: "assets/icons/default-profile.png",
+              // imagePath: isImg ? imageFile.toString() : user.imagePath,
+              isEdit: true,
+              onClicked: () async {
+                // _getFromGallery();
+              },
+            ),
+            Text("Change profile picture here.",
+                textAlign: TextAlign.center,
+                style: GoogleFonts.ubuntu(
+                    fontSize: 12, color: Colors.grey, height: 2)),
+            const SizedBox(height: 24),
+            Form(
+              child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
@@ -149,9 +149,11 @@ class _EditProfileState extends State<EditProfile> {
                     ),
                   ),
                 ],
-              )),
-            ],
-          ),
-        ));
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
