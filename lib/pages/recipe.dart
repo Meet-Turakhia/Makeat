@@ -11,6 +11,7 @@ import 'package:makeat_app/pages/saved.dart';
 import 'package:makeat_app/widgets/showtoast.dart';
 import 'package:vosk_flutter_plugin/vosk_flutter_plugin.dart';
 import "../widgets/fonts.dart";
+import 'profile.dart';
 import 'swipecards.dart';
 import 'package:text_to_speech/text_to_speech.dart';
 
@@ -1288,7 +1289,13 @@ class _RecipeState extends State<Recipe> {
                 ),
               ),
               IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => Profile(uid: user!.uid)),
+                  );
+                },
                 icon: Icon(
                   Icons.account_circle_outlined,
                   color: Color(0xff3BB143),
