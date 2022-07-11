@@ -10,6 +10,7 @@ import 'package:makeat_app/pages/likes.dart';
 import 'package:makeat_app/widgets/fonts.dart';
 import 'package:makeat_app/widgets/showtoast.dart';
 import "../pages/recipe.dart";
+import 'profile.dart';
 import 'swipecards.dart';
 import "package:cloud_firestore/cloud_firestore.dart";
 
@@ -680,7 +681,13 @@ class _SavedState extends State<Saved> {
                 ),
               ),
               IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => Profile(uid: user!.uid)),
+                  );
+                },
                 icon: Icon(
                   Icons.account_circle_outlined,
                   color: Color(0xff3BB143),
