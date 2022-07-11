@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:makeat_app/pages/likes.dart';
+import 'package:makeat_app/pages/profile.dart';
 import 'package:makeat_app/pages/saved.dart';
 import "../pages/home.dart";
 import "package:firebase_auth/firebase_auth.dart";
@@ -48,7 +49,12 @@ Widget buildBottomBar(BuildContext context) {
           icon: Icon(CupertinoIcons.bookmark, color: Color(0xff3BB143)),
         ),
         IconButton(
-          onPressed: () {},
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => Profile(uid: user!.uid)),
+            );
+          },
           icon: Icon(CupertinoIcons.profile_circled, color: Color(0xff3BB143)),
         ),
       ],

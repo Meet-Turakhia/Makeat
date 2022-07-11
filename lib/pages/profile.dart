@@ -11,7 +11,8 @@ import '../widgets/bottombar.dart';
 import '../widgets/fonts.dart';
 
 class Profile extends StatefulWidget {
-  const Profile({ Key? key }) : super(key: key);
+  final String uid;
+  const Profile({Key? key, required this.uid}) : super(key: key);
 
   @override
   _ProfileState createState() => _ProfileState();
