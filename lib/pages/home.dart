@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:makeat_app/pages/likes.dart';
+import 'package:makeat_app/pages/profile.dart';
 import 'package:makeat_app/pages/saved.dart';
 import 'package:makeat_app/widgets/fonts.dart';
 import 'package:makeat_app/widgets/searchbar.dart';
@@ -550,7 +551,13 @@ class _HomeState extends State<Home> {
                 ),
               ),
               IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => Profile(uid: user!.uid)),
+                  );
+                },
                 icon: Icon(
                   Icons.account_circle_outlined,
                   color: Color(0xff3BB143),
