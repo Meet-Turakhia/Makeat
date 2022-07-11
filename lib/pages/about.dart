@@ -36,7 +36,7 @@ class _AboutState extends State<About> {
             actions: [
               Padding(
                 padding: EdgeInsets.fromLTRB(2, 2, 10, 2),
-                child: Image.asset('assets/makeat_transparent.png'),
+                child: Image.asset('assets/logo/makeat_transparent.png'),
               ),
               // Image.asset('assets/makeat_transparent.png', scale: 15),
             ],
@@ -47,7 +47,7 @@ class _AboutState extends State<About> {
             physics: BouncingScrollPhysics(),
             children: [
               Image.asset(
-                'assets/ncoders_transparent_black.png',
+                'assets/logo/ncoders_transparent_black.png',
                 height: 30,
               ),
               // assets\ncoders_transparent_black.png
@@ -82,7 +82,7 @@ class _AboutState extends State<About> {
                             child: Material(
                               color: Colors.transparent,
                               child: Ink.image(
-                                image: AssetImage('assets/default-profile.png'),
+                                image: AssetImage('assets/icons/default-profile.png'),
                                 fit: BoxFit.cover,
                                 width: 100,
                                 height: 100,
@@ -120,7 +120,7 @@ class _AboutState extends State<About> {
                             child: Material(
                               color: Colors.transparent,
                               child: Ink.image(
-                                image: AssetImage('assets/default-profile.png'),
+                                image: AssetImage('assets/icons/default-profile.png'),
                                 fit: BoxFit.cover,
                                 width: 100,
                                 height: 100,
@@ -192,7 +192,7 @@ class _AboutState extends State<About> {
                               fontSize: 20, fontWeight: FontWeight.bold),
                         ),
                         Image.asset(
-                          'assets/makeat_transparent.png',
+                          'assets/logo/makeat_transparent.png',
                           height: 40,
                         ),
                       ],
@@ -214,7 +214,7 @@ class _AboutState extends State<About> {
               ),
 
               Image.asset(
-                'assets/makeat_transparent.png',
+                'assets/logo/makeat_transparent.png',
                 height: 100,
               ),
 
