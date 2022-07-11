@@ -9,6 +9,7 @@ import 'package:makeat_app/pages/home.dart';
 import 'package:makeat_app/pages/likes.dart';
 import 'package:makeat_app/pages/saved.dart';
 import "../widgets/fonts.dart";
+import 'profile.dart';
 import 'recipe.dart';
 
 class Tinderswiper extends StatefulWidget {
@@ -418,7 +419,13 @@ class _TinderswiperState extends State<Tinderswiper>
                 ),
               ),
               IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => Profile(uid: user!.uid)),
+                  );
+                },
                 icon: Icon(
                   Icons.account_circle_outlined,
                   color: Color(0xff3BB143),
