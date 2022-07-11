@@ -55,7 +55,7 @@ class _ProfileState extends State<Profile> {
             actions: [
               Padding(
                 padding: EdgeInsets.fromLTRB(2, 2, 10, 2),
-                child: Image.asset('assets/makeat_transparent.png'),
+                child: Image.asset('assets/logo/makeat_transparent.png'),
               ),
             ],
             title: Text("Profile",
@@ -68,7 +68,7 @@ class _ProfileState extends State<Profile> {
 
           body: ListView(physics: BouncingScrollPhysics(), children: [
             ProfileWidget(
-              imagePath: user.imagePath,
+              imagePath: "assets/icons/default-profile.png",
               onClicked: () async {
                 Navigator.push(
                   context,
@@ -610,7 +610,7 @@ Widget buildAbout(context) => Padding(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Image.asset(
-                'assets/makeat_transparent.png',
+                'assets/logo/makeat_transparent.png',
                 height: 40,
               ),
               Column(
