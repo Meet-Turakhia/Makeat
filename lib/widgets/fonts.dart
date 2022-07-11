@@ -36,3 +36,5 @@ var mfontgbl17 = GoogleFonts.ubuntu(
     color: Color(0xff3BB143),
     fontSize: 17.0,
     textStyle: TextStyle(fontWeight: FontWeight.bold));
+var mfont24b = GoogleFonts.ubuntu(
+    color: Colors.black, fontSize: 24, fontWeight: FontWeight.bold);
