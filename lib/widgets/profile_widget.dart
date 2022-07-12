@@ -5,12 +5,14 @@ class ProfileWidget extends StatelessWidget {
   final String imagePath;
   final VoidCallback onClicked;
   final bool isEdit;
+  final bool isAssetImage;
 
   // ignore: use_key_in_widget_constructors
   const ProfileWidget({
     // Key? key,
     required this.imagePath,
     required this.onClicked,
+    required this.isAssetImage,
     this.isEdit = false,
   });
   // : super(key: key);
@@ -34,13 +36,13 @@ class ProfileWidget extends StatelessWidget {
   }
 
   Widget buildImage() {
-    final image = AssetImage(imagePath);
-
     return ClipOval(
       child: Material(
         color: Colors.transparent,
         child: Ink.image(
-          image: image,
+          image: isAssetImage
+              ? AssetImage(imagePath)
+              : NetworkImage(imagePath) as ImageProvider,
           fit: BoxFit.cover,
           width: 128,
           height: 128,
@@ -64,34 +66,37 @@ class ProfileWidget extends StatelessWidget {
 // }
 
   Widget buildEditIcon() => ClipOval(
-      child: Material(
-        elevation: 15.0,
-        shadowColor: Colors.black,
-        color: Colors.black, // button color
-        child: InkWell(
-          splashColor: Colors.white, // inkwell color
-          child: SizedBox(
-            width: 35, height: 35, 
-            child: Icon(
-              isEdit ? CupertinoIcons.add_circled_solid : CupertinoIcons.gear_alt_fill, 
-              size: 28, 
-              color: Color(0xff3BB143),)
+        child: Material(
+          elevation: 15.0,
+          shadowColor: Colors.black,
+          color: Colors.black, // button color
+          child: InkWell(
+            splashColor: Colors.white, // inkwell color
+            child: SizedBox(
+                width: 35,
+                height: 35,
+                child: Icon(
+                  isEdit
+                      ? CupertinoIcons.add_circled_solid
+                      : CupertinoIcons.gear_alt_fill,
+                  size: 28,
+                  color: const Color(0xff3BB143),
+                )),
+            onTap: onClicked,
           ),
-          onTap: onClicked,
         ),
-      ),
-    );
+      );
 
   Widget buildCircle({
     required Widget child,
     required double all,
     required Color color,
   }) =>
-  ClipOval(
-    child: Container(
-      padding: EdgeInsets.all(all),
-      color: color,
-      child: child,
-    ),
-  );
+      ClipOval(
+        child: Container(
+          padding: EdgeInsets.all(all),
+          color: color,
+          child: child,
+        ),
+      );
 }

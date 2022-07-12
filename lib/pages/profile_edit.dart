@@ -52,6 +52,7 @@ class _EditProfileState extends State<EditProfile> {
           children: [
             ProfileWidget(
               imagePath: "assets/icons/default-profile.png",
+              isAssetImage: true,
               // imagePath: isImg ? imageFile.toString() : user.imagePath,
               isEdit: true,
               onClicked: () async {

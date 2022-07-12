@@ -1,4 +1,5 @@
 // ignore_for_file: prefer_const_constructors
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -6,7 +7,6 @@ import 'about.dart';
 import 'profile_edit.dart';
 import 'swipecards.dart';
 import '../widgets/profile_widget.dart';
-import '../widgets/user.dart';
 import '../widgets/bottombar.dart';
 import '../widgets/fonts.dart';
 
@@ -19,7 +19,10 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
-  final user = UserPreferences.mUser;
+  User? user = FirebaseAuth.instance.currentUser;
+  var userName = FirebaseAuth.instance.currentUser!.displayName;
+  String userImage = FirebaseAuth.instance.currentUser!.photoURL.toString();
+  bool isUserImageAsset = false;
 
   var timeselectedRange = RangeValues(150, 200);
   var calselectedRange = RangeValues(1000, 4000);
@@ -32,10 +35,24 @@ class _ProfileState extends State<Profile> {
 
   @override
   void initState() {
-    isSelected = [true, false, false];
     super.initState();
+    isSelected = [true, false, false];
+    if (user!.displayName == null) {
+      var setName = user!.email!.split("@")[0];
+      user!.updateDisplayName(setName);
+      setState(() {
+        userName = setName;
+      });
+    }
+    if (user!.photoURL == null) {
+      setState(() {
+        userImage = "assets/icons/default-profile.png";
+        isUserImageAsset = true;
+      });
+    }
   }
 
+  @override
   Widget build(BuildContext context) {
     return Container(
         decoration: BoxDecoration(
@@ -68,7 +85,8 @@ class _ProfileState extends State<Profile> {
 
           body: ListView(physics: BouncingScrollPhysics(), children: [
             ProfileWidget(
-              imagePath: "assets/icons/default-profile.png",
+              imagePath: userImage,
+              isAssetImage: isUserImageAsset,
               onClicked: () async {
                 Navigator.push(
                   context,
@@ -78,7 +96,7 @@ class _ProfileState extends State<Profile> {
             ),
 
             const SizedBox(height: 24),
-            buildName(user),
+            buildName(user!, userName, userImage),
 
             Padding(
               padding: const EdgeInsets.only(top: 20.0, bottom: 20.0),
@@ -565,15 +583,15 @@ class _ProfileState extends State<Profile> {
   }
 }
 
-Widget buildName(User user) => Column(
+Widget buildName(User user, var userName, var userImage) => Column(
       children: [
         Text(
-          user.name,
+          "$userName",
           style: mfont24b,
         ),
         const SizedBox(height: 4),
         Text(
-          user.email,
+          "${user.email}",
           style: GoogleFonts.ubuntu(
               color: Colors.black38, fontStyle: FontStyle.italic),
         )
