@@ -36,7 +36,19 @@ class _EditProfileState extends State<EditProfile> {
     }
   }
 
-  void getCameraImage() {}
+  Future<void> getCameraImage() async {
+      XFile? clickedImage = await ImagePicker().pickImage(
+      source: ImageSource.camera,
+      maxWidth: 1800,
+      maxHeight: 1800,
+    );
+    if (clickedImage != null) {
+      setState(() {
+        assetOrEditImage = clickedImage.path.toString();
+        isEditImage = true;
+      });
+    }
+  }
 
   void imageUploadOptions() {
     showDialog(
@@ -99,7 +111,7 @@ class _EditProfileState extends State<EditProfile> {
                   Navigator.of(context, rootNavigator: true).pop();
                 },
                 child: Text(
-                  "Cancel",
+                  "Close",
                   style: mfontw15,
                 ),
               ),
