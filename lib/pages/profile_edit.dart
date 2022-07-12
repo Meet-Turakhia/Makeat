@@ -1,10 +1,11 @@
 // ignore_for_file: prefer_const_constructors
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../widgets/profile_widget.dart';
-import '../widgets/user.dart';
 import '../widgets/fonts.dart';
+import 'package:image_picker/image_picker.dart';
 
 class EditProfile extends StatefulWidget {
   const EditProfile({Key? key}) : super(key: key);
@@ -14,7 +15,100 @@ class EditProfile extends StatefulWidget {
 }
 
 class _EditProfileState extends State<EditProfile> {
-  final user = UserPreferences.mUser;
+  User? user = FirebaseAuth.instance.currentUser;
+  var userName = FirebaseAuth.instance.currentUser!.displayName;
+  var userImage = FirebaseAuth.instance.currentUser!.photoURL;
+  String assetOrEditImage = "assets/icons/default-profile.png";
+  bool isEditImage = false;
+  bool isAssetImage = FirebaseAuth.instance.currentUser!.photoURL == null;
+
+  Future<void> getGalleryImage() async {
+    XFile? pickedImage = await ImagePicker().pickImage(
+      source: ImageSource.gallery,
+      maxWidth: 1800,
+      maxHeight: 1800,
+    );
+    if (pickedImage != null) {
+      setState(() {
+        assetOrEditImage = pickedImage.path.toString();
+        isEditImage = true;
+      });
+    }
+  }
+
+  void getCameraImage() {}
+
+  void imageUploadOptions() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          scrollable: true,
+          shape: RoundedRectangleBorder(
+            side: BorderSide(color: Color(0xff3BB143), width: 2.0),
+            borderRadius: BorderRadius.circular(15.0),
+          ),
+          title: Row(
+            children: [
+              Image(
+                image: AssetImage("assets/icons/default-profile.png"),
+                width: 30.0,
+              ),
+              Center(
+                child: Text(
+                  "  Image Upload Options",
+                  style: mfontgbl17,
+                ),
+              ),
+            ],
+          ),
+          content: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              IconButton(
+                onPressed: () {
+                  getGalleryImage();
+                },
+                icon: Icon(
+                  Icons.photo_library_rounded,
+                  color: Color(0xff3BB143),
+                  size: 45.0,
+                ),
+              ),
+              IconButton(
+                onPressed: () {
+                  getCameraImage();
+                },
+                icon: Icon(
+                  Icons.photo_camera_front_rounded,
+                  color: Color(0xff3BB143),
+                  size: 50.0,
+                ),
+              ),
+            ],
+          ),
+          actions: [
+            Center(
+              child: ElevatedButton(
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all(
+                    Color(0xff3BB143),
+                  ),
+                ),
+                onPressed: () {
+                  Navigator.of(context, rootNavigator: true).pop();
+                },
+                child: Text(
+                  "Cancel",
+                  style: mfontw15,
+                ),
+              ),
+            )
+          ],
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -51,11 +145,13 @@ class _EditProfileState extends State<EditProfile> {
           physics: BouncingScrollPhysics(),
           children: [
             ProfileWidget(
-              imagePath: "assets/icons/default-profile.png",
-              isAssetImage: true,
+              imagePath: isAssetImage || isEditImage ? assetOrEditImage : user!.photoURL.toString(),
+              isAssetImage: isAssetImage,
               // imagePath: isImg ? imageFile.toString() : user.imagePath,
               isEdit: true,
+              isEditImage: isEditImage,
               onClicked: () async {
+                imageUploadOptions();
                 // _getFromGallery();
               },
             ),
@@ -77,7 +173,7 @@ class _EditProfileState extends State<EditProfile> {
                   TextFormField(
                     enabled: false,
                     style: mfont15,
-                    controller: TextEditingController(text: user.email),
+                    controller: TextEditingController(text: user!.email),
                     decoration: InputDecoration(
                       labelText:
                           "email cannot be edited once account is created.",
@@ -101,7 +197,7 @@ class _EditProfileState extends State<EditProfile> {
                   ),
                   const SizedBox(height: 10),
                   TextFormField(
-                    controller: TextEditingController(text: user.name),
+                    initialValue: user!.displayName,
                     style: mfont15,
                     cursorColor: Colors.black,
                     decoration: InputDecoration(

@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_typing_uninitialized_variables
+import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -6,6 +8,7 @@ class ProfileWidget extends StatelessWidget {
   final VoidCallback onClicked;
   final bool isEdit;
   final bool isAssetImage;
+  final bool isEditImage;
 
   // ignore: use_key_in_widget_constructors
   const ProfileWidget({
@@ -13,6 +16,7 @@ class ProfileWidget extends StatelessWidget {
     required this.imagePath,
     required this.onClicked,
     required this.isAssetImage,
+    required this.isEditImage,
     this.isEdit = false,
   });
   // : super(key: key);
@@ -36,13 +40,18 @@ class ProfileWidget extends StatelessWidget {
   }
 
   Widget buildImage() {
+    final assetOrEditImage;
+    if (isEditImage) {
+      assetOrEditImage = FileImage(File(imagePath));
+    } else {
+      assetOrEditImage = AssetImage(imagePath);
+    }
+
     return ClipOval(
       child: Material(
         color: Colors.transparent,
         child: Ink.image(
-          image: isAssetImage
-              ? AssetImage(imagePath)
-              : NetworkImage(imagePath) as ImageProvider,
+          image: isAssetImage || isEditImage ? assetOrEditImage : NetworkImage(imagePath),
           fit: BoxFit.cover,
           width: 128,
           height: 128,

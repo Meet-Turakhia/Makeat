@@ -87,6 +87,7 @@ class _ProfileState extends State<Profile> {
             ProfileWidget(
               imagePath: userImage,
               isAssetImage: isUserImageAsset,
+              isEditImage: false,
               onClicked: () async {
                 Navigator.push(
                   context,
