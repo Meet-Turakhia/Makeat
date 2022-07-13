@@ -32,8 +32,8 @@ class _EditProfileState extends State<EditProfile> {
       maxWidth: 1800,
       maxHeight: 1800,
     );
-    Navigator.of(context, rootNavigator: true).pop();
     if (pickedImage != null) {
+      Navigator.of(context, rootNavigator: true).pop();
       setState(() {
         assetOrEditImage = pickedImage.path.toString();
         isEditImage = true;
@@ -48,8 +48,8 @@ class _EditProfileState extends State<EditProfile> {
       maxWidth: 1800,
       maxHeight: 1800,
     );
-    Navigator.of(context, rootNavigator: true).pop();
     if (clickedImage != null) {
+      Navigator.of(context, rootNavigator: true).pop();
       setState(() {
         assetOrEditImage = clickedImage.path.toString();
         isEditImage = true;
