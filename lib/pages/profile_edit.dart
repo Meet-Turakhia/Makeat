@@ -126,7 +126,62 @@ class _EditProfileState extends State<EditProfile> {
     );
   }
 
+  void updatingProfilePopUpMessage() {
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          scrollable: true,
+          shape: RoundedRectangleBorder(
+            side: BorderSide(color: Color(0xff3BB143), width: 2.0),
+            borderRadius: BorderRadius.circular(15.0),
+          ),
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.update_rounded,
+                color: Color(0xff3BB143),
+                size: 30.0,
+              ),
+              Text(
+                "  Updating Profile!",
+                style: mfontgbl17,
+              ),
+            ],
+          ),
+          content: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: const [
+                  CircularProgressIndicator(
+                    color: Color(0xff3BB143),
+                  ),
+                ],
+              ),
+              Padding(
+                padding: EdgeInsets.only(bottom: 25.0),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    "Please Wait",
+                    style: mfontgbl17,
+                  ),
+                ],
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   Future<void> editProfile() async {
+    updatingProfilePopUpMessage();
     await user!.updateDisplayName(userName);
     if (isEditImage == true) {
       final userImageUploadPath = "userProfileImage/" + user!.uid;
@@ -138,6 +193,7 @@ class _EditProfileState extends State<EditProfile> {
       await user!.updatePhotoURL(userImageUploadURL);
     }
     popupMessage("Profile Updated!");
+    Navigator.of(context, rootNavigator: true).pop();
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
