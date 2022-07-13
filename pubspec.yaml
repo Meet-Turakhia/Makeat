@@ -55,6 +55,7 @@ dependencies:
     git:
       url: https://github.com/alphacep/vosk-flutter.git
   image_picker: ^0.8.5+3
+  firebase_storage: 9.0.0
 
 dev_dependencies:
   flutter_test:

@@ -1,11 +1,15 @@
 // ignore_for_file: prefer_const_constructors
+import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:makeat_app/pages/profile.dart';
+import 'package:makeat_app/widgets/showtoast.dart';
 import '../widgets/profile_widget.dart';
 import '../widgets/fonts.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 class EditProfile extends StatefulWidget {
   const EditProfile({Key? key}) : super(key: key);
@@ -37,7 +41,7 @@ class _EditProfileState extends State<EditProfile> {
   }
 
   Future<void> getCameraImage() async {
-      XFile? clickedImage = await ImagePicker().pickImage(
+    XFile? clickedImage = await ImagePicker().pickImage(
       source: ImageSource.camera,
       maxWidth: 1800,
       maxHeight: 1800,
@@ -122,6 +126,26 @@ class _EditProfileState extends State<EditProfile> {
     );
   }
 
+  Future<void> editProfile() async {
+    await user!.updateDisplayName(userName);
+    if (isEditImage == true) {
+      final userImageUploadPath = "userProfileImage/" + user!.uid;
+      final userImageUploadFile = File(assetOrEditImage);
+      final userImageUploadRef =
+          FirebaseStorage.instance.ref().child(userImageUploadPath);
+      await userImageUploadRef.putFile(userImageUploadFile);
+      String userImageUploadURL = await userImageUploadRef.getDownloadURL();
+      await user!.updatePhotoURL(userImageUploadURL);
+    }
+    popupMessage("Profile Updated!");
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => Profile(uid: user!.uid),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -157,7 +181,9 @@ class _EditProfileState extends State<EditProfile> {
           physics: BouncingScrollPhysics(),
           children: [
             ProfileWidget(
-              imagePath: isAssetImage || isEditImage ? assetOrEditImage : user!.photoURL.toString(),
+              imagePath: isAssetImage || isEditImage
+                  ? assetOrEditImage
+                  : user!.photoURL.toString(),
               isAssetImage: isAssetImage,
               // imagePath: isImg ? imageFile.toString() : user.imagePath,
               isEdit: true,
@@ -226,7 +252,9 @@ class _EditProfileState extends State<EditProfile> {
                         borderRadius: BorderRadius.circular(20),
                       ),
                     ),
-                    onChanged: (name) {},
+                    onChanged: (name) {
+                      userName = name;
+                    },
                   ),
                   Padding(
                     padding: const EdgeInsets.all(20.0),
@@ -243,7 +271,9 @@ class _EditProfileState extends State<EditProfile> {
                             ),
                             splashFactory: InkSplash.splashFactory,
                           ),
-                          onPressed: () => {},
+                          onPressed: () => {
+                            editProfile(),
+                          },
                           icon: Icon(
                             CupertinoIcons.checkmark_alt_circle_fill,
                             color: Color(0xff3BB143),
