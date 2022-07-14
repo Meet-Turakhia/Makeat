@@ -133,7 +133,7 @@ class _ProfileState extends State<Profile> {
                 TextButton(
                   //liked
                   onPressed: () {
-                    Navigator.pushReplacement(
+                    Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder: (context) => Likes(uid: user!.uid),
@@ -242,7 +242,7 @@ class _ProfileState extends State<Profile> {
                 TextButton(
                   //Saved
                   onPressed: () {
-                    Navigator.pushReplacement(
+                    Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder: (context) => Saved(uid: user!.uid),
