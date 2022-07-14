@@ -4,6 +4,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:makeat_app/pages/likes.dart';
+import 'package:makeat_app/pages/saved.dart';
 import 'about.dart';
 import 'profile_edit.dart';
 import 'swipecards.dart';
@@ -129,7 +131,14 @@ class _ProfileState extends State<Profile> {
                 children: [
                   TextButton(
                     //liked
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => Likes(uid: user!.uid),
+                        ),
+                      );
+                    },
                     style: TextButton.styleFrom(
                       primary: Colors.black,
                       backgroundColor: Colors.white24,
@@ -231,7 +240,14 @@ class _ProfileState extends State<Profile> {
 
                   TextButton(
                     //Saved
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => Saved(uid: user!.uid),
+                        ),
+                      );
+                    },
                     style: TextButton.styleFrom(
                       primary: Colors.black,
                       backgroundColor: Colors.white24,
