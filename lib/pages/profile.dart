@@ -1,4 +1,5 @@
 // ignore_for_file: prefer_const_constructors
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
@@ -23,6 +24,10 @@ class _ProfileState extends State<Profile> {
   var userName = FirebaseAuth.instance.currentUser!.displayName;
   String userImage = FirebaseAuth.instance.currentUser!.photoURL.toString();
   bool isUserImageAsset = false;
+  var likeCollection = FirebaseFirestore.instance.collection("likes");
+  var likeCount = 0;
+  var saveCollection = FirebaseFirestore.instance.collection("saves");
+  var saveCount = 0;
 
   var timeselectedRange = RangeValues(150, 200);
   var calselectedRange = RangeValues(1000, 4000);
@@ -50,6 +55,24 @@ class _ProfileState extends State<Profile> {
         isUserImageAsset = true;
       });
     }
+    likeCollection.doc(widget.uid).collection("like").get().then(
+          (value) => {
+            setState(
+              () {
+                likeCount = value.size;
+              },
+            ),
+          },
+        );
+    saveCollection.doc(widget.uid).collection("save").get().then(
+          (value) => {
+            setState(
+              () {
+                saveCount = value.size;
+              },
+            ),
+          },
+        );
   }
 
   @override
@@ -121,7 +144,7 @@ class _ProfileState extends State<Profile> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          "100",
+                          "$likeCount",
                           style: GoogleFonts.ubuntu(
                             fontWeight: FontWeight.bold,
                             fontSize: 20.0,
@@ -223,7 +246,7 @@ class _ProfileState extends State<Profile> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          "50",
+                          "$saveCount",
                           style: GoogleFonts.ubuntu(
                             fontWeight: FontWeight.bold,
                             fontSize: 20.0,
