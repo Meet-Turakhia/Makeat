@@ -42,6 +42,52 @@ class _ProfileState extends State<Profile> {
 
   late List<bool> isSelected;
 
+  void setRefreshData() {
+    User? user = FirebaseAuth.instance.currentUser;
+    var likeCollection = FirebaseFirestore.instance.collection("likes");
+    var saveCollection = FirebaseFirestore.instance.collection("saves");
+
+    if (user!.displayName == null) {
+      var setName = user.email!.split("@")[0];
+      user.updateDisplayName(setName);
+      setState(() {
+        userName = setName;
+      });
+    } else {
+      setState(() {
+        userName = user.displayName;
+      });
+    }
+    if (user.photoURL == null) {
+      setState(() {
+        userImage = "assets/icons/default-profile.png";
+        isUserImageAsset = true;
+      });
+    } else {
+      setState(() {
+        userImage = user.photoURL.toString();
+      });
+    }
+    likeCollection.doc(widget.uid).collection("like").get().then(
+          (value) => {
+            setState(
+              () {
+                likeCount = value.size;
+              },
+            ),
+          },
+        );
+    saveCollection.doc(widget.uid).collection("save").get().then(
+          (value) => {
+            setState(
+              () {
+                saveCount = value.size;
+              },
+            ),
+          },
+        );
+  }
+
   @override
   void initState() {
     super.initState();
@@ -118,6 +164,10 @@ class _ProfileState extends State<Profile> {
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => EditProfile()),
+              ).then(
+                (value) => {
+                  setRefreshData(),
+                },
               );
             },
           ),
@@ -138,6 +188,10 @@ class _ProfileState extends State<Profile> {
                       MaterialPageRoute(
                         builder: (context) => Likes(uid: user!.uid),
                       ),
+                    ).then(
+                      (value) => {
+                        setRefreshData(),
+                      },
                     );
                   },
                   style: TextButton.styleFrom(
@@ -247,6 +301,10 @@ class _ProfileState extends State<Profile> {
                       MaterialPageRoute(
                         builder: (context) => Saved(uid: user!.uid),
                       ),
+                    ).then(
+                      (value) => {
+                        setRefreshData(),
+                      },
                     );
                   },
                   style: TextButton.styleFrom(
@@ -610,6 +668,10 @@ class _ProfileState extends State<Profile> {
               MaterialPageRoute(
                 builder: (context) => Tinderswiper(),
               ),
+            ).then(
+              (value) => {
+                setRefreshData(),
+              },
             );
           },
           tooltip: 'Scan Ingredients',
@@ -633,6 +695,10 @@ class _ProfileState extends State<Profile> {
                     context,
                     MaterialPageRoute(
                         builder: (context) => Home(uid: user!.uid)),
+                  ).then(
+                    (value) => {
+                      setRefreshData(),
+                    },
                   );
                 },
                 icon: Icon(
@@ -647,6 +713,10 @@ class _ProfileState extends State<Profile> {
                     context,
                     MaterialPageRoute(
                         builder: (context) => Likes(uid: user!.uid)),
+                  ).then(
+                    (value) => {
+                      setRefreshData(),
+                    },
                   );
                 },
                 icon: Icon(
@@ -666,6 +736,10 @@ class _ProfileState extends State<Profile> {
                     context,
                     MaterialPageRoute(
                         builder: (context) => Saved(uid: user!.uid)),
+                  ).then(
+                    (value) => {
+                      setRefreshData(),
+                    },
                   );
                 },
                 icon: Icon(
