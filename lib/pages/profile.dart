@@ -32,15 +32,74 @@ class _ProfileState extends State<Profile> {
   var likeCount = 0;
   var saveCollection = FirebaseFirestore.instance.collection("saves");
   var saveCount = 0;
+  var preferenceCollection =
+      FirebaseFirestore.instance.collection("preferences");
+  var isVeganOnly = false;
 
-  var timeselectedRange = RangeValues(150, 200);
-  var calselectedRange = RangeValues(1000, 4000);
-  var sugarselectedRange = RangeValues(360, 750);
-  var proteinselectedRange = RangeValues(260, 450);
-  var sodiumselectedRange = RangeValues(700, 3500);
-  var fatselectedRange = RangeValues(260, 450);
+  var timeselectedRange = RangeValues(0, 0);
+  var calselectedRange = RangeValues(0, 0);
+  var sugarselectedRange = RangeValues(0, 0);
+  var proteinselectedRange = RangeValues(0, 0);
+  var sodiumselectedRange = RangeValues(0, 0);
+  var fatselectedRange = RangeValues(0, 0);
 
   late List<bool> isSelected;
+
+  void setPreferenceData() {
+    preferenceCollection
+        .doc(widget.uid)
+        .collection("preference")
+        .get()
+        .then((value) => {
+              if (value.docs.isEmpty)
+                {
+                  preferenceCollection
+                      .doc(widget.uid)
+                      .collection("preference")
+                      .doc(widget.uid)
+                      .set({
+                    "isVeganOnly": false,
+                    "cookTimeMin": 0.0,
+                    "cookTimeMax": 500.0,
+                    "caloriesMin": 0.0,
+                    "caloriesMax": 10000.0,
+                    "sugarMin": 0.0,
+                    "sugarMax": 1000.0,
+                    "proteinMin": 0.0,
+                    "proteinMax": 1000.0,
+                    "sodiumMin": 0.0,
+                    "sodiumMax": 5000.0,
+                    "fatMin": 0.0,
+                    "fatMax": 1000.0,
+                  }),
+                  preferenceCollection
+                      .doc(widget.uid)
+                      .collection("preference")
+                      .doc(widget.uid)
+                      .get()
+                      .then((value) => {
+                            setState(() {
+                              timeselectedRange = RangeValues(
+                                  value.get("cookTimeMin"),
+                                  value.get("cookTimeMax"));
+                              calselectedRange = RangeValues(
+                                  value.get("caloriesMin"),
+                                  value.get("caloriesMax"));
+                              sugarselectedRange = RangeValues(
+                                  value.get("sugarMin"), value.get("sugarMax"));
+                              proteinselectedRange = RangeValues(
+                                  value.get("proteinMin"),
+                                  value.get("proteinMax"));
+                              sodiumselectedRange = RangeValues(
+                                  value.get("sodiumMin"),
+                                  value.get("sodiumMax"));
+                              fatselectedRange = RangeValues(
+                                  value.get("fatMin"), value.get("fatMax"));
+                            })
+                          }),
+                }
+            });
+  }
 
   void setRefreshData() {
     User? user = FirebaseAuth.instance.currentUser;
@@ -123,6 +182,7 @@ class _ProfileState extends State<Profile> {
             ),
           },
         );
+    setPreferenceData();
   }
 
   @override
@@ -223,75 +283,81 @@ class _ProfileState extends State<Profile> {
                   ),
                 ),
 
-                Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white24,
-                    borderRadius: BorderRadius.circular(20.0),
-                  ),
-                  child: ToggleButtons(
-                    isSelected: isSelected,
-                    color: Colors.black,
-                    selectedColor: Color(0xff3BB143),
-                    selectedBorderColor: Colors.black,
-                    fillColor: Colors.black,
-                    splashColor: Colors.black,
-                    borderColor: Colors.black26,
-                    borderWidth: 0.5,
-                    borderRadius: BorderRadius.circular(20.0),
-                    direction: Axis.vertical,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(
-                          'All',
-                          style: GoogleFonts.ubuntu(
-                              fontWeight: FontWeight.bold, fontSize: 15),
-                        ),
-                      ),
-                      // second toggle button
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(
-                          'Veg',
-                          style: GoogleFonts.ubuntu(
-                              fontWeight: FontWeight.bold, fontSize: 15),
-                        ),
-                      ),
-                      // third toggle button
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(
-                          'Vegan',
-                          style: GoogleFonts.ubuntu(
-                              fontWeight: FontWeight.bold, fontSize: 15),
-                        ),
-                      ),
-                    ],
-                    onPressed: (int index) {
-                      setState(() {
-                        for (int i = 0; i < isSelected.length; i++) {
-                          isSelected[i] = i == index;
-                        }
-                      });
-                    },
-                  ),
-                ),
-
-                // Column(
-                //   children: [
-                //     Text("Veg Only", style: GoogleFonts.ubuntu(fontWeight: FontWeight.bold, fontSize: 15.0,),),
-                //     CupertinoSwitch(
-                //       // trackColor: Colors.black,
-                //       activeColor: Color(0xff3BB143),
-                //       value: vegonly,
-                //       onChanged: (bool newValue) {
-                //         setState(() {
-                //           vegonly = newValue;
-                //         });
-                //       },
-                //     ),
-                //   ],
+                // Container(
+                //   decoration: BoxDecoration(
+                //     color: Colors.white24,
+                //     borderRadius: BorderRadius.circular(20.0),
+                //   ),
+                //   child: ToggleButtons(
+                //     isSelected: isSelected,
+                //     color: Colors.black,
+                //     selectedColor: Color(0xff3BB143),
+                //     selectedBorderColor: Colors.black,
+                //     fillColor: Colors.black,
+                //     splashColor: Colors.black,
+                //     borderColor: Colors.black26,
+                //     borderWidth: 0.5,
+                //     borderRadius: BorderRadius.circular(20.0),
+                //     direction: Axis.vertical,
+                //     children: [
+                //       Padding(
+                //         padding: const EdgeInsets.all(8.0),
+                //         child: Text(
+                //           'All',
+                //           style: GoogleFonts.ubuntu(
+                //               fontWeight: FontWeight.bold, fontSize: 15),
+                //         ),
+                //       ),
+                //       // second toggle button
+                //       Padding(
+                //         padding: const EdgeInsets.all(8.0),
+                //         child: Text(
+                //           'Veg',
+                //           style: GoogleFonts.ubuntu(
+                //               fontWeight: FontWeight.bold, fontSize: 15),
+                //         ),
+                //       ),
+                //       // third toggle button
+                //       Padding(
+                //         padding: const EdgeInsets.all(8.0),
+                //         child: Text(
+                //           'Vegan',
+                //           style: GoogleFonts.ubuntu(
+                //               fontWeight: FontWeight.bold, fontSize: 15),
+                //         ),
+                //       ),
+                //     ],
+                //     onPressed: (int index) {
+                //       setState(() {
+                //         for (int i = 0; i < isSelected.length; i++) {
+                //           isSelected[i] = i == index;
+                //         }
+                //       });
+                //     },
+                //   ),
                 // ),
+
+                Column(
+                  children: [
+                    Text(
+                      "Veg Only",
+                      style: GoogleFonts.ubuntu(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 15.0,
+                      ),
+                    ),
+                    CupertinoSwitch(
+                      // trackColor: Colors.black,
+                      activeColor: Color(0xff3BB143),
+                      value: isVeganOnly,
+                      onChanged: (bool newValue) {
+                        setState(() {
+                          isVeganOnly = newValue;
+                        });
+                      },
+                    ),
+                  ],
+                ),
 
                 TextButton(
                   //Saved
