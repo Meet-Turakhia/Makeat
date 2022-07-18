@@ -79,6 +79,36 @@ class _ProfileState extends State<Profile> {
                       .get()
                       .then((value) => {
                             setState(() {
+                              isVeganOnly = value.get("isVeganOnly");
+                              timeselectedRange = RangeValues(
+                                  value.get("cookTimeMin"),
+                                  value.get("cookTimeMax"));
+                              calselectedRange = RangeValues(
+                                  value.get("caloriesMin"),
+                                  value.get("caloriesMax"));
+                              sugarselectedRange = RangeValues(
+                                  value.get("sugarMin"), value.get("sugarMax"));
+                              proteinselectedRange = RangeValues(
+                                  value.get("proteinMin"),
+                                  value.get("proteinMax"));
+                              sodiumselectedRange = RangeValues(
+                                  value.get("sodiumMin"),
+                                  value.get("sodiumMax"));
+                              fatselectedRange = RangeValues(
+                                  value.get("fatMin"), value.get("fatMax"));
+                            })
+                          }),
+                }
+              else
+                {
+                  preferenceCollection
+                      .doc(widget.uid)
+                      .collection("preference")
+                      .doc(widget.uid)
+                      .get()
+                      .then((value) => {
+                            setState(() {
+                              isVeganOnly = value.get("isVeganOnly");
                               timeselectedRange = RangeValues(
                                   value.get("cookTimeMin"),
                                   value.get("cookTimeMax"));
@@ -145,6 +175,7 @@ class _ProfileState extends State<Profile> {
             ),
           },
         );
+    setPreferenceData();
   }
 
   @override
@@ -340,7 +371,7 @@ class _ProfileState extends State<Profile> {
                 Column(
                   children: [
                     Text(
-                      "Veg Only",
+                      "Vegan Only",
                       style: GoogleFonts.ubuntu(
                         fontWeight: FontWeight.bold,
                         fontSize: 15.0,
