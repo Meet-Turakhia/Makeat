@@ -46,3 +46,4 @@ app.*.map.json
 /android/app/release
 
 /assets/sqlite/makeatDB.db
+/android/app/google-services.json
