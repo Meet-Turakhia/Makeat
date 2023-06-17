@@ -44,6 +44,13 @@ class _ProfileState extends State<Profile> {
   var sodiumselectedRange = RangeValues(0, 0);
   var fatselectedRange = RangeValues(0, 0);
 
+  bool isTimeUpdated = false;
+  bool isCaloriesUpdated = false;
+  bool isSugarUpdated = false;
+  bool isProteinUpdated = false;
+  bool isSodiumUpdated = false;
+  bool isFatUpdated = false;
+
   late List<bool> isSelected;
 
   void setPreferenceData() {
@@ -252,13 +259,40 @@ class _ProfileState extends State<Profile> {
   }
 
   Future<void> updatePreferences() async {
-    await updateTimePreference();
-    await updateCaloriesPreference();
-    await updateSugarPreference();
-    await updateProteinPreference();
-    await updateSodiumPreference();
-    await updateFatPreference();
-    popupMessage("Preferences Saved!");
+    bool isPreferenceUpdated = false;
+    if (isTimeUpdated) {
+      await updateTimePreference();
+      isTimeUpdated = false;
+      isPreferenceUpdated = true;
+    }
+    if (isCaloriesUpdated) {
+      await updateCaloriesPreference();
+      isCaloriesUpdated = false;
+      isPreferenceUpdated = true;
+    }
+    if (isSugarUpdated) {
+      await updateSugarPreference();
+      isSugarUpdated = false;
+      isPreferenceUpdated = true;
+    }
+    if (isProteinUpdated) {
+      await updateProteinPreference();
+      isProteinUpdated = false;
+      isPreferenceUpdated = true;
+    }
+    if (isSodiumUpdated) {
+      await updateSodiumPreference();
+      isSodiumUpdated = false;
+      isPreferenceUpdated = true;
+    }
+    if (isFatUpdated) {
+      await updateFatPreference();
+      isFatUpdated = false;
+      isPreferenceUpdated = true;
+    }
+    if(isPreferenceUpdated){
+      popupMessage("Preferences Saved!");
+    }
   }
 
   @override
@@ -592,6 +626,7 @@ class _ProfileState extends State<Profile> {
                     onChanged: (RangeValues timeRange) {
                       setState(() {
                         timeselectedRange = timeRange;
+                        isTimeUpdated = true;
                       });
                     },
                     labels: RangeLabels(
@@ -628,6 +663,7 @@ class _ProfileState extends State<Profile> {
                     onChanged: (RangeValues calRange) {
                       setState(() {
                         calselectedRange = calRange;
+                        isCaloriesUpdated = true;
                       });
                     },
                     labels: RangeLabels('${calselectedRange.start} cal',
@@ -662,6 +698,7 @@ class _ProfileState extends State<Profile> {
                     onChanged: (RangeValues sugarRange) {
                       setState(() {
                         sugarselectedRange = sugarRange;
+                        isSugarUpdated = true;
                       });
                     },
                     labels: RangeLabels(
@@ -698,6 +735,7 @@ class _ProfileState extends State<Profile> {
                     onChanged: (RangeValues proteinRange) {
                       setState(() {
                         proteinselectedRange = proteinRange;
+                        isProteinUpdated = true;
                       });
                     },
                     labels: RangeLabels(
@@ -734,6 +772,7 @@ class _ProfileState extends State<Profile> {
                     onChanged: (RangeValues sodiumRange) {
                       setState(() {
                         sodiumselectedRange = sodiumRange;
+                        isSodiumUpdated = true;
                       });
                     },
                     labels: RangeLabels(
@@ -770,6 +809,7 @@ class _ProfileState extends State<Profile> {
                     onChanged: (RangeValues fatRange) {
                       setState(() {
                         fatselectedRange = fatRange;
+                        isFatUpdated = true;
                       });
                     },
                     labels: RangeLabels(
