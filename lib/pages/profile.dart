@@ -9,6 +9,7 @@ import 'package:makeat_app/pages/home.dart';
 import 'package:makeat_app/pages/likes.dart';
 import 'package:makeat_app/pages/login.dart';
 import 'package:makeat_app/pages/saved.dart';
+import 'package:makeat_app/widgets/showtoast.dart';
 import 'about.dart';
 import 'profile_edit.dart';
 import 'swipecards.dart';
@@ -248,6 +249,16 @@ class _ProfileState extends State<Profile> {
         .doc(widget.uid)
         .update(
             {"fatMin": fatselectedRange.start, "fatMax": fatselectedRange.end});
+  }
+
+  Future<void> updatePreferences() async {
+    await updateTimePreference();
+    await updateCaloriesPreference();
+    await updateSugarPreference();
+    await updateProteinPreference();
+    await updateSodiumPreference();
+    await updateFatPreference();
+    popupMessage("Preferences Saved!");
   }
 
   @override
@@ -547,6 +558,11 @@ class _ProfileState extends State<Profile> {
                 style: GoogleFonts.ubuntu(fontSize: 12, color: Colors.black45),
               ),
               trailing: Icon(CupertinoIcons.chevron_up_chevron_down),
+              onExpansionChanged: (isExpanded) {
+                if (!isExpanded) {
+                  updatePreferences();
+                }
+              },
               children: <Widget>[
                 ListTile(
                   dense: true,
@@ -577,7 +593,6 @@ class _ProfileState extends State<Profile> {
                       setState(() {
                         timeselectedRange = timeRange;
                       });
-                      updateTimePreference();
                     },
                     labels: RangeLabels(
                       '${timeselectedRange.start} min',
@@ -614,7 +629,6 @@ class _ProfileState extends State<Profile> {
                       setState(() {
                         calselectedRange = calRange;
                       });
-                      updateCaloriesPreference();
                     },
                     labels: RangeLabels('${calselectedRange.start} cal',
                         '${calselectedRange.end} cal'),
@@ -649,7 +663,6 @@ class _ProfileState extends State<Profile> {
                       setState(() {
                         sugarselectedRange = sugarRange;
                       });
-                      updateSugarPreference();
                     },
                     labels: RangeLabels(
                       '${sugarselectedRange.start} g',
@@ -686,7 +699,6 @@ class _ProfileState extends State<Profile> {
                       setState(() {
                         proteinselectedRange = proteinRange;
                       });
-                      updateProteinPreference();
                     },
                     labels: RangeLabels(
                       '${proteinselectedRange.start} g',
@@ -723,7 +735,6 @@ class _ProfileState extends State<Profile> {
                       setState(() {
                         sodiumselectedRange = sodiumRange;
                       });
-                      updateSodiumPreference();
                     },
                     labels: RangeLabels(
                       '${sodiumselectedRange.start} mg',
@@ -760,7 +771,6 @@ class _ProfileState extends State<Profile> {
                       setState(() {
                         fatselectedRange = fatRange;
                       });
-                      updateFatPreference();
                     },
                     labels: RangeLabels(
                       '${fatselectedRange.start} g',
@@ -771,7 +781,7 @@ class _ProfileState extends State<Profile> {
                 ListTile(
                   dense: true,
                   subtitle: Text(
-                    "Preferences will be saved once window is closed.",
+                    "Preferences will be saved once dropdown is closed.",
                     textAlign: TextAlign.center,
                     style: GoogleFonts.ubuntu(
                         fontSize: 12,
