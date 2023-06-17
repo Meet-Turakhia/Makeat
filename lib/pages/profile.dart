@@ -192,7 +192,7 @@ class _ProfileState extends State<Profile> {
         .collection("preference")
         .doc(widget.uid)
         .update({
-      "cookiTimeMin": timeselectedRange.start,
+      "cookTimeMin": timeselectedRange.start,
       "cookTimeMax": timeselectedRange.end
     });
   }
