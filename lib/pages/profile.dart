@@ -178,6 +178,78 @@ class _ProfileState extends State<Profile> {
     setPreferenceData();
   }
 
+  Future<void> updateVeganPreference() async {
+    await preferenceCollection
+        .doc(widget.uid)
+        .collection("preference")
+        .doc(widget.uid)
+        .update({"isVeganOnly": isVeganOnly});
+  }
+
+  Future<void> updateTimePreference() async {
+    await preferenceCollection
+        .doc(widget.uid)
+        .collection("preference")
+        .doc(widget.uid)
+        .update({
+      "cookiTimeMin": timeselectedRange.start,
+      "cookTimeMax": timeselectedRange.end
+    });
+  }
+
+  Future<void> updateCaloriesPreference() async {
+    await preferenceCollection
+        .doc(widget.uid)
+        .collection("preference")
+        .doc(widget.uid)
+        .update({
+      "caloriesMin": calselectedRange.start,
+      "caloriesMax": calselectedRange.end
+    });
+  }
+
+  Future<void> updateSugarPreference() async {
+    await preferenceCollection
+        .doc(widget.uid)
+        .collection("preference")
+        .doc(widget.uid)
+        .update({
+      "sugarMin": sugarselectedRange.start,
+      "sugarMax": sugarselectedRange.end
+    });
+  }
+
+  Future<void> updateProteinPreference() async {
+    await preferenceCollection
+        .doc(widget.uid)
+        .collection("preference")
+        .doc(widget.uid)
+        .update({
+      "proteinMin": proteinselectedRange.start,
+      "proteinMax": proteinselectedRange.end
+    });
+  }
+
+  Future<void> updateSodiumPreference() async {
+    await preferenceCollection
+        .doc(widget.uid)
+        .collection("preference")
+        .doc(widget.uid)
+        .update({
+      "sodiumMin": sodiumselectedRange.start,
+      "sodiumMax": sodiumselectedRange.end
+    });
+  }
+
+  Future<void> updateFatPreference() async {
+    await preferenceCollection
+        .doc(widget.uid)
+        .collection("preference")
+        .doc(widget.uid)
+        .update(
+            {"fatMin": fatselectedRange.start, "fatMax": fatselectedRange.end});
+  }
+
   @override
   void initState() {
     super.initState();
@@ -385,6 +457,7 @@ class _ProfileState extends State<Profile> {
                         setState(() {
                           isVeganOnly = newValue;
                         });
+                        updateVeganPreference();
                       },
                     ),
                   ],
@@ -504,6 +577,7 @@ class _ProfileState extends State<Profile> {
                       setState(() {
                         timeselectedRange = timeRange;
                       });
+                      updateTimePreference();
                     },
                     labels: RangeLabels(
                       '${timeselectedRange.start} min',
@@ -540,6 +614,7 @@ class _ProfileState extends State<Profile> {
                       setState(() {
                         calselectedRange = calRange;
                       });
+                      updateCaloriesPreference();
                     },
                     labels: RangeLabels('${calselectedRange.start} cal',
                         '${calselectedRange.end} cal'),
@@ -574,6 +649,7 @@ class _ProfileState extends State<Profile> {
                       setState(() {
                         sugarselectedRange = sugarRange;
                       });
+                      updateSugarPreference();
                     },
                     labels: RangeLabels(
                       '${sugarselectedRange.start} g',
@@ -610,6 +686,7 @@ class _ProfileState extends State<Profile> {
                       setState(() {
                         proteinselectedRange = proteinRange;
                       });
+                      updateProteinPreference();
                     },
                     labels: RangeLabels(
                       '${proteinselectedRange.start} g',
@@ -646,6 +723,7 @@ class _ProfileState extends State<Profile> {
                       setState(() {
                         sodiumselectedRange = sodiumRange;
                       });
+                      updateSodiumPreference();
                     },
                     labels: RangeLabels(
                       '${sodiumselectedRange.start} mg',
@@ -682,6 +760,7 @@ class _ProfileState extends State<Profile> {
                       setState(() {
                         fatselectedRange = fatRange;
                       });
+                      updateFatPreference();
                     },
                     labels: RangeLabels(
                       '${fatselectedRange.start} g',
