@@ -28,6 +28,8 @@ class _HomeState extends State<Home> {
   final db = FirebaseFirestore.instance;
   CollectionReference recipeStream =
       FirebaseFirestore.instance.collection("recipes");
+  CollectionReference preferenceCollection =
+      FirebaseFirestore.instance.collection("preferences");
 
   List<DocumentSnapshot> recipes = [];
   bool isLoading = false;
@@ -36,6 +38,20 @@ class _HomeState extends State<Home> {
   int documentLimit = 15;
   late DocumentSnapshot lastDocument;
   bool allFetched = false;
+  bool isVeganOnly = false;
+  var cookTimeMin = 0.0;
+  var cookTimeMax = 500.0;
+  var caloriesMin = 0.0;
+  var caloriesMax = 10000.0;
+  var sugarMin = 0.0;
+  var sugarMax = 1000.0;
+  var proteinMin = 0.0;
+  var proteinMax = 1000.0;
+  var sodiumMin = 0.0;
+  var sodiumMax = 5000.0;
+  var fatMin = 0.0;
+  var fatMax = 1000.0;
+  bool isPreferenceFetched = false;
 
   StreamController<List<DocumentSnapshot>> controller =
       StreamController<List<DocumentSnapshot>>();
@@ -54,29 +70,183 @@ class _HomeState extends State<Home> {
     super.dispose();
   }
 
+  Future<void> fetchPreferences() async {
+    await preferenceCollection
+        .doc(widget.uid)
+        .collection("preference")
+        .doc(widget.uid)
+        .get()
+        .then((value) => {
+              isVeganOnly = value.get("isVeganOnly"),
+              cookTimeMin = value.get("cookTimeMin"),
+              cookTimeMax = value.get("cookTimeMax"),
+              caloriesMin = value.get("caloriesMin"),
+              caloriesMax = value.get("caloriesMax"),
+              sugarMin = value.get("sugarMin"),
+              sugarMax = value.get("sugarMax"),
+              proteinMin = value.get("proteinMin"),
+              proteinMax = value.get("proteinMax"),
+              sodiumMin = value.get("sodiumMin"),
+              sodiumMax = value.get("sodiumMax"),
+              fatMin = value.get("fatMin"),
+              fatMax = value.get("fatMax")
+            });
+  }
+
   getRecipes() async {
+    if (!isPreferenceFetched) {
+      await fetchPreferences();
+      isPreferenceFetched = true;
+    }
     if (isLoading || allFetched) {
       return;
     }
     QuerySnapshot querySnapshot;
     if (firstCall == true) {
-      querySnapshot = await db.collection("recipes").limit(documentLimit).get();
+      if(isVeganOnly){
+       querySnapshot = await db
+            .collection("recipes")
+            .where("Keywords", arrayContains: "Vegan")
+            .where("CookTime",
+                isGreaterThanOrEqualTo: cookTimeMin,
+                isLessThanOrEqualTo: cookTimeMax)
+            .where("Calories",
+                isGreaterThanOrEqualTo: caloriesMin,
+                isLessThanOrEqualTo: caloriesMax)
+            .where("SugarContent",
+                isGreaterThanOrEqualTo: sugarMin, isLessThanOrEqualTo: sugarMax)
+            .where("ProteinContent",
+                isGreaterThanOrEqualTo: proteinMin,
+                isLessThanOrEqualTo: proteinMax)
+            .where("SodiumContent",
+                isGreaterThanOrEqualTo: sodiumMin,
+                isLessThanOrEqualTo: sodiumMax)
+            .where("FatContent",
+                isGreaterThanOrEqualTo: fatMin, isLessThanOrEqualTo: fatMax)
+            .limit(documentLimit)
+            .get(); 
+      } else {
+        querySnapshot = await db
+            .collection("recipes")
+            .where("CookTime",
+                isGreaterThanOrEqualTo: cookTimeMin,
+                isLessThanOrEqualTo: cookTimeMax)
+            .where("Calories",
+                isGreaterThanOrEqualTo: caloriesMin,
+                isLessThanOrEqualTo: caloriesMax)
+            .where("SugarContent",
+                isGreaterThanOrEqualTo: sugarMin, isLessThanOrEqualTo: sugarMax)
+            .where("ProteinContent",
+                isGreaterThanOrEqualTo: proteinMin,
+                isLessThanOrEqualTo: proteinMax)
+            .where("SodiumContent",
+                isGreaterThanOrEqualTo: sodiumMin,
+                isLessThanOrEqualTo: sodiumMax)
+            .where("FatContent",
+                isGreaterThanOrEqualTo: fatMin, isLessThanOrEqualTo: fatMax)
+            .limit(documentLimit)
+            .get();
+      }
       firstCall = false;
       // ignore: unnecessary_null_comparison
     } else if (lastDocument == null) {
       setState(() {
         isLoading = true;
       });
-      querySnapshot = await db.collection("recipes").limit(documentLimit).get();
+      if (isVeganOnly) {
+        querySnapshot = await db
+            .collection("recipes")
+            .where("Keywords", arrayContains: "Vegan")
+            .where("CookTime",
+                isGreaterThanOrEqualTo: cookTimeMin,
+                isLessThanOrEqualTo: cookTimeMax)
+            .where("Calories",
+                isGreaterThanOrEqualTo: caloriesMin,
+                isLessThanOrEqualTo: caloriesMax)
+            .where("SugarContent",
+                isGreaterThanOrEqualTo: sugarMin, isLessThanOrEqualTo: sugarMax)
+            .where("ProteinContent",
+                isGreaterThanOrEqualTo: proteinMin,
+                isLessThanOrEqualTo: proteinMax)
+            .where("SodiumContent",
+                isGreaterThanOrEqualTo: sodiumMin,
+                isLessThanOrEqualTo: sodiumMax)
+            .where("FatContent",
+                isGreaterThanOrEqualTo: fatMin, isLessThanOrEqualTo: fatMax)
+            .limit(documentLimit)
+            .get();
+      } else {
+        querySnapshot = await db
+            .collection("recipes")
+            .where("CookTime",
+                isGreaterThanOrEqualTo: cookTimeMin,
+                isLessThanOrEqualTo: cookTimeMax)
+            .where("Calories",
+                isGreaterThanOrEqualTo: caloriesMin,
+                isLessThanOrEqualTo: caloriesMax)
+            .where("SugarContent",
+                isGreaterThanOrEqualTo: sugarMin, isLessThanOrEqualTo: sugarMax)
+            .where("ProteinContent",
+                isGreaterThanOrEqualTo: proteinMin,
+                isLessThanOrEqualTo: proteinMax)
+            .where("SodiumContent",
+                isGreaterThanOrEqualTo: sodiumMin,
+                isLessThanOrEqualTo: sodiumMax)
+            .where("FatContent",
+                isGreaterThanOrEqualTo: fatMin, isLessThanOrEqualTo: fatMax)
+            .limit(documentLimit)
+            .get();
+      }
     } else {
       setState(() {
         isLoading = true;
       });
-      querySnapshot = await db
-          .collection("recipes")
-          .startAfterDocument(lastDocument)
-          .limit(documentLimit)
-          .get();
+      if (isVeganOnly) {
+        querySnapshot = await db
+            .collection("recipes")
+            .where("Keywords", arrayContains: "Vegan")
+            .where("CookTime",
+                isGreaterThanOrEqualTo: cookTimeMin,
+                isLessThanOrEqualTo: cookTimeMax)
+            .where("Calories",
+                isGreaterThanOrEqualTo: caloriesMin,
+                isLessThanOrEqualTo: caloriesMax)
+            .where("SugarContent",
+                isGreaterThanOrEqualTo: sugarMin, isLessThanOrEqualTo: sugarMax)
+            .where("ProteinContent",
+                isGreaterThanOrEqualTo: proteinMin,
+                isLessThanOrEqualTo: proteinMax)
+            .where("SodiumContent",
+                isGreaterThanOrEqualTo: sodiumMin,
+                isLessThanOrEqualTo: sodiumMax)
+            .where("FatContent",
+                isGreaterThanOrEqualTo: fatMin, isLessThanOrEqualTo: fatMax)
+            .startAfterDocument(lastDocument)
+            .limit(documentLimit)
+            .get();
+      } else {
+        querySnapshot = await db
+            .collection("recipes")
+            .where("CookTime",
+                isGreaterThanOrEqualTo: cookTimeMin,
+                isLessThanOrEqualTo: cookTimeMax)
+            .where("Calories",
+                isGreaterThanOrEqualTo: caloriesMin,
+                isLessThanOrEqualTo: caloriesMax)
+            .where("SugarContent",
+                isGreaterThanOrEqualTo: sugarMin, isLessThanOrEqualTo: sugarMax)
+            .where("ProteinContent",
+                isGreaterThanOrEqualTo: proteinMin,
+                isLessThanOrEqualTo: proteinMax)
+            .where("SodiumContent",
+                isGreaterThanOrEqualTo: sodiumMin,
+                isLessThanOrEqualTo: sodiumMax)
+            .where("FatContent",
+                isGreaterThanOrEqualTo: fatMin, isLessThanOrEqualTo: fatMax)
+            .startAfterDocument(lastDocument)
+            .limit(documentLimit)
+            .get();
+      }
     }
     if (querySnapshot.docs.isEmpty) {
       setLoading(false);
