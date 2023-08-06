@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:camera/camera.dart';
 
-import 'package:flutter_yolov5_app/data/model/ml_camera.dart';
-import 'package:flutter_yolov5_app/data/entity/recognition.dart';
+import 'package:makeat_app/miss_chef_ai/model/ml_camera.dart';
+import 'package:makeat_app/miss_chef_ai/entity/recognition.dart';
 
 class MainPage extends HookConsumerWidget {
   const MainPage({Key? key}) : super(key: key);

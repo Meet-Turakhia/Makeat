@@ -54,8 +54,13 @@ dependencies:
   vosk_flutter_plugin:
     git:
       url: https://github.com/alphacep/vosk-flutter.git
+      ref: e752836c669b11ae72de2deefdfe9fced32881ec
   image_picker: ^0.8.5+3
   firebase_storage: 9.0.0
+  tflite_flutter: ^0.9.1
+  tflite_flutter_helper: ^0.3.1
+  hooks_riverpod: ^1.0.3+1
+  simple_logger: ^1.9.0+2
 
 dev_dependencies:
   flutter_test:

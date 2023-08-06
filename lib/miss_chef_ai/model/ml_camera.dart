@@ -7,9 +7,9 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:image/image.dart' as image_lib;
 import 'package:tflite_flutter/tflite_flutter.dart';
 
-import 'package:flutter_yolov5_app/data/model/classifier.dart';
-import 'package:flutter_yolov5_app/utils/image_utils.dart';
-import 'package:flutter_yolov5_app/data/entity/recognition.dart';
+import 'package:makeat_app/miss_chef_ai/model/classifier.dart';
+import 'package:makeat_app/widgets/image_utils.dart';
+import 'package:makeat_app/miss_chef_ai/entity/recognition.dart';
 
 final recognitionsProvider = StateProvider<List<Recognition>>((ref) => []);
 

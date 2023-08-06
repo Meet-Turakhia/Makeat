@@ -5,8 +5,8 @@ import 'package:image/image.dart' as image_lib;
 import 'package:tflite_flutter/tflite_flutter.dart';
 import 'package:tflite_flutter_helper/tflite_flutter_helper.dart';
 
-import 'package:flutter_yolov5_app/utils/logger.dart';
-import 'package:flutter_yolov5_app/data/entity/recognition.dart';
+import 'package:makeat_app/widgets/logger.dart';
+import 'package:makeat_app/miss_chef_ai/entity/recognition.dart';
 
 class Classifier {
   Classifier({
