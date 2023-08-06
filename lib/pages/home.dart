@@ -579,9 +579,7 @@ class _HomeState extends State<Home> {
           onPressed: () async {
             Navigator.push(
               context,
-              MaterialPageRoute(
-                builder: (context) => Tinderswiper(),
-              ),
+              MaterialPageRoute(builder: (context) => MainPage()),
             );
           },
           tooltip: 'Scan Ingredients',
