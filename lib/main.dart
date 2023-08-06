@@ -2,6 +2,7 @@
 import 'dart:io';
 import "package:flutter/material.dart";
 import 'package:flutter/services.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:makeat_app/widgets/globals.dart';
 import 'package:makeat_app/widgets/splashscreen.dart';
 import "package:firebase_core/firebase_core.dart";
@@ -22,7 +23,8 @@ Future<void> main() async {
   sqliteDB = await openDatabase(path);
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]).then(
     (value) => runApp(
-      MaterialApp(
+      ProviderScope(
+      child: MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
           appBarTheme: AppBarTheme(
@@ -30,6 +32,7 @@ Future<void> main() async {
           ),
         ),
         home: MyApp(),
+      ),
       ),
     ),
   );
