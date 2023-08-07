@@ -17,7 +17,7 @@ class Classifier {
   late Interpreter? _interpreter;
   Interpreter? get interpreter => _interpreter;
 
-  static const String modelFileName = 'coco128.tflite';
+  static const String modelFileName = 'miss_chef_ai_model/best-fp16.tflite';
 
   /// image size into interpreter
   static const int inputSize = 640;
@@ -39,6 +39,7 @@ class Classifier {
             options: InterpreterOptions()..threads = 4,
           );
       final outputTensors = _interpreter!.getOutputTensors();
+      print(outputTensors);
       _outputShapes = [];
       _outputTypes = [];
       for (final tensor in outputTensors) {
@@ -46,6 +47,7 @@ class Classifier {
         _outputTypes.add(tensor.type);
       }
     } on Exception catch (e) {
+      print("Error ho gaya Bhai!!!!!!!!!!!!!!!!!!");
       logger.warning(e.toString());
     }
   }
@@ -56,18 +58,18 @@ class Classifier {
 
     imageProcessor ??= ImageProcessorBuilder()
         .add(
-      ResizeWithCropOrPadOp(
-        padSize,
-        padSize,
-      ),
-    )
+          ResizeWithCropOrPadOp(
+            padSize,
+            padSize,
+          ),
+        )
         .add(
-      ResizeOp(
-        inputSize,
-        inputSize,
-        ResizeMethod.BILINEAR,
-      ),
-    )
+          ResizeOp(
+            inputSize,
+            inputSize,
+            ResizeMethod.BILINEAR,
+          ),
+        )
         .build();
     return imageProcessor!.process(inputImage);
   }
@@ -86,7 +88,8 @@ class Classifier {
       normalizedInputImage.add(pixel / 255.0);
     }
     var normalizedTensorBuffer = TensorBuffer.createDynamic(TfLiteType.float32);
-    normalizedTensorBuffer.loadList(normalizedInputImage, shape: [inputSize, inputSize, 3]);
+    normalizedTensorBuffer
+        .loadList(normalizedInputImage, shape: [inputSize, inputSize, 3]);
 
     final inputs = [normalizedTensorBuffer.buffer];
 
@@ -107,12 +110,14 @@ class Classifier {
 
       /// check cls conf
       // double maxClsConf = results[i + 5];
-      double maxClsConf = results.sublist(i + 5, i + 5 + clsNum - 1).reduce(max);
+      double maxClsConf =
+          results.sublist(i + 5, i + 5 + clsNum - 1).reduce(max);
       if (maxClsConf < clsConfTh) continue;
 
       /// add detects
       // int cls = 0;
-      int cls = results.sublist(i + 5, i + 5 + clsNum - 1).indexOf(maxClsConf) % clsNum;
+      int cls = results.sublist(i + 5, i + 5 + clsNum - 1).indexOf(maxClsConf) %
+          clsNum;
       Rect outputRect = Rect.fromCenter(
         center: Offset(
           results[i] * inputSize,
@@ -121,11 +126,10 @@ class Classifier {
         width: results[i + 2] * inputSize,
         height: results[i + 3] * inputSize,
       );
-      Rect transformRect = imageProcessor!.inverseTransformRect(outputRect, image.height, image.width);
+      Rect transformRect = imageProcessor!
+          .inverseTransformRect(outputRect, image.height, image.width);
 
-      recognitions.add(
-          Recognition(i, cls, maxClsConf, transformRect)
-      );
+      recognitions.add(Recognition(i, cls, maxClsConf, transformRect));
     }
     return recognitions;
   }

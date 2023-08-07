@@ -98,6 +98,7 @@ flutter:
     - assets/svgs/
     - assets/sqlite/
     - assets/vosk/
+    - assets/miss_chef_ai_model/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
