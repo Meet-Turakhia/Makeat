@@ -17,7 +17,7 @@ class Classifier {
   late Interpreter? _interpreter;
   Interpreter? get interpreter => _interpreter;
 
-  static const String modelFileName = 'miss_chef_ai_model/best-fp16.tflite';
+  static const String modelFileName = 'miss_chef_ai_model/best_60.pt';
 
   /// image size into interpreter
   static const int inputSize = 640;
