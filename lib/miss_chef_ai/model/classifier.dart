@@ -26,7 +26,7 @@ class Classifier {
   late List<List<int>> _outputShapes;
   late List<TfLiteType> _outputTypes;
 
-  static const int clsNum = 80;
+  static const int clsNum = 40;
   static const double objConfTh = 0.80;
   static const double clsConfTh = 0.80;
 
